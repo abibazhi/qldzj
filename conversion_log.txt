@@ -1,0 +1,6 @@
+Error converting page 92 of ./pdfs/005.pdf.
+Error converting page 291 of ./pdfs/018.pdf.
+Error converting page 10 of ./pdfs/041.pdf.
+Error converting page 265 of ./pdfs/091.pdf.
+Error converting page 6 of ./pdfs/141.pdf.
+Error converting page 18 of ./pdfs/141.pdf.

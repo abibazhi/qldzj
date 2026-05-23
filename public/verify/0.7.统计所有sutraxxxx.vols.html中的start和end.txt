@@ -1,0 +1,18 @@
+python -c "
+import os, re
+parent_dir = '..'
+html_files = [f for f in os.listdir(parent_dir) if f.startswith('sutra') and f.endswith('.vols.html')]
+html_files.sort(key=lambda x: int(re.search(r'sutra(\d+)\.vols\.html', x).group(1)) if re.search(r'sutra(\d+)\.vols\.html', x) else 0)
+with open('sutra_ranges.txt', 'w', encoding='utf-8') as out:
+    out.write('No,start,end\\n')
+    for f in html_files:
+        file_no = int(re.search(r'sutra(\d+)\.vols\.html', f).group(1))
+        with open(os.path.join(parent_dir, f), 'r', encoding='utf-8') as infile:
+            content = infile.read()
+        starts = re.findall(r'start=(\\d{6,7})', content)
+        ends = re.findall(r'end=(\\d{6,7})', content)
+        if starts and ends:
+            out.write(f'{file_no},{starts[0]},{ends[-1]}\\n')
+            print(f'{file_no},{starts[0]},{ends[-1]}')
+print(f'处理了 {len(html_files)} 个文件')
+"

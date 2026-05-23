@@ -1,0 +1,17 @@
+python -c "
+import re, os
+with open('../index.html', 'r', encoding='utf-8') as f:
+    content = f.read()
+
+# 简化版本：查找 <td>数字</td> 后面跟着 start=数字&end=数字 的模式
+pattern = r'<td>(\d+)</td>[^<]*<td>[^<]*<a[^>]*href=\"[^\"]*start=(\d+)&end=(\d+)[^\"]*\"'
+matches = re.findall(pattern, content, re.DOTALL)
+
+with open('start_end.txt', 'w', encoding='utf-8') as f:
+    f.write('No,start,end\\n')
+    for td_no, start, end in matches:
+        f.write(f'{td_no},{start},{end}\\n')
+        print(f'{td_no},{start},{end}')
+
+print(f'找到 {len(matches)} 个')
+"

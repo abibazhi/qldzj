@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>乾隆大藏经图片浏览</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    padding: 10px; /* 添加一些内边距 */
+    box-shadow: 0 0 0 5px silver; /* 使用阴影模拟边框 */
+    box-sizing: border-box; /* 确保内边距包含在元素的总宽度和高度中 */
+}
+
+  </style>
+</head>
+<body>
+
+<div id="imageContainer" class="container"></div>
+
+<script>
+  function getQueryVariable(variable) {
+    const query = window.location.search.substring(1);
+    const vars = query.split('&');
+    for (let i = 0; i < vars.length; i++) {
+      const pair = vars[i].split('=');
+      if (pair[0] === variable) return decodeURIComponent(pair[1]);
+    }
+    return false;
+  }
+
+  const startParam = getQueryVariable('start') || '001001';
+  const endParam = getQueryVariable('end') || '999999';
+
+  const startVol = startParam.slice(0, 3);
+  const startPage = startParam.slice(3, 6);
+  const endVol = endParam.slice(0, 3);
+  const endPage = endParam.slice(3, 6);
+
+  let currentPage = startPage;
+  let currentVol = startVol;
+
+  // 设置边缘区域为5%，防止误触
+  const edgeThreshold = 0.05; // 左右各5%为翻页区域
+  const zoomAreaRatio = 0.5; // 中央50%为双击区域
+
+  function changeImage(direction) {
+    const page = parseInt(currentPage, 10) + direction;
+    const vol = parseInt(currentVol, 10);
+
+    if (direction > 0) {
+      if (page >= 999) {
+        currentPage = '001';
+        currentVol = (vol + 1).toString().padStart(3, '0');
+      } else {
+        currentPage = page.toString().padStart(3, '0');
+      }
+    } else {
+      if (page <= 1) {
+        currentPage = '999';
+        currentVol = (vol - 1).toString().padStart(3, '0');
+      } else {
+        currentPage = page.toString().padStart(3, '0');
+      }
+    }
+
+    document.getElementById('imageContainer').style.backgroundImage = `url(/qldzj/${currentVol}/${currentPage}.png)`;
+  }
+
+  const container = document.getElementById('imageContainer');
+
+
+  container.addEventListener('click', (event) => {
+    const rect = event.target.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const width = rect.width;
+
+    const isLeftEdge = clickX < width * edgeThreshold;
+    const isRightEdge = clickX > width * (1 - edgeThreshold);
+
+    if (isLeftEdge) {
+      changeImage(-1); // 前翻
+    } else if (isRightEdge) {
+      changeImage(1); // 后翻
+    }
+  });
+
+  window.onload = () => {
+    document.getElementById('imageContainer').style.backgroundImage = `url(/qldzj/${currentVol}/${currentPage}.png)`;
+  };
+</script>
+
+</body>
+</html>

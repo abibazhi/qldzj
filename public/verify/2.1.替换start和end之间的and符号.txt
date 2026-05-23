@@ -1,0 +1,21 @@
+# 单行命令修复
+python -c "
+import os, re, shutil
+files = [f for f in os.listdir('..') if f.startswith('sutra') and f.endswith('.vols.html')]
+backup_dir = 'backup_amp'
+if not os.path.exists(backup_dir): os.makedirs(backup_dir)
+total = 0
+for f in files:
+    path = os.path.join('..', f)
+    shutil.copy2(path, os.path.join(backup_dir, f))
+    with open(path, 'r', encoding='utf-8') as file:
+        content = file.read()
+    count = content.count('&amp;')
+    if count > 0:
+        new_content = content.replace('&amp;', '&')
+        with open(path, 'w', encoding='utf-8') as file:
+            file.write(new_content)
+        total += count
+        print(f'{f}: 替换了{count}个')
+print(f'总共替换了{total}个&amp;实体')
+"

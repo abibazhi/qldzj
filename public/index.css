@@ -1,0 +1,109 @@
+body {
+    font-family: "Microsoft YaHei", sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+h1 {
+    text-align: center;
+    font-size: 2em;
+    margin-bottom: 30px;
+    color: #333;
+}
+.container, .special-anchor {
+    max-width: 1000px; /* 与.container保持一致 */
+    margin: 0 auto; /* 居中显示 */
+    padding: 0 20px; /* 增加内边距 */
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.special-anchor {
+    padding: 10px 20px; /* 增加额外的内边距 */
+    border-bottom: 1px solid #ddd; /* 可选：增加下边框以区分 */
+    background-color: #fafafa; /* 轻微不同的背景颜色用于区分 */
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    border: 1px solid #999;
+    padding: 10px;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+}
+a {
+    color: #0066cc;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+.scroll-link, .preface-link {
+  display: inline-block; /* 确保元素在一行内显示 */
+  padding-right: 5px; /* 给第二个链接前留一点空白 */
+  text-decoration: none; /* 如果需要移除下划线可以取消注释 */
+}
+
+.scroll-link {
+  padding-left: 5px; /* 给第一个链接和这个链接之间增加一点空隙 */
+}
+/* 在 <a> 上显示黄色小三角警示（仅图标，不干扰文字） */
+a.suspect {
+  position: relative;
+  text-decoration: none; /* 确保下划线不会被图标干扰 */
+}
+
+a.suspect::after {
+  content: "⚠️";
+  position: absolute;
+  top: 0;
+  right: "-16px"; /* 图标放在链接文字右侧一点，避免重叠 */
+  font-size: 0.8em;
+  color: #d9a000; /* 醒目的黄色 */
+  opacity: 0.8;
+  pointer-events: none; /* 确保点击区域不受影响 */
+}
+
+/* 警示图标样式 */
+.suspect-icon {
+  display: inline-block;
+  margin-left: 4px; /* 与文字之间留一点空隙 */
+  font-size: 0.8em;
+  color: #d9a000;
+  opacity: 0.8;
+  vertical-align: top; /* 避免影响行高 */
+  line-height: 1;
+}
+.suspect-icon {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.8em;
+  color: #d9a000;
+  opacity: 0.8;
+  vertical-align: middle; /* 关键：与文字垂直居中对齐 */
+  line-height: 1;
+}
+
+.suspect-icon {
+  display: inline-block;
+  margin-left: 4px;
+  font-size: 0.8em;
+  color: #d9a000;
+  opacity: 0.8;
+  vertical-align: baseline; /* 先对齐基线 */
+  transform: translateY(-0.1em); /* 向下微移 0.1 倍当前字体大小 */
+  line-height: 1;
+}
+
+/* 移动端微调 */
+@media (max-width: 600px) {
+  .suspect-icon {
+    margin-left: 3px;
+    font-size: 0.75em;
+  }
+}
+

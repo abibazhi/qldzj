@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>乾隆大藏经图片浏览</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 100vw;
+      height: 100vh;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: transparent;
+      border: 5px solid silver;
+      box-sizing: border-box;
+      cursor: auto; /* 默认为箭头 */
+    }
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+    padding: 10px; /* 添加一些内边距 */
+    box-shadow: 0 0 0 5px silver; /* 使用阴影模拟边框 */
+    box-sizing: border-box; /* 确保内边距包含在元素的总宽度和高度中 */
+}
+
+  </style>
+</head>
+<body>
+
+<div id="imageContainer" class="container"></div>
+
+<script>
+  function getQueryVariable(variable) {
+    const query = window.location.search.substring(1);
+    const vars = query.split('&');
+    for (let i = 0; i < vars.length; i++) {
+      const pair = vars[i].split('=');
+      if (pair[0] === variable) return decodeURIComponent(pair[1]);
+    }
+    return false;
+  }
+
+  const startParam = getQueryVariable('start') || '001001';
+  const endParam = getQueryVariable('end') || '999999';
+
+  const startVol = startParam.slice(0, 3);
+  const startPage = startParam.slice(3, 6);
+  const endVol = endParam.slice(0, 3);
+  const endPage = endParam.slice(3, 6);
+
+  let currentPage = startPage;
+  let currentVol = startVol;
+  let zoomed = false;
+
+  // 设置边缘区域为5%，防止误触
+  const edgeThreshold = 0.05; // 左右各5%为翻页区域
+  const zoomAreaRatio = 0.5; // 中央50%为双击区域
+
+  function changeImage(direction) {
+    const page = parseInt(currentPage, 10) + direction;
+    const vol = parseInt(currentVol, 10);
+
+    if (direction > 0) {
+      if (page >= 999) {
+        currentPage = '001';
+        currentVol = (vol + 1).toString().padStart(3, '0');
+      } else {
+        currentPage = page.toString().padStart(3, '0');
+      }
+    } else {
+      if (page <= 1) {
+        currentPage = '999';
+        currentVol = (vol - 1).toString().padStart(3, '0');
+      } else {
+        currentPage = page.toString().padStart(3, '0');
+      }
+    }
+
+    document.getElementById('imageContainer').style.backgroundImage = `url(/qldzj/${currentVol}/${currentPage}.png)`;
+  }
+
+  const container = document.getElementById('imageContainer');
+
+
+function updateCursor(event) {
+  const rect = event.target.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  const width = rect.width;
+  const height = rect.height;
+
+  // 上下左右各占5%
+  const isTopEdge = y < height * edgeThreshold;       // 上边缘 5%
+  const isBottomEdge = y > height * (1 - edgeThreshold); // 下边缘 5%
+  const isLeftEdge = x < width * edgeThreshold;       // 左边缘 5%
+  const isRightEdge = x > width * (1 - edgeThreshold); // 右边缘 5%
+
+  if (isTopEdge || isBottomEdge || isLeftEdge || isRightEdge) {
+    container.style.cursor = 'pointer'; // 手型，表示可交互
+  } else {
+    container.style.cursor = 'auto';    // 默认箭头
+  }
+}
+
+  container.addEventListener('mousemove', updateCursor);
+  container.addEventListener('mouseleave', () => {
+    container.style.cursor = 'auto';
+  });
+
+  container.addEventListener('click', (event) => {
+    const rect = event.target.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const width = rect.width;
+
+    const isLeftEdge = clickX < width * edgeThreshold;
+    const isRightEdge = clickX > width * (1 - edgeThreshold);
+
+    if (isLeftEdge) {
+      changeImage(-1); // 前翻
+    } else if (isRightEdge) {
+      changeImage(1); // 后翻
+    }
+  });
+/*
+*/
+
+	  container.addEventListener('dblclick', (event) => {
+  if(zoomed) {
+    zoomOut(); // 如果已经是放大的状态，则调用zoomOut恢复原样
+    return;
+  }
+
+  const rect = event.target.getBoundingClientRect();
+  const y = event.clientY - rect.top;
+  const height = rect.height;
+
+  // 上下侧边缘各占5%
+  const isTopEdge = y < height * 0.05; // 上侧边缘5%区域内
+  const isBottomEdge = y > height * 0.95; // 下侧边缘5%区域内
+
+  if (isTopEdge) {
+    zoomToPosition(0, 'top'); // 双击上侧时让图片顶部与视口顶部对齐
+  } else if (isBottomEdge) {
+    zoomToPosition(0, 'bottom'); // 双击下侧时让图片底部与视口底部对齐
+  }
+});
+
+function zoomToPosition(clickX, position) {
+  const scale = 2.4; // 放大倍数
+  let transformOriginY = 'center'; // 默认为中心点
+
+  if (position === 'top') {
+    transformOriginY = '11.8%'; // 上部对齐
+  } else if (position === 'bottom') {
+    transformOriginY = '80%'; // 底部对齐
+  }
+
+  container.style.transformOrigin = `50% ${transformOriginY}`; // X轴居中，Y轴根据位置调整
+  container.style.transform = `scale(${scale})`;
+  container.style.backgroundSize = 'contain';
+  container.style.backgroundPosition = 'center';
+
+  zoomed = true; // 更新zoomed状态为已放大
+}
+
+function zoomOut() {
+  container.style.transformOrigin = 'center';
+  container.style.transform = 'scale(1)';
+  container.style.backgroundSize = 'contain';
+  container.style.backgroundPosition = 'center';
+
+  zoomed = false; // 更新zoomed状态为未放大
+}
+  window.onload = () => {
+    document.getElementById('imageContainer').style.backgroundImage = `url(/qldzj/${currentVol}/${currentPage}.png)`;
+  };
+</script>
+
+</body>
+</html>

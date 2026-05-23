@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>乾隆大藏经 图片浏览</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    .container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    .image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform-origin: center center;
+      transition: transform 0.2s ease-out;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    .loading-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      z-index: 10;
+    }
+
+    .error-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 0, 0, 0.7);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      z-index: 10;
+      display: none;
+    }
+
+    .page-info {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      z-index: 10;
+    }
+
+    .controls {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 20;
+    }
+
+    .control-btn {
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="image-wrapper" id="imageWrapper">
+    <img id="imageView" src="" alt="乾隆大藏经图片"/>
+  </div>
+  <div class="loading-indicator" id="loadingIndicator">加载中...</div>
+  <div class="error-message" id="errorMessage">图片加载失败</div>
+  <div class="page-info" id="pageInfo"></div>
+
+  <!-- 添加控制按钮 -->
+  <div class="controls">
+    <button class="control-btn" id="zoomOutBtn">-</button>
+    <button class="control-btn" id="resetBtn">1:1</button>
+    <button class="control-btn" id="zoomInBtn">+</button>
+  </div>
+</div>
+
+<script>
+  function getQueryVariable(variable) {
+    const query = window.location.search.substring(1);
+    const vars = query.split('&');
+    for (let i = 0; i < vars.length; i++) {
+      const pair = vars[i].split('=');
+      if (pair[0] === variable) return decodeURIComponent(pair[1]);
+    }
+    return false;
+  }
+
+  // 获取URL参数
+  const startParam = getQueryVariable('start') || '001001';
+  const endParam = getQueryVariable('end') || '999999';
+
+  // 解析参数：自动检测6位或7位格式
+  function parseParam(param) {
+    if (!/^\d+$/.test(param)) {
+      return { vol: 1, page: 1 };
+    }
+    
+    if (param.length === 6) {
+      // 6位格式：前3位册号，后3位页码
+      return {
+        vol: parseInt(param.slice(0, 3), 10),
+        page: parseInt(param.slice(3, 6), 10)
+      };
+    } else if (param.length === 7) {
+      // 7位格式：前3位册号，后4位页码
+      return {
+        vol: parseInt(param.slice(0, 3), 10),
+        page: parseInt(param.slice(3, 7), 10)
+      };
+    } else {
+      // 默认格式
+      return { vol: 1, page: 1 };
+    }
+  }
+
+  // 解析起始和结束参数
+  const startData = parseParam(startParam);
+  const endData = parseParam(endParam);
+
+  let currentVol = startData.vol;
+  let currentPage = startData.page;
+  
+  const startVol = startData.vol;
+  const startPage = startData.page;
+  const endVol = endData.vol;
+  const endPage = endData.page;
+
+  // 缩放和拖拽相关变量
+  let scale = 1;
+  let translateX = 0;
+  let translateY = 0;
+  let lastScaleDistance = 0;
+  let isLoading = false;
+  let touchMode = null; // 'scale', 'swipe' 或 'drag'
+  let startX = 0;
+  let startY = 0;
+  let startTranslateX = 0;
+  let startTranslateY = 0;
+  let startTime = 0;
+  let scaleFactor = 1.1;
+  let zoomSensitivity = 0.1;
+  let dragSpeedFactor = 1.5;
+
+  const imageWrapper = document.getElementById('imageWrapper');
+  const imageView = document.getElementById('imageView');
+  const loadingIndicator = document.getElementById('loadingIndicator');
+  const errorMessage = document.getElementById('errorMessage');
+  const pageInfo = document.getElementById('pageInfo');
+  const zoomInBtn = document.getElementById('zoomInBtn');
+  const zoomOutBtn = document.getElementById('zoomOutBtn');
+  const resetBtn = document.getElementById('resetBtn');
+
+  function showLoading() {
+    if (isLoading) return;
+    isLoading = true;
+    loadingIndicator.style.display = 'block';
+    errorMessage.style.display = 'none';
+  }
+
+  function hideLoading() {
+    isLoading = false;
+    loadingIndicator.style.display = 'none';
+  }
+
+  function showError(message) {
+    errorMessage.textContent = message;
+    errorMessage.style.display = 'block';
+    setTimeout(() => {
+      errorMessage.style.display = 'none';
+    }, 3000);
+  }
+
+  function updatePageInfo() {
+    const volFormatted = String(currentVol).padStart(3, '0');
+    pageInfo.textContent = `第 ${currentVol} 册 第 ${currentPage} 页`;
+  }
+
+  // 更新图片变换
+  function updateTransform() {
+    imageWrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+  }
+// 替换你代码中原有的 loadImage 函数
+function loadImage(vol, page) {
+  return new Promise((resolve, reject) => {
+    showLoading();
+    
+    // 关键修复：确保册号是3位数字
+    const volFormatted = String(vol).padStart(3, '0'); // 16 -> "016"
+    const imgUrl = `/qldzj/${volFormatted}/${page}.png`;
+    
+    console.log('加载图片:', imgUrl); // 调试信息
+    
+    // 更新页面信息（显示格式化册号）
+    updatePageInfo();
+    
+    imageView.onload = () => {
+      resetView();
+      hideLoading();
+      resolve();
+    };
+    
+    imageView.onerror = () => {
+      hideLoading();
+      reject(new Error(`图片加载失败: ${imgUrl}`));
+    };
+    
+    // 避免缓存问题
+    imageView.src = imgUrl + '?t=' + Date.now();
+  });
+}
+
+  function loadImage1(vol, page) {
+    return new Promise((resolve, reject) => {
+      showLoading();
+
+      // 更新页面信息
+      updatePageInfo();
+
+      // 图片路径：/qldzj/册号/页码.png
+      const imgUrl = `/qldzj/${vol}/${page}.png`;
+
+      imageView.onload = () => {
+        // 图片加载完成后重置缩放和位置
+        resetView();
+
+        hideLoading();
+        resolve();
+      };
+
+      imageView.onerror = (err) => {
+        hideLoading();
+        console.error('图片加载失败:', err);
+        reject(new Error('图片加载失败，请尝试其他页面'));
+      };
+
+      imageView.src = imgUrl;
+    });
+  }
+
+  async function changeImage(direction) {
+    if (isLoading) return;
+
+    let newVol = currentVol;
+    let newPage = currentPage + direction;
+
+    // 计算新的卷号和页码
+    if (direction > 0) {
+      // 下一页逻辑
+      // 每册最多9999页（兼容4位页码）
+      if (newPage > 9999) {
+        newPage = 1;
+        newVol += 1;
+      }
+    } else {
+      // 上一页逻辑
+      if (newPage < 1) {
+        newPage = 9999;
+        newVol -= 1;
+      }
+    }
+
+    // 验证新的卷号和页码是否超出范围
+    if (newVol < startVol || (newVol === startVol && newPage < startPage)) {
+      showError('已经是第一页');
+      return;
+    }
+
+    if (newVol > endVol || (newVol === endVol && newPage > endPage)) {
+      showError('已经是最后一页');
+      return;
+    }
+
+    // 不允许册号为0或负数
+    if (newVol < 1) {
+      showError('已经是第一页');
+      return;
+    }
+
+    try {
+      // 保存当前状态，用于回滚
+      const prevVol = currentVol;
+      const prevPage = currentPage;
+
+      // 更新当前状态
+      currentVol = newVol;
+      currentPage = newPage;
+
+      // 尝试加载新图片
+      await loadImage(currentVol, currentPage);
+    } catch (err) {
+      // 加载失败时回滚到之前的有效页面
+      currentVol = prevVol;
+      currentPage = prevPage;
+      showError(err.message);
+    }
+  }
+
+  // 缩放控制
+  function zoomAtCenter(centerX, centerY, scaleRatio) {
+    const oldScale = scale;
+    scale = Math.max(1, scale * scaleRatio);
+    scale = Math.min(5, scale * scaleRatio);
+
+    // 计算新的平移值以保持中心点的位置不变
+    translateX = centerX - ((centerX - translateX) * (scale / oldScale));
+    translateY = centerY - ((centerY - translateY) * (scale / oldScale));
+
+    // 限制拖拽范围，确保图片不会完全移出屏幕
+    const maxTranslateX = (scale - 1) * window.innerWidth / 2;
+    const maxTranslateY = (scale - 1) * window.innerHeight / 2;
+
+    translateX = Math.max(-maxTranslateX, Math.min(maxTranslateX, translateX));
+    translateY = Math.max(-maxTranslateY, Math.min(maxTranslateY, translateY));
+
+    updateTransform();
+  }
+
+  function resetView() {
+    scale = 1;
+    translateX = 0;
+    translateY = 0;
+    updateTransform();
+  }
+
+  // 触摸事件处理
+  imageWrapper.addEventListener('touchstart', (event) => {
+    if (event.touches.length === 2) {
+      // 双指缩放
+      touchMode = 'scale';
+      const dx = event.touches[0].clientX - event.touches[1].clientX;
+      const dy = event.touches[0].clientY - event.touches[1].clientY;
+      lastScaleDistance = Math.sqrt(dx * dx + dy * dy);
+
+      // 记录当前平移值
+      startTranslateX = translateX;
+      startTranslateY = translateY;
+    } else if (event.touches.length === 1) {
+      // 检查当前缩放比例，确定是拖拽还是滑动
+      if (scale > 1.0) {
+        touchMode = 'drag';
+        startX = event.touches[0].clientX;
+        startY = event.touches[0].clientY;
+        startTranslateX = translateX;
+        startTranslateY = translateY;
+      } else {
+        touchMode = 'swipe';
+        startX = event.touches[0].clientX;
+        startY = event.touches[0].clientY;
+        startTime = Date.now();
+      }
+    }
+  });
+
+  imageWrapper.addEventListener('touchmove', (event) => {
+    if (touchMode === 'scale' && event.touches.length === 2) {
+      event.preventDefault();
+
+      const dx = event.touches[0].clientX - event.touches[1].clientX;
+      const dy = event.touches[0].clientY - event.touches[1].clientY;
+      const currentDistance = Math.sqrt(dx * dx + dy * dy);
+
+      const scaleRatio = 1 + (currentDistance / lastScaleDistance - 1) * zoomSensitivity;
+
+      const centerX = (event.touches[0].clientX + event.touches[1].clientX) / 2;
+      const centerY = (event.touches[0].clientY + event.touches[1].clientY) / 2;
+
+      zoomAtCenter(centerX, centerY, scaleRatio);
+
+      lastScaleDistance = currentDistance;
+    } else if (touchMode === 'drag' && event.touches.length === 1) {
+      event.preventDefault();
+
+      const currentX = event.touches[0].clientX;
+      const currentY = event.touches[0].clientY;
+
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+
+      translateX = startTranslateX + deltaX * dragSpeedFactor;
+      translateY = startTranslateY + deltaY * dragSpeedFactor;
+
+      const maxTranslateX = (scale - 1) * window.innerWidth / 2;
+      const maxTranslateY = (scale - 1) * window.innerHeight / 2;
+
+      translateX = Math.max(-maxTranslateX, Math.min(maxTranslateX, translateX));
+      translateY = Math.max(-maxTranslateY, Math.min(maxTranslateY, translateY));
+
+      updateTransform();
+    } else if (touchMode === 'swipe' && event.touches.length === 1) {
+      const deltaX = event.touches[0].clientX - startX;
+      const deltaY = event.touches[0].clientY - startY;
+
+      if (Math.abs(deltaY) > 50) {
+        touchMode = null;
+      }
+    }
+  });
+
+  imageWrapper.addEventListener('touchend', (event) => {
+    if (touchMode === 'swipe' && event.changedTouches.length === 1) {
+      const endX = event.changedTouches[0].clientX;
+      const endY = event.changedTouches[0].clientY;
+      const deltaX = endX - startX;
+      const deltaY = endY - startY;
+      const duration = Date.now() - startTime;
+
+      // 判断是否是有效的翻页手势
+      if (Math.abs(deltaX) > 50 && Math.abs(deltaY) < 50 && duration < 500) {
+        if (deltaX > 0) {
+          changeImage(-1); // 向左滑动 ← 上一页
+        } else {
+          changeImage(1);  // 向右滑动 → 下一页
+        }
+      }
+    }
+
+    touchMode = null;
+  });
+
+  // 按钮事件监听
+  zoomInBtn.addEventListener('click', () => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    zoomAtCenter(centerX, centerY, scaleFactor);
+  });
+
+  zoomOutBtn.addEventListener('click', () => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    zoomAtCenter(centerX, centerY, 1 / scaleFactor);
+  });
+
+  resetBtn.addEventListener('click', resetView);
+
+  // 页面加载时加载初始图片
+	
+  window.onload = async () => {
+    try {
+      updatePageInfo();
+      await loadImage(currentVol, currentPage);
+    } catch (err) {
+      showError('初始图片加载失败');
+      console.error('初始图片加载失败:', err);
+    }
+  };
+
+window1.onload = async () => {
+  console.log('=== 开始加载 ===');
+  
+  // 详细的调试信息
+  console.log('1. URL参数分析:');
+  console.log('  完整URL:', window.location.href);
+  console.log('  search:', window.location.search);
+  console.log('  start参数原始值:', getQueryVariable('start'));
+  console.log('  end参数原始值:', getQueryVariable('end'));
+  
+  console.log('2. 解析结果:');
+  console.log('  startData:', startData);
+  console.log('  endData:', endData);
+  console.log('  currentVol:', currentVol, '类型:', typeof currentVol);
+  console.log('  currentPage:', currentPage, '类型:', typeof currentPage);
+  
+  console.log('3. 生成的路径:');
+  const volFormatted = String(currentVol).padStart(3, '0');
+  const expectedPath = `/qldzj/${volFormatted}/${currentPage}.png`;
+  console.log('  预期路径:', expectedPath);
+  
+  console.log('4. 开始加载图片...');
+  
+  try {
+    updatePageInfo();
+    await loadImage(currentVol, currentPage);
+    console.log('✓ 图片加载成功');
+  } catch (err) {
+    console.error('✗ 图片加载失败:', err);
+    console.log('失败时的图片src:', imageView.src);
+    showError('初始图片加载失败');
+    
+    // 立即测试正确的路径
+    console.log('立即测试预期路径...');
+    const testImg = new Image();
+    testImg.onload = () => console.log('✓ 测试图片加载成功:', expectedPath);
+    testImg.onerror = () => console.log('✗ 测试图片加载失败:', expectedPath);
+    testImg.src = expectedPath;
+  }
+};	
+</script>
+
+</body>
+</html>

@@ -164,7 +164,7 @@ var _hmt = _hmt || [];
 
     try {
       console.log('正在加载 /mapping.json...');
-      const response = await fetch('/qldzj/mapping.json');
+      const response = await fetch('/qldzj/mapping.json.gz?v=1');
       if (response.ok) {
         urlMapping = await response.json();
         console.log(`✅ 加载映射表成功，共 ${Object.keys(urlMapping).length} 条记录`);

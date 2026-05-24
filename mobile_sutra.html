@@ -322,7 +322,7 @@ var _hmt = _hmt || [];
     if (LOAD_STRATEGY === 'local') return;
     
     try {
-      const response = await fetch('/qldzj/mapping.json');
+      const response = await fetch('/qldzj/mapping.json.gz?v=1');
       if (response.ok) {
         urlMapping = await response.json();
         console.log(`✅ 加载映射表成功，共 ${Object.keys(urlMapping).length} 条记录`);

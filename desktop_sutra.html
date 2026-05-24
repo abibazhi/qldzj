@@ -63,7 +63,7 @@ var _hmt = _hmt || [];
 </script>
 </head>
 <body>
-<script defer src="./mapping.js?v=1"></script>
+<script src="./mapping.js?v=1"></script>
 
 <div id="imageContainer" class="container">
   <div id="loadingIndicator" class="loading-indicator">加载中...</div>
@@ -74,8 +74,10 @@ var _hmt = _hmt || [];
   // ========== 配置区域 ==========
   // 加载策略: 'local' (仅本地), 'imgbb' (仅远程), 'fallback' (远程优先，失败回退本地)
   let LOAD_STRATEGY = 'fallback';  // 优先 ImgBB，失败回退本地
-  let urlMapping = null;           // 存储映射表
-  urlMapping = mappingData;
+  let urlMapping = null; // 存储映射表
+  document.addEventListener('DOMContentLoaded', function() {
+    urlMapping = mappingData;
+  });
   let currentSource = 'local';     // 当前图片来源
   // =============================
 

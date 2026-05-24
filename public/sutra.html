@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<script>
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const target = isMobile ? "../mobile_sutra.html" : "../desktop_sutra.html";
+window.top.location.replace(target + window.location.search);
+</script>

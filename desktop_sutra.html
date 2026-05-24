@@ -63,14 +63,14 @@ var _hmt = _hmt || [];
 </script>
 </head>
 <body>
-<script src="./mapping.js?v=1"></script>
+<script defer src="./mapping.js?v=1"></script>
 
 <div id="imageContainer" class="container">
   <div id="loadingIndicator" class="loading-indicator">加载中...</div>
   <div id="sourceBadge" class="source-badge">---</div>
 </div>
 
-<script>
+<script defer>
   // ========== 配置区域 ==========
   // 加载策略: 'local' (仅本地), 'imgbb' (仅远程), 'fallback' (远程优先，失败回退本地)
   let LOAD_STRATEGY = 'fallback';  // 优先 ImgBB，失败回退本地
@@ -398,9 +398,9 @@ var _hmt = _hmt || [];
   window.onload = async () => {
     console.log('桌面版页面加载启动...');
     
-    if (LOAD_STRATEGY !== 'local') {
-      await loadMapping();
-    }
+    // if (LOAD_STRATEGY !== 'local') {
+    //  await loadMapping();
+    // }
     
     try {
       await loadImage(currentVol, currentPage);

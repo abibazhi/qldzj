@@ -130,6 +130,7 @@ var _hmt = _hmt || [];
 </script>
 </head>
 <body>
+<script src="./mapping.js?v=4"></script>
 
 <div class="container">
   <div class="image-wrapper" id="imageWrapper">
@@ -189,6 +190,9 @@ var _hmt = _hmt || [];
   
   // 映射表缓存（从服务器加载）
   let urlMapping = null;
+  document.addEventListener('DOMContentLoaded', function() {
+    urlMapping = mappingData;
+  });
   
   // 当前图片来源标识
   let currentSource = 'local';
@@ -305,8 +309,15 @@ var _hmt = _hmt || [];
 
   function getImgbbrl(vol, page) {
     if (!urlMapping) return null;
-    const key = `${String(vol).padStart(3, '0')}_${page}`;
-    const randomId = urlMapping[key];
+    // const key = `${String(vol).padStart(3, '0')}_${page}`;
+    // const randomId = urlMapping[key];
+    // 🔥 新数组取值方式
+    const volNum = parseInt(vol, 10);
+    const pageNum = parseInt(page, 10);
+    if (!urlMapping[volNum] || !urlMapping[volNum][pageNum - 1]) return null;
+
+    const randomId = urlMapping[volNum][pageNum - 1];
+    
     if (!randomId) return null;
     
     // 拼接完整 URL
@@ -563,9 +574,9 @@ var _hmt = _hmt || [];
     console.log('页面加载启动...');
     
     // 如果策略不是纯本地，先加载映射表
-    if (LOAD_STRATEGY !== 'local') {
-      await loadMapping();
-    }
+    // if (LOAD_STRATEGY !== 'local') {
+    //  await loadMapping();
+    // }
     
     updatePageInfo();
     await loadImage(currentVol, currentPage);

@@ -164,11 +164,9 @@ var _hmt = _hmt || [];
 
     try {
       console.log('正在加载 /mapping.json...');
-      const response = await fetch('/qldzj/mapping.json.gz?v=1');
+      const response = await fetch('/qldzj/mapping.json?v=1');
       if (response.ok) {
-	const text = await response.text(); // 👈 能正确读取并解压
-        urlMapping = JSON.parse(text);      // 👈 再转成对象
-        // urlMapping = await response.json();
+        urlMapping = await response.json();
         console.log(`✅ 加载映射表成功，共 ${Object.keys(urlMapping).length} 条记录`);
       } else {
         console.warn('⚠️ 映射表加载失败，将只使用本地图片');

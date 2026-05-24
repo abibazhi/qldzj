@@ -15,33 +15,6 @@ var _hmt = _hmt || [];
 })();
 </script>
 </head>
-<script>
-// 自动把所有经书链接变成自适应链接（电脑/手机自动识别）
-document.querySelectorAll('a[href*="sutra.html?"]').forEach(a => {
-  const href = a.getAttribute('href');
-  
-  // 提取 start 和 end
-  const startMatch = href.match(/start=([0-9]+)/);
-  const endMatch = href.match(/end=([0-9]+)/);
-  
-  if (startMatch && endMatch) {
-    const start = startMatch[1];
-    const end = endMatch[1];
-    // 替换为自动识别设备的跳转
-    a.setAttribute('href', 'javascript:openSutra(\'' + start + '\',\'' + end + '\')');
-  }
-});
-
-// 设备判断 + 跳转
-function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-function openSutra(start, end) {
-  const page = isMobile() ? 'mobile_sutra.html' : 'desktop_sutra.html';
-  location.href = `${page}?start=${start}&end=${end}`;
-}
-</script>
-
 <body>
     <h1>乾隆大藏经目录</h1>
     <!-- 快速跳转链接 -->
@@ -8489,5 +8462,31 @@ function openSutra(start, end) {
         </tr>
     </table>
 </body>
+<script>
+// 自动把所有经书链接变成自适应链接（电脑/手机自动识别）
+document.querySelectorAll('a[href*="sutra.html?"]').forEach(a => {
+  const href = a.getAttribute('href');
+
+  // 提取 start 和 end
+  const startMatch = href.match(/start=([0-9]+)/);
+  const endMatch = href.match(/end=([0-9]+)/);
+
+  if (startMatch && endMatch) {
+    const start = startMatch[1];
+    const end = endMatch[1];
+    // 替换为自动识别设备的跳转
+    a.setAttribute('href', 'javascript:openSutra(\'' + start + '\',\'' + end + '\')');
+  }
+});
+
+// 设备判断 + 跳转
+function isMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+function openSutra(start, end) {
+  const page = isMobile() ? 'mobile_sutra.html' : 'desktop_sutra.html';
+  location.href = `${page}?start=${start}&end=${end}`;
+}
+</script>
 </html>
 

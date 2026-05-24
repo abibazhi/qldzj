@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>乾隆大藏经图片浏览</title>
+  <script src="/qldzj/mapping.js?v=1"></script>
   <style>
     html, body {
       height: 100%;
@@ -73,8 +74,8 @@ var _hmt = _hmt || [];
   // ========== 配置区域 ==========
   // 加载策略: 'local' (仅本地), 'imgbb' (仅远程), 'fallback' (远程优先，失败回退本地)
   let LOAD_STRATEGY = 'fallback';  // 优先 ImgBB，失败回退本地
-  
   let urlMapping = null;           // 存储映射表
+  urlMapping = mappingData;
   let currentSource = 'local';     // 当前图片来源
   // =============================
 
@@ -159,6 +160,7 @@ var _hmt = _hmt || [];
   }
 
   // 加载映射表
+  /*
   async function loadMapping() {
     if (LOAD_STRATEGY === 'local') return;
 
@@ -177,6 +179,7 @@ var _hmt = _hmt || [];
       LOAD_STRATEGY = 'local';
     }
   }
+  */
 
   // 尝试加载单张图片
   function tryLoadImage(url) {

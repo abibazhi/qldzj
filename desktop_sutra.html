@@ -63,7 +63,6 @@ var _hmt = _hmt || [];
 </script>
 </head>
 <body>
-<script src="./mapping.js?v=4"></script>
 
 <div id="imageContainer" class="container">
   <div id="loadingIndicator" class="loading-indicator">加载中...</div>
@@ -73,13 +72,27 @@ var _hmt = _hmt || [];
 <script defer>
   // ========== 配置区域 ==========
   // 加载策略: 'local' (仅本地), 'imgbb' (仅远程), 'fallback' (远程优先，失败回退本地)
-  let LOAD_STRATEGY = 'fallback';  // 优先 ImgBB，失败回退本地
   let urlMapping = null; // 存储映射表
-  document.addEventListener('DOMContentLoaded', function() {
-    urlMapping = mappingData;
-  });
+  //document.addEventListener('DOMContentLoaded', function() {
+  //  urlMapping = mappingData;
+  //});
   let currentSource = 'local';     // 当前图片来源
   // =============================
+
+  // 动态加载对应卷的 mapping.js（极简干净版）
+  async function loadMappingForVolume(vol) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      // 👇 去掉版本号，让浏览器自动缓存
+      script.src = `/${vol}/mapping.js`;
+
+      script.onload = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  }
+
+
 
   function getQueryVariable(variable) {
     const query = window.location.search.substring(1);
@@ -172,27 +185,6 @@ var _hmt = _hmt || [];
     return `https://i.ibb.co/${randomId}/${filename}`;
   }
 
-  // 加载映射表
-  /*
-  async function loadMapping() {
-    if (LOAD_STRATEGY === 'local') return;
-
-    try {
-      console.log('正在加载 /mapping.json...');
-      const response = await fetch('/qldzj/mapping.json?v=1');
-      if (response.ok) {
-        urlMapping = await response.json();
-        console.log(`✅ 加载映射表成功，共 ${Object.keys(urlMapping).length} 条记录`);
-      } else {
-        console.warn('⚠️ 映射表加载失败，将只使用本地图片');
-        LOAD_STRATEGY = 'local';
-      }
-    } catch (err) {
-      console.warn('⚠️ 映射表加载异常:', err);
-      LOAD_STRATEGY = 'local';
-    }
-  }
-  */
 
   // 尝试加载单张图片
   function tryLoadImage(url) {
@@ -219,51 +211,15 @@ var _hmt = _hmt || [];
   }
 
   // 带回退的图片加载
-  async function loadImage1(vol, page) {
-    showLoading();
-
-    const strategies = [];
-
-    if (LOAD_STRATEGY === 'fallback') {
-      strategies.push({ type: 'imgbb', url: getImgbbrl(vol, page) });
-      strategies.push({ type: 'local', url: getLocalImageUrl(vol, page) });
-    } else if (LOAD_STRATEGY === 'imgbb') {
-      strategies.push({ type: 'imgbb', url: getImgbbrl(vol, page) });
-    } else {
-      strategies.push({ type: 'local', url: getLocalImageUrl(vol, page) });
-    }
-
-    for (const strategy of strategies) {
-      if (!strategy.url) continue;
-
-      try {
-        const result = await tryLoadImage(strategy.url);
-        if (result.success) {
-          container.style.backgroundImage = `url(${strategy.url})`;
-          currentSource = strategy.type === 'imgbb' ? 'ImgBB' : '本地';
-          sourceBadge.textContent = currentSource;
-          sourceBadge.style.color = strategy.type === 'imgbb' ? '#0f0' : '#ff0';
-          hideLoading();
-          return;
-        }
-        console.warn(`${strategy.type} 加载失败: ${strategy.url}`);
-      } catch (err) {
-        console.warn(`${strategy.type} 加载异常:`, err);
-      }
-    }
-
-    hideLoading();
-    console.error('所有图片来源均加载失败');
-    // 可选：显示错误提示
-    container.style.backgroundColor = '#333';
-    container.style.backgroundImage = 'none';
-  }
-
-  // 旧的很长一段 → 全部删掉，换成下面这个
-
   // 新的（本地优先）
   async function loadImage(vol, page) {
     showLoading();
+
+    // 1. 先加载当前卷的 mapping.js
+    await loadMappingForVolume(vol);
+
+    // 2. 加载完了，mappingData 才存在，这里赋值
+    const urlMapping = mappingData;
 
     const localUrl = getLocalImageUrl(vol, page);
     const imgbbUrl = getImgbbrl(vol, page);
@@ -451,10 +407,6 @@ var _hmt = _hmt || [];
   // 页面初始化
   window.onload = async () => {
     console.log('桌面版页面加载启动...');
-    
-    // if (LOAD_STRATEGY !== 'local') {
-    //  await loadMapping();
-    // }
     
     try {
       await loadImage(currentVol, currentPage);

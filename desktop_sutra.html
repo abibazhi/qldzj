@@ -81,6 +81,10 @@ var _hmt = _hmt || [];
 
   // 动态加载对应卷的 mapping.js（极简干净版）
   async function loadMappingForVolume(vol) {
+
+    // 👇 加这一行：如果页面上已经加载过这个卷的js，直接返回，不重复加载
+    if (document.querySelector(`script[src="/${vol}/mapping.js"]`)) return;
+
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       // 👇 去掉版本号，让浏览器自动缓存

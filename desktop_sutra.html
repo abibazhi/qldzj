@@ -143,9 +143,15 @@ var _hmt = _hmt || [];
   }
 
   // 获取本地图片路径
-  function getLocalImageUrl(vol, page) {
+  function getLocalImageUrl1(vol, page) {
     const pageNum = parseInt(page, 10);
     return `/qldzj/pngs/${vol}/${pageNum}.png`;
+  }
+
+  // 换成这个
+  function getLocalImageUrl(vol, page) {
+    const pageNum = parseInt(page, 10);
+    return `https://abibazhi.github.io/${vol}/${pageNum}.png`;
   }
 
   // 获取 ImgBB 图片路径（适配只存随机ID的 mapping.json）
@@ -213,7 +219,7 @@ var _hmt = _hmt || [];
   }
 
   // 带回退的图片加载
-  async function loadImage(vol, page) {
+  async function loadImage1(vol, page) {
     showLoading();
 
     const strategies = [];
@@ -252,6 +258,46 @@ var _hmt = _hmt || [];
     container.style.backgroundColor = '#333';
     container.style.backgroundImage = 'none';
   }
+
+  // 旧的很长一段 → 全部删掉，换成下面这个
+
+  // 新的（本地优先）
+  async function loadImage(vol, page) {
+    showLoading();
+
+    const localUrl = getLocalImageUrl(vol, page);
+    const imgbbUrl = getImgbbrl(vol, page);
+
+    // 先试本地
+    const localResult = await tryLoadImage(localUrl);
+    if (localResult.success) {
+      container.style.backgroundImage = `url(${localUrl})`;
+      currentSource = '本地';
+      sourceBadge.textContent = '本地';
+      sourceBadge.style.color = '#ff0';
+      hideLoading();
+      return;
+    }
+
+    // 失败再试 imgbb
+    if (imgbbUrl) {
+      const imgbbResult = await tryLoadImage(imgbbUrl);
+      if (imgbbResult.success) {
+        container.style.backgroundImage = `url(${imgbbUrl})`;
+        currentSource = 'ImgBB';
+        sourceBadge.textContent = 'ImgBB';
+        sourceBadge.style.color = '#0f0';
+        hideLoading();
+        return;
+      }
+    }
+
+    hideLoading();
+    container.style.backgroundColor = '#222';
+    container.style.backgroundImage = 'none';
+  }
+
+
 
   async function changeImage(direction) {
     if (zoomed || isLoading) return;

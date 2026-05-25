@@ -267,18 +267,7 @@ var _hmt = _hmt || [];
 
     const localUrl = getLocalImageUrl(vol, page);
     const imgbbUrl = getImgbbrl(vol, page);
-
-    // 先试本地
-    const localResult = await tryLoadImage(localUrl);
-    if (localResult.success) {
-      container.style.backgroundImage = `url(${localUrl})`;
-      currentSource = '本地';
-      sourceBadge.textContent = '本地';
-      sourceBadge.style.color = '#ff0';
-      hideLoading();
-      return;
-    }
-
+    
     // 失败再试 imgbb
     if (imgbbUrl) {
       const imgbbResult = await tryLoadImage(imgbbUrl);
@@ -291,6 +280,18 @@ var _hmt = _hmt || [];
         return;
       }
     }
+
+    // 先试本地
+    const localResult = await tryLoadImage(localUrl);
+    if (localResult.success) {
+      container.style.backgroundImage = `url(${localUrl})`;
+      currentSource = '本地';
+      sourceBadge.textContent = '本地';
+      sourceBadge.style.color = '#ff0';
+      hideLoading();
+      return;
+    }
+
 
     hideLoading();
     container.style.backgroundColor = '#222';

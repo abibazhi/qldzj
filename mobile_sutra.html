@@ -442,7 +442,7 @@ var _hmt = _hmt || [];
     container.style.backgroundImage = 'none';
   }
 
-  async function loadImage(vol, page) {
+  async function loadImage3(vol, page) {
     showLoading();
 
     // 1. 先加载当前卷的 mapping.js
@@ -489,6 +489,61 @@ var _hmt = _hmt || [];
     hideLoading();
     showError('所有图片来源均加载失败');
   }
+
+
+async function loadImage(vol, page) {
+  showLoading();
+
+  // 加载 mapping
+  await loadMappingForVolume(vol);
+  const urlMapping = mappingData;
+
+  const localUrl = getLocalImageUrl(vol, page);
+  const imgbbUrl = getImgbbrl(vol, page);
+
+  updatePageInfo();
+
+  // ==========================
+  // 先试本地
+  // ==========================
+  if (localUrl) {
+    try {
+      const res = await tryLoadImage(localUrl);
+      if (res.success) {
+        // ✅ 这里自己赋值！
+        imageView.src = localUrl;
+        currentSource = '本地';
+        sourceBadge.textContent = '本地';
+        sourceBadge.style.color = '#ff0';
+        hideLoading();
+        return;
+      }
+    } catch (e) {}
+  }
+
+  // ==========================
+  // 再试 ImgBB
+  // ==========================
+  if (imgbbUrl) {
+    try {
+      const res = await tryLoadImage(imgbbUrl);
+      if (res.success) {
+        // ✅ 这里自己赋值！
+        imageView.src = imgbbUrl;
+        currentSource = 'ImgBB';
+        sourceBadge.textContent = 'ImgBB';
+        sourceBadge.style.color = '#0f0';
+        hideLoading();
+        return;
+      }
+    } catch (e) {}
+  }
+
+  hideLoading();
+  showError('所有图片来源均加载失败');
+}
+
+
 
   
   // 尝试加载单张图片（返回 Promise）

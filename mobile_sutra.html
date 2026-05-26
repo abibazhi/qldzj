@@ -359,8 +359,8 @@ async function loadImage(vol, page) {
   // ======================
   // 日志 1：开始执行
   // ======================
-  console.log("===== 开始加载图片 =====");
-  console.log("当前册:", vol, "当前页:", page);
+  //console.log("===== 开始加载图片 =====");
+  //console.log("当前册:", vol, "当前页:", page);
 
   await loadMappingForVolume(vol);
   const urlMapping = mappingData;
@@ -368,8 +368,8 @@ async function loadImage(vol, page) {
   // ======================
   // 日志 2：mapping 加载完成
   // ======================
-  console.log("mappingData 加载完成:", mappingData);
-  console.log("urlMapping:", urlMapping);
+  //console.log("mappingData 加载完成:", mappingData);
+  //console.log("urlMapping:", urlMapping);
 
   showLoading();
 
@@ -388,17 +388,17 @@ async function loadImage(vol, page) {
   // ======================
   // 日志 3：输出策略列表
   // ======================
-  console.log("加载策略列表:", strategies);
+  // console.log("加载策略列表:", strategies);
 
   updatePageInfo();
 
   for (const strategy of strategies) {
     if (!strategy.url) {
-      console.log("跳过：URL 为空", strategy);
+      // console.log("跳过：URL 为空", strategy);
       continue;
     }
 
-    console.log("正在尝试加载:", strategy.type, strategy.url);
+    // console.log("正在尝试加载:", strategy.type, strategy.url);
 
     try {
       const result = await tryLoadImage(strategy.url);
@@ -406,7 +406,7 @@ async function loadImage(vol, page) {
       // ======================
       // 日志 4：输出加载结果
       // ======================
-      console.log("加载结果:", result);
+      // console.log("加载结果:", result);
 
       if (result.success) {
         console.log("✅ 加载成功！显示图片");

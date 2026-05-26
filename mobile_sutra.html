@@ -316,59 +316,42 @@ var _hmt = _hmt || [];
     return `/qldzj/pngs/${volFormatted}/${page}.png`;
   }
 
-  function getLocalImageUrl(vol, page) {
+  function getLocalImageUrl2(vol, page) {
     const volFormatted = String(vol).padStart(3, '0');
     return `pngs/${volFormatted}/${page}.png`; // ✅ 正确
   }
 
+function getLocalImageUrl3(vol, page) {
+  const vol3 = String(vol).padStart(3, '0');
+  const pageNum = parseInt(page, 10);
+  return `https://abibazhi.github.io/${vol3}/${pageNum}.png`;
+}
+
+function getLocalImageUrl(vol, page) {
+  const vol3 = String(vol).padStart(3, '0');
+  const pageNum = parseInt(page, 10);
+  return `../${vol3}/${pageNum}.png`;
+}
+
+
   
-  // 获取 ImgBB 图片路径（通过映射表）
-  function getImgbbrl1(vol, page) {
-    if (!urlMapping) return null;
-    const key = `${String(vol).padStart(3, '0')}_${page}`;
-    return urlMapping[key] || null;
-  }
-
-  function getImgbbral2(vol, page) {
-    // 👇 就加这一行！内部直接拿，永远不报错！
-    const urlMapping = mappingData;
-    if (!urlMapping) return null;
-    // const key = `${String(vol).padStart(3, '0')}_${page}`;
-    // const randomId = urlMapping[key];
-    // 🔥 新数组取值方式
-    const volNum = parseInt(vol, 10);
-    const pageNum = parseInt(page, 10);
-    if (!urlMapping[volNum] || !urlMapping[volNum][pageNum - 1]) return null;
-
-    const randomId = urlMapping[volNum][pageNum - 1];
-    
-    if (!randomId) return null;
-    
-    // 拼接完整 URL
-    // 注意：ImgBB 的文件名格式是 {册号}-{页码}-png.png
-    const filename = `${String(vol).padStart(3, '0')}-${page}-png.png`;
-    return `https://i.ibb.co/${randomId}/${filename}`;
-  }
-
-
 function getImgbbrl(vol, page) {
   const urlMapping = mappingData;
   if (!urlMapping) return null;
 
-  const volNum = parseInt(vol, 10);
   const pageIdx = parseInt(page) - 1;
-
-  if (!urlMapping[volNum] || pageIdx < 0 || pageIdx >= urlMapping[volNum].length) {
+  
+  // 一维数组，直接取值！
+  if (pageIdx < 0 || pageIdx >= urlMapping.length) {
     return null;
   }
 
-  const randomId = urlMapping[volNum][pageIdx];
+  const randomId = urlMapping[pageIdx];
   if (!randomId) return null;
 
   const vol3 = String(vol).padStart(3, '0');
   return `https://i.ibb.co/${randomId}/${vol3}-${page}-png.png`;
 }
-
 
 
 async function loadImage(vol, page) {

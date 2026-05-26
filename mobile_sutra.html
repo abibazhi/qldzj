@@ -311,22 +311,6 @@ var _hmt = _hmt || [];
   }
   
   // 获取本地图片路径
-  function getLocalImageUrl1(vol, page) {
-    const volFormatted = String(vol).padStart(3, '0');
-    return `/qldzj/pngs/${volFormatted}/${page}.png`;
-  }
-
-  function getLocalImageUrl2(vol, page) {
-    const volFormatted = String(vol).padStart(3, '0');
-    return `pngs/${volFormatted}/${page}.png`; // ✅ 正确
-  }
-
-function getLocalImageUrl3(vol, page) {
-  const vol3 = String(vol).padStart(3, '0');
-  const pageNum = parseInt(page, 10);
-  return `https://abibazhi.github.io/${vol3}/${pageNum}.png`;
-}
-
 function getLocalImageUrl(vol, page) {
   const vol3 = String(vol).padStart(3, '0');
   const pageNum = parseInt(page, 10);

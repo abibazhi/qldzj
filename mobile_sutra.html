@@ -130,7 +130,6 @@ var _hmt = _hmt || [];
 </script>
 </head>
 <body>
-<script src="./mapping.js?v=4"></script>
 
 <div class="container">
   <div class="image-wrapper" id="imageWrapper">
@@ -189,11 +188,26 @@ var _hmt = _hmt || [];
   let LOAD_STRATEGY = 'imgbb';  // 改为 'fallback' 启用 ImgBB 优先加载
   
   // 映射表缓存（从服务器加载）
-  let urlMapping = null;
-  document.addEventListener('DOMContentLoaded', function() {
-    urlMapping = mappingData;
-  });
-  
+  //let urlMapping = null;
+  //document.addEventListener('DOMContentLoaded', function() {
+  //  urlMapping = mappingData;
+  //});
+
+  // 动态加载当前卷的 mapping.js（防重复加载）
+  async function loadMappingForVolume(vol) {
+    // 防止重复加载，避免报错
+    const exists = document.querySelector(`script[src="/${vol}/mapping.js"]`);
+    if (exists) return;
+
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = `/${vol}/mapping.js`;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  }
+    
   // 当前图片来源标识
   let currentSource = 'local';
   
@@ -329,6 +343,7 @@ var _hmt = _hmt || [];
 
   
   // 加载映射表（首次加载时调用）
+  /*
   async function loadMapping() {
     if (LOAD_STRATEGY === 'local') return;
     
@@ -348,10 +363,30 @@ var _hmt = _hmt || [];
       LOAD_STRATEGY = 'local';
     }
   }
-  
+  */
+
+  // 动态加载当前卷的 mapping.js（防重复加载）
+  async function loadMappingForVolume(vol) {
+    // 防止重复加载，避免报错
+    const exists = document.querySelector(`script[src="/${vol}/mapping.js"]`);
+    if (exists) return;
+
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = `/${vol}/mapping.js`;
+      script.onload = resolve;
+      script.onerror = reject;
+      document.body.appendChild(script);
+    });
+  }
+    
   // 带回退的图片加载
   async function loadImage(vol, page) {
+
+    await loadMappingForVolume(vol);
+
     showLoading();
+
     
     const strategies = [];
     

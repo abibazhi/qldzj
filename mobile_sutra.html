@@ -395,7 +395,7 @@ var _hmt = _hmt || [];
   }
 
 
-  async function loadImage(vol, page) {
+  async function loadImage2(vol, page) {
     showLoading();
 
     // 1. 先加载当前卷的 mapping.js
@@ -442,7 +442,53 @@ var _hmt = _hmt || [];
     container.style.backgroundImage = 'none';
   }
 
+  async function loadImage(vol, page) {
+    showLoading();
 
+    // 1. 先加载当前卷的 mapping.js
+    await loadMappingForVolume(vol);
+
+    // 2. 赋值映射表
+    const urlMapping = mappingData;
+
+    // 3. 获取地址
+    const localUrl = getLocalImageUrl(vol, page);
+    const imgbbUrl = getImgbbrl(vol, page);
+
+    // ============================
+    // 移动版：先本地，后 ImgBB
+    // ============================
+
+    // 先试本地
+    if (localUrl) {
+      const localResult = await tryLoadImage(localUrl);
+      if (localResult.success) {
+        imageView.src = localUrl; // ✅ mobile 用 imageView
+        currentSource = '本地';
+        sourceBadge.textContent = '本地';
+        sourceBadge.style.color = '#ff0';
+        hideLoading();
+        return;
+      }
+    }
+
+    // 本地失败 → 试 ImgBB
+    if (imgbbUrl) {
+      const imgbbResult = await tryLoadImage(imgbbUrl);
+      if (imgbbResult.success) {
+        imageView.src = imgbbUrl; // ✅ mobile 用 imageView
+        currentSource = 'ImgBB';
+        sourceBadge.textContent = 'ImgBB';
+        sourceBadge.style.color = '#0f0';
+        hideLoading();
+        return;
+      }
+    }
+
+    // 都失败
+    hideLoading();
+    showError('所有图片来源均加载失败');
+  }
 
   
   // 尝试加载单张图片（返回 Promise）

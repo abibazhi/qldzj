@@ -196,7 +196,10 @@ var _hmt = _hmt || [];
   // 动态加载当前卷的 mapping.js（防重复加载）
   async function loadMappingForVolume(vol) {
     // 防止重复加载，避免报错
-    const exists = document.querySelector(`script[src="/${vol}/mapping.js"]`);
+
+    const vol3 = vol.toString().padStart(3, '0');
+
+    const exists = document.querySelector(`script[src="/${vol3}/mapping.js"]`);
     if (exists) return;
 
     return new Promise((resolve, reject) => {

@@ -368,25 +368,12 @@ var _hmt = _hmt || [];
   }
   */
 
-  // 动态加载当前卷的 mapping.js（防重复加载）
-  async function loadMappingForVolume(vol) {
-    // 防止重复加载，避免报错
-    const exists = document.querySelector(`script[src="/${vol}/mapping.js"]`);
-    if (exists) return;
-
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = `/${vol}/mapping.js`;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.body.appendChild(script);
-    });
-  }
-    
   // 带回退的图片加载
   async function loadImage(vol, page) {
 
     await loadMappingForVolume(vol);
+    const urlMapping = mappingData;
+
 
     showLoading();
 

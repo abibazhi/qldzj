@@ -570,7 +570,7 @@ async function loadImage4(vol, page) {
   showError('所有图片来源均加载失败');
 }
 
-async function loadImage(vol, page) {
+async function loadImage5(vol, page) {
   showLoading();
 
   // 加载 mapping
@@ -609,6 +609,53 @@ async function loadImage(vol, page) {
   hideLoading();
   showError('所有图片来源均加载失败');
 }
+
+
+async function loadImage(vol, page) {
+  showLoading();
+
+  await loadMappingForVolume(vol);
+  const urlMapping = mappingData;
+
+  const localUrl = getLocalImageUrl(vol, page);
+  const imgbbUrl = getImgbbrl(vol, page);
+
+  updatePageInfo();
+
+  // 先本地
+  if (localUrl) {
+    // ✅ 直接用背景图，一定能看见！
+    imageWrapper.style.backgroundImage = `url(${localUrl})`;
+    imageWrapper.style.backgroundSize = "contain";
+    imageWrapper.style.backgroundPosition = "center";
+    imageWrapper.style.backgroundRepeat = "no-repeat";
+    
+    currentSource = '本地';
+    sourceBadge.textContent = '本地';
+    sourceBadge.style.color = '#ff0';
+    hideLoading();
+    return;
+  }
+
+  // 再ImgBB
+  if (imgbbUrl) {
+    imageWrapper.style.backgroundImage = `url(${imgbbUrl})`;
+    imageWrapper.style.backgroundSize = "contain";
+    imageWrapper.style.backgroundPosition = "center";
+    imageWrapper.style.backgroundRepeat = "no-repeat";
+    
+    currentSource = 'ImgBB';
+    sourceBadge.textContent = 'ImgBB';
+    sourceBadge.style.color = '#0f0';
+    hideLoading();
+    return;
+  }
+
+  hideLoading();
+  showError('所有图片来源均加载失败');
+}
+
+
 
   
   // 尝试加载单张图片（返回 Promise）

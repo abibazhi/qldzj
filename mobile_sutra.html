@@ -311,10 +311,16 @@ var _hmt = _hmt || [];
   }
   
   // 获取本地图片路径
-  function getLocalImageUrl(vol, page) {
+  function getLocalImageUrl1(vol, page) {
     const volFormatted = String(vol).padStart(3, '0');
     return `/qldzj/pngs/${volFormatted}/${page}.png`;
   }
+
+  function getLocalImageUrl(vol, page) {
+    const volFormatted = String(vol).padStart(3, '0');
+    return `pngs/${volFormatted}/${page}.png`; // ✅ 正确
+  }
+
   
   // 获取 ImgBB 图片路径（通过映射表）
   function getImgbbrl1(vol, page) {
@@ -323,7 +329,7 @@ var _hmt = _hmt || [];
     return urlMapping[key] || null;
   }
 
-  function getImgbbrl(vol, page) {
+  function getImgbbral2(vol, page) {
     // 👇 就加这一行！内部直接拿，永远不报错！
     const urlMapping = mappingData;
     if (!urlMapping) return null;
@@ -343,6 +349,27 @@ var _hmt = _hmt || [];
     const filename = `${String(vol).padStart(3, '0')}-${page}-png.png`;
     return `https://i.ibb.co/${randomId}/${filename}`;
   }
+
+
+function getImgbbrl(vol, page) {
+  const urlMapping = mappingData;
+  if (!urlMapping) return null;
+
+  const volNum = parseInt(vol, 10);
+  const pageIdx = parseInt(page) - 1;
+
+  if (!urlMapping[volNum] || pageIdx < 0 || pageIdx >= urlMapping[volNum].length) {
+    return null;
+  }
+
+  const randomId = urlMapping[volNum][pageIdx];
+  if (!randomId) return null;
+
+  const vol3 = String(vol).padStart(3, '0');
+  return `https://i.ibb.co/${randomId}/${vol3}-${page}-png.png`;
+}
+
+
 
   
   // 带回退的图片加载

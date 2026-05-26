@@ -344,10 +344,9 @@ var _hmt = _hmt || [];
     return `https://i.ibb.co/${randomId}/${filename}`;
   }
 
-
   
   // 带回退的图片加载
-  async function loadImage(vol, page) {
+  async function loadImage1(vol, page) {
 
     await loadMappingForVolume(vol);
     const urlMapping = mappingData;
@@ -394,6 +393,57 @@ var _hmt = _hmt || [];
     hideLoading();
     showError('所有图片来源均加载失败');
   }
+
+
+  async function loadImage(vol, page) {
+    showLoading();
+
+    // 1. 先加载当前卷的 mapping.js
+    await loadMappingForVolume(vol);
+
+    // 2. 加载完了，mappingData 才存在，这里赋值
+    const urlMapping = mappingData;
+
+    const localUrl = getLocalImageUrl(vol, page);
+    const imgbbUrl = getImgbbrl(vol, page);
+
+    // ========================
+    // 🔥 移动版：先试本地
+    // ========================
+    if (localUrl) {
+      const localResult = await tryLoadImage(localUrl);
+      if (localResult.success) {
+        container.style.backgroundImage = `url(${localUrl})`;
+        currentSource = '本地';
+        sourceBadge.textContent = '本地';
+        sourceBadge.style.color = '#ff0';
+        hideLoading();
+        return;
+      }
+    }
+
+    // ========================
+    // 🔥 本地失败 → 再试 ImgBB
+    // ========================
+    if (imgbbUrl) {
+      const imgbbResult = await tryLoadImage(imgbbUrl);
+      if (imgbbResult.success) {
+        container.style.backgroundImage = `url(${imgbbUrl})`;
+        currentSource = 'ImgBB';
+        sourceBadge.textContent = 'ImgBB';
+        sourceBadge.style.color = '#0f0';
+        hideLoading();
+        return;
+      }
+    }
+
+    hideLoading();
+    container.style.backgroundColor = '#222';
+    container.style.backgroundImage = 'none';
+  }
+
+
+
   
   // 尝试加载单张图片（返回 Promise）
   function tryLoadImage(url) {

@@ -196,10 +196,9 @@ var _hmt = _hmt || [];
   // 动态加载当前卷的 mapping.js（防重复加载）
   async function loadMappingForVolume(vol) {
     // 防止重复加载，避免报错
+    vol = vol.toString().padStart(3, '0');
 
-    const vol3 = vol.toString().padStart(3, '0');
-
-    const exists = document.querySelector(`script[src="/${vol3}/mapping.js"]`);
+    const exists = document.querySelector(`script[src="/${vol}/mapping.js"]`);
     if (exists) return;
 
     return new Promise((resolve, reject) => {
@@ -345,29 +344,6 @@ var _hmt = _hmt || [];
 
 
   
-  // 加载映射表（首次加载时调用）
-  /*
-  async function loadMapping() {
-    if (LOAD_STRATEGY === 'local') return;
-    
-    try {
-      const response = await fetch('/qldzj/mapping.json.gz?v=1');
-      if (response.ok) {
-	const text = await response.text(); // 👈 能正确读取并解压
-        urlMapping = JSON.parse(text);      // 👈 再转成对象
-        // urlMapping = await response.json();
-        console.log(`✅ 加载映射表成功，共 ${Object.keys(urlMapping).length} 条记录`);
-      } else {
-        console.warn('⚠️ 映射表加载失败，将只使用本地图片');
-        LOAD_STRATEGY = 'local';
-      }
-    } catch (err) {
-      console.warn('⚠️ 映射表加载异常:', err);
-      LOAD_STRATEGY = 'local';
-    }
-  }
-  */
-
   // 带回退的图片加载
   async function loadImage(vol, page) {
 

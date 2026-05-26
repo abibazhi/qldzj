@@ -376,9 +376,9 @@ async function loadImage(vol, page) {
   const strategies = [];
 
   if (LOAD_STRATEGY === 'fallback') {
-    // 移动版：本地优先
-    strategies.push({ type: 'local', url: getLocalImageUrl(vol, page) });
+    // 移动版：imgbb优先
     strategies.push({ type: 'imgbb', url: getImgbbrl(vol, page) });
+    strategies.push({ type: 'local', url: getLocalImageUrl(vol, page) });
   } else if (LOAD_STRATEGY === 'imgbb') {
     strategies.push({ type: 'imgbb', url: getImgbbrl(vol, page) });
   } else {

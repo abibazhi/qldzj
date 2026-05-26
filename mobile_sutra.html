@@ -518,7 +518,7 @@ function getImgbbrl(vol, page) {
   }
 
 
-async function loadImage(vol, page) {
+async function loadImage4(vol, page) {
   showLoading();
 
   // 加载 mapping
@@ -570,7 +570,45 @@ async function loadImage(vol, page) {
   showError('所有图片来源均加载失败');
 }
 
+async function loadImage(vol, page) {
+  showLoading();
 
+  // 加载 mapping
+  await loadMappingForVolume(vol);
+  const urlMapping = mappingData;
+
+  const localUrl = getLocalImageUrl(vol, page);
+  const imgbbUrl = getImgbbrl(vol, page);
+
+  updatePageInfo();
+
+  // ==========================
+  // 先试本地（直接赋值！）
+  // ==========================
+  if (localUrl) {
+    imageView.src = localUrl;
+    currentSource = '本地';
+    sourceBadge.textContent = '本地';
+    sourceBadge.style.color = '#ff0';
+    hideLoading();
+    return;
+  }
+
+  // ==========================
+  // 再试 ImgBB
+  // ==========================
+  if (imgbbUrl) {
+    imageView.src = imgbbUrl;
+    currentSource = 'ImgBB';
+    sourceBadge.textContent = 'ImgBB';
+    sourceBadge.style.color = '#0f0';
+    hideLoading();
+    return;
+  }
+
+  hideLoading();
+  showError('所有图片来源均加载失败');
+}
 
   
   // 尝试加载单张图片（返回 Promise）

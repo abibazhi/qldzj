@@ -611,7 +611,7 @@ async function loadImage5(vol, page) {
 }
 
 
-async function loadImage(vol, page) {
+async function loadImage6(vol, page) {
   showLoading();
 
   await loadMappingForVolume(vol);
@@ -655,6 +655,55 @@ async function loadImage(vol, page) {
   showError('所有图片来源均加载失败');
 }
 
+
+async function loadImage(vol, page) {
+
+  await loadMappingForVolume(vol);
+  const urlMapping = mappingData;
+
+  showLoading();
+
+  const strategies = [];
+
+  if (LOAD_STRATEGY === 'fallback') {
+    // 🔥 移动版：本地优先，把 local 放前面
+    strategies.push({ type: 'local', url: getLocalImageUrl(vol, page) });
+    strategies.push({ type: 'imgbb', url: getImgbbrl(vol, page) });
+  } else if (LOAD_STRATEGY === 'imgbb') {
+    strategies.push({ type: 'imgbb', url: getImgbbrl(vol, page) });
+  } else {
+    strategies.push({ type: 'local', url: getLocalImageUrl(vol, page) });
+  }
+
+  updatePageInfo();
+
+  for (const strategy of strategies) {
+    if (!strategy.url) continue;
+
+    try {
+      const result = await tryLoadImage(strategy.url);
+      if (result.success) {
+        // =======================
+        // 🔥 就加这一行！显示图片！
+        // =======================
+        imageView.src = strategy.url;
+
+        currentSource = strategy.type === 'imgbb' ? 'ImgBB' : '本地';
+        sourceBadge.textContent = currentSource;
+        sourceBadge.style.color = strategy.type === 'imgbb' ? '#0f0' : '#ff0';
+        hideLoading();
+        resetView();
+        return;
+      }
+      console.warn(`${strategy.type} 加载失败: ${strategy.url}`);
+    } catch (err) {
+      console.warn(`${strategy.type} 加载异常:`, err);
+    }
+  }
+
+  hideLoading();
+  showError('所有图片来源均加载失败');
+}
 
 
   

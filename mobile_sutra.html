@@ -185,7 +185,7 @@ var _hmt = _hmt || [];
   // 'local': 只从本地加载
   // 'imgbb': 只从 ImgBB 加载（需要映射文件）
   // 'fallback': 优先 ImgBB，失败回退本地（需要映射文件）
-  let LOAD_STRATEGY = 'imgbb';  // 改为 'fallback' 启用 ImgBB 优先加载
+  let LOAD_STRATEGY = 'fallback';  // 改为 'fallback' 启用 ImgBB 优先加载
   
   // 映射表缓存（从服务器加载）
   //let urlMapping = null;
@@ -656,7 +656,7 @@ async function loadImage6(vol, page) {
 }
 
 
-async function loadImage(vol, page) {
+async function loadImage7(vol, page) {
 
   await loadMappingForVolume(vol);
   const urlMapping = mappingData;
@@ -705,10 +705,52 @@ async function loadImage(vol, page) {
   showError('所有图片来源均加载失败');
 }
 
+async function loadImage(vol, page) {
+  await loadMappingForVolume(vol);
+  const urlMapping = mappingData;
 
+  showLoading();
+
+  const strategies = [];
+
+  // 🔥 移动版：本地优先
+  if (LOAD_STRATEGY === 'fallback') {
+    strategies.push({ type: 'local', url: getLocalImageUrl(vol, page) });
+    strategies.push({ type: 'imgbb', url: getImgbbrl(vol, page) });
+  } else if (LOAD_STRATEGY === 'imgbb') {
+    strategies.push({ type: 'imgbb', url: getImgbbrl(vol, page) });
+  } else {
+    strategies.push({ type: 'local', url: getLocalImageUrl(vol, page) });
+  }
+
+  updatePageInfo();
+
+  for (const strategy of strategies) {
+    if (!strategy.url) continue;
+
+    try {
+      const result = await tryLoadImage(strategy.url);
+      if (result.success) {
+
+        // ✅【关键】显示图片
+        imageView.src = strategy.url;
+
+        currentSource = strategy.type === 'imgbb' ? 'ImgBB' : '本地';
+        sourceBadge.textContent = currentSource;
+        sourceBadge.style.color = strategy.type === 'imgbb' ? '#0f0' : '#ff0';
+        hideLoading();
+        resetView();
+        return;
+      }
+    } catch (err) { }
+  }
+
+  hideLoading();
+  showError('所有图片来源均加载失败');
+}
   
   // 尝试加载单张图片（返回 Promise）
-  function tryLoadImage(url) {
+  function tryLoadImage1(url) {
     return new Promise((resolve) => {
       const img = new Image();
       const timeout = setTimeout(() => {
@@ -731,6 +773,32 @@ async function loadImage(vol, page) {
       img.src = url;
     });
   }
+
+function tryLoadImage(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+
+    const timeout = setTimeout(() => {
+      img.onload = null;
+      img.onerror = null;
+      resolve({ success: false });
+    }, 8000);
+
+    img.onload = () => {
+      clearTimeout(timeout);
+      resolve({ success: true }); // ✅ 这里必须返回成功
+    };
+
+    img.onerror = () => {
+      clearTimeout(timeout);
+      resolve({ success: false });
+    };
+
+    img.src = url;
+  });
+}
+
   
   async function changeImage(direction) {
     if (isLoading) return;

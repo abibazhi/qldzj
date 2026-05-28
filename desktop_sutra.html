@@ -282,7 +282,7 @@ async function loadMappingForVolume(vol) {
 // ======================================
 // 生成三个平台的路径（完全兼容你现有代码）
 // ======================================
-function getImageUrls(vol, page) {
+function getImageUrls1(vol, page) {
   const pageNum = parseInt(page, 10);
 
   // 1. R2 正式地址
@@ -305,7 +305,32 @@ function getImageUrls(vol, page) {
   return { r2, github, imgbb };
 }
 
+// ======================================
+// 生成三个平台的路径（完全无冲突版）
+// ======================================
+function getImageUrls(vol, page) {
+  const pageNum = parseInt(page, 10);
 
+  // 👇 全部放在函数内部，绝对不会全局冲突
+  const r2_url = `https://pub-a0fc4de2782d448f916244913768fb78.r2.dev/${vol}/${pageNum}.png`;
+  const github_url = `/${vol}/${pageNum}.png`;
+
+  let imgbb_url = null;
+  if (urlMapping) {
+    const volNum = parseInt(vol, 10);
+    const pageNumInt = parseInt(page, 10);
+    if (urlMapping[volNum] && urlMapping[volNum][pageNumInt - 1]) {
+      const id = urlMapping[volNum][pageNumInt - 1];
+      imgbb_url = `https://i.ibb.co/${id}/${vol}-${pageNum}-png.png`;
+    }
+  }
+
+  return {
+    r2: r2_url,
+    github: github_url,
+    imgbb: imgbb_url
+  };
+}
 
   // 获取 ImgBB 图片路径（适配只存随机ID的 mapping.json）
   function getImgbbrl(vol, page) {
@@ -399,7 +424,7 @@ function tryLoadImage(url) {
 // ======================================
 // 🔥 最终版：先加载 mapping → 再拿图片地址
 // ======================================
-async function loadImage(vol, page) {
+async function loadImage1(vol, page) {
   console.log('======================================');
   console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
 
@@ -485,6 +510,86 @@ async function loadImage(vol, page) {
   hideLoading();
   console.log("❌ 所有图片源加载失败");
 }
+
+
+// ======================================
+// 最终双平台智能加载（零错误）
+// ======================================
+async function loadImage(vol, page) {
+  console.log('======================================');
+  console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
+
+  const env = getCurrentEnv();
+  console.log('🌍 当前域名环境:', env);
+
+  showLoading();
+
+  try {
+    console.log("🔍 尝试加载 mapping.js:", vol + "/mapping.js");
+    await loadMappingForVolume(vol);
+    urlMapping = mappingData;
+    console.log("✅ mapping.js 加载成功！");
+  } catch (err) {
+    console.log("⚠️ mapping.js 加载失败，继续加载图片！");
+    urlMapping = null;
+  }
+
+  const imageUrls = getImageUrls(vol, page);
+
+  let primaryUrl, backupUrl, sourceText;
+
+  if (env === "cloudflare") {
+    primaryUrl = imageUrls.r2;
+    backupUrl = imageUrls.imgbb;
+    sourceText = "R2 🚀";
+  } else {
+    primaryUrl = imageUrls.imgbb;
+    backupUrl = imageUrls.github;
+    sourceText = "ImgBB 📦";
+
+    if (!primaryUrl) {
+      primaryUrl = backupUrl;
+      backupUrl = null;
+      sourceText = "GitHub 🛡️";
+    }
+  }
+
+  console.log("🎯 主地址:", primaryUrl);
+  console.log("🎯 备用地址:", backupUrl || "无");
+
+  try {
+    if (primaryUrl) {
+      const res = await tryLoadImage(primaryUrl);
+      if (res.success) {
+        container.style.backgroundImage = `url(${primaryUrl})`;
+        sourceBadge.textContent = sourceText;
+        hideLoading();
+        console.log("✅ 图片加载成功！");
+        return;
+      }
+    }
+  } catch (e) {}
+
+  try {
+    if (backupUrl) {
+      const res = await tryLoadImage(backupUrl);
+      if (res.success) {
+        container.style.backgroundImage = `url(${backupUrl})`;
+        sourceBadge.textContent = "备用 🛟";
+        hideLoading();
+        console.log("✅ 备用图片加载成功！");
+        return;
+      }
+    }
+  } catch (e) {}
+
+  container.style.backgroundImage = "none";
+  container.style.backgroundColor = "#222";
+  hideLoading();
+  console.log("❌ 所有图片源加载失败");
+}
+
+
 
   async function changeImage(direction) {
     if (zoomed || isLoading) return;

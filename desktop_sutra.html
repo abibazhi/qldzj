@@ -556,7 +556,7 @@ async function loadImage3(vol, page) {
 // ======================================
 // 🔥 核心：根据不同网站自动切换最优图片源
 // ======================================
-async function loadImage(vol, page) {
+async function loadImage4(vol, page) {
   console.log('======================================');
   console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
   console.log('🌍 当前域名环境:', getCurrentEnv());
@@ -637,6 +637,101 @@ async function loadImage(vol, page) {
   }
 
   // 彻底失败
+  container.style.backgroundImage = "none";
+  container.style.backgroundColor = "#222";
+  hideLoading();
+  console.log("❌ 所有图片源加载失败");
+}
+
+// ======================================
+// 🔥 双平台智能图片加载策略（最终完美版）
+// Cloudflare：R2 优先
+// GitHub.io：ImgBB 优先
+// ======================================
+async function loadImage(vol, page) {
+  console.log("=== DEBUG ===");
+  console.log("vol, page:", vol, page);
+  console.log("mapping entry:", urlMapping?.[vol]?.[page]);
+  const { r2, github, imgbb } = getImageUrls(vol, page);
+  console.log("getImageUrls →", { r2, github, imgbb });
+
+
+  console.log('======================================');
+  console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
+  console.log('🌍 当前域名环境:', getCurrentEnv());
+
+  showLoading();
+
+  // 安全加载 mapping，不阻塞主流程
+  try {
+    console.log("🔍 尝试加载 mapping.js:", vol + "/mapping.js");
+    await loadMappingForVolume(vol);
+    urlMapping = mappingData;
+    console.log("✅ mapping.js 加载成功！");
+  } catch (err) {
+    console.log("⚠️ mapping.js 加载失败，继续加载图片！");
+    urlMapping = null;
+  }
+
+  const env = getCurrentEnv();
+  const { r2, github, imgbb } = getImageUrls(vol, page);
+
+  let primaryUrl, backupUrl, sourceText;
+
+  // ============================
+  // 你要的核心策略（100% 正确）
+  // ============================
+  if (env === "cloudflare") {
+    // Cloudflare 网站：R2 优先
+    primaryUrl = r2;
+    backupUrl = imgbb;
+    sourceText = "R2 🚀";
+  } else {
+    // GitHub 网站：ImgBB 优先（国内最稳）
+    primaryUrl = imgbb;
+    backupUrl = github;
+    sourceText = "ImgBB 📦";
+
+    // 如果没有 ImgBB 地址，自动降级到 GitHub 原图
+    if (!primaryUrl) {
+      primaryUrl = backupUrl;
+      backupUrl = null;
+      sourceText = "GitHub 🛡️";
+    }
+  }
+
+  console.log("🎯 主地址:", primaryUrl);
+  console.log("🎯 备用地址:", backupUrl || "无");
+
+  // 尝试加载主图
+  try {
+    if (primaryUrl) {
+      const res = await tryLoadImage(primaryUrl);
+      if (res.success) {
+        container.style.backgroundImage = `url(${primaryUrl})`;
+        sourceBadge.textContent = sourceText;
+        hideLoading();
+        console.log("✅ 图片加载成功！");
+        return;
+      }
+    }
+  } catch (e) {}
+
+  // 尝试加载备用图
+  try {
+    if (backupUrl) {
+      const res = await tryLoadImage(backupUrl);
+      if (res.success) {
+        container.style.backgroundImage = `url(${backupUrl})`;
+        sourceBadge.textContent = "备用 🛟";
+        hideLoading();
+        console.log("✅ 备用图片加载成功！");
+        return;
+      }
+    }
+  } catch (e) {}
+
+  // 全部失败
   container.style.backgroundImage = "none";
   container.style.backgroundColor = "#222";
   hideLoading();

@@ -237,7 +237,7 @@ function getImageUrls(vol, page) {
 
 
   // 尝试加载单张图片
-  function tryLoadImage(url) {
+  function tryLoadImage1(url) {
     return new Promise((resolve) => {
       const img = new Image();
       const timeout = setTimeout(() => {
@@ -259,6 +259,39 @@ function getImageUrls(vol, page) {
       img.src = url;
     });
   }
+
+
+// 尝试加载单张图片
+function tryLoadImage(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+
+    // 调试日志
+    console.log('🔗 尝试加载图片地址:', url);
+
+    const timeout = setTimeout(() => {
+      img.onload = null;
+      img.onerror = null;
+      console.log('⏰ 加载超时:', url);
+      resolve({ success: false, error: 'timeout' });
+    }, 10000);
+
+    img.onload = () => {
+      clearTimeout(timeout);
+      console.log('✅ 图片加载成功:', url);
+      resolve({ success: true, img: img });
+    };
+
+    img.onerror = () => {
+      clearTimeout(timeout);
+      console.log('❌ 图片加载失败:', url);
+      resolve({ success: false, error: 'load error' });
+    };
+
+    img.src = url;
+  });
+}
+
 
   // 带回退的图片加载
   // 新的（本地优先）
@@ -309,6 +342,13 @@ function getImageUrls(vol, page) {
 // 🔥 智能加载：根据域名自动选择优先顺序
 // ======================================
 async function loadImage(vol, page) {
+
+  // ========== 调试日志开始 ==========
+  console.log('======================================');
+  console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
+  console.log('🌍 当前域名环境:', getCurrentEnv());
+  // ========== 调试日志结束 ==========
+
   showLoading();
   await loadMappingForVolume(vol);
   urlMapping = mappingData;
@@ -515,7 +555,7 @@ async function loadImage(vol, page) {
   }
 
   // 页面初始化
-  window.onload = async () => {
+  window.onload1 = async () => {
     console.log('桌面版页面加载启动...');
     
     try {
@@ -524,6 +564,24 @@ async function loadImage(vol, page) {
       console.error('初始图片加载失败:', err);
     }
   };
+
+// 页面初始化（加强调试版）
+window.onload = async () => {
+  console.log('✅ 桌面版页面加载启动...');
+  console.log('📌 当前卷号:', currentVol);
+  console.log('📌 当前页码:', currentPage);
+
+  try {
+    console.log('🚀 开始加载第一张图片:', currentVol, currentPage);
+    await loadImage(currentVol, currentPage);
+    console.log('✅ 初始图片加载完成！');
+  } catch (err) {
+    console.error('❌ 初始图片加载失败:', err);
+    console.error('❌ 失败详情:', err.message || err);
+  }
+};
+
+
 </script>
 
 </body>

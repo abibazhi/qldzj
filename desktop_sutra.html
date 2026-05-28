@@ -456,7 +456,7 @@ async function loadImage2(vol, page) {
   hideLoading();
 }
 
-async function loadImage(vol, page) {
+async function loadImage3(vol, page) {
   console.log('======================================');
   console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
   console.log('🌍 当前域名环境:', getCurrentEnv());
@@ -513,6 +513,85 @@ async function loadImage(vol, page) {
   container.style.backgroundColor = "#222";
   hideLoading();
 }
+
+
+// ======================================
+// 🔥 核心：根据不同网站自动切换最优图片源
+// ======================================
+async function loadImage(vol, page) {
+  console.log('======================================');
+  console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
+  console.log('🌍 当前域名环境:', getCurrentEnv());
+
+  showLoading();
+
+  // 加载 mapping（不阻塞流程）
+  try {
+    console.log("🔍 尝试加载 mapping.js:", vol + "/mapping.js");
+    await loadMappingForVolume(vol);
+    urlMapping = mappingData;
+    console.log("✅ mapping.js 加载成功！");
+  } catch (err) {
+    console.log("⚠️ mapping.js 加载失败，继续加载图片！");
+    urlMapping = null;
+  }
+
+  const env = getCurrentEnv();
+  const { r2, github, imgbb } = getImageUrls(vol, page);
+
+  let primaryUrl, backupUrl, sourceText;
+
+  // =======================
+  // 🔥 你要的核心逻辑在这里
+  // =======================
+  if (env === "cloudflare") {
+    // ✅ CF 网站：R2 优先，ImgBB 备用
+    primaryUrl = r2;
+    backupUrl = imgbb;
+    sourceText = "R2 🚀";
+  } else {
+    // ✅ GitHub.io 网站：IMGBB 优先，GitHub 备用（国内最稳）
+    primaryUrl = imgbb;
+    backupUrl = github;
+    sourceText = "ImgBB 📦";
+  }
+
+  console.log("🎯 主地址:", primaryUrl);
+  console.log("🎯 备用地址:", backupUrl || "无");
+
+  // 加载主图
+  try {
+    const res = await tryLoadImage(primaryUrl);
+    if (res.success) {
+      container.style.backgroundImage = `url(${primaryUrl})`;
+      sourceBadge.textContent = sourceText;
+      hideLoading();
+      console.log("✅ 图片加载成功！");
+      return;
+    }
+  } catch (e) {}
+
+  // 加载备用图
+  if (backupUrl) {
+    try {
+      const res = await tryLoadImage(backupUrl);
+      if (res.success) {
+        container.style.backgroundImage = `url(${backupUrl})`;
+        sourceBadge.textContent = "备用 🛟";
+        hideLoading();
+        console.log("✅ 备用图片加载成功！");
+        return;
+      }
+    } catch (e) {}
+  }
+
+  // 彻底失败
+  container.style.backgroundImage = "none";
+  container.style.backgroundColor = "#222";
+  hideLoading();
+  console.log("❌ 所有图片源加载失败");
+}
+
 
   async function changeImage(direction) {
     if (zoomed || isLoading) return;

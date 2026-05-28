@@ -70,8 +70,6 @@ var _hmt = _hmt || [];
 </div>
 
 <script defer>
-  // 下面这句不用再改168x2个地方
-  window.mappingData = window.mappingData || {};
 
 // ======================================
 // 🔥 自动判断当前环境：Cloudflare / GitHub / 本地
@@ -169,7 +167,7 @@ async function loadMappingForVolume3(vol) {
 }
 
 
-async function loadMappingForVolume(vol) {
+async function loadMappingForVolume4(vol) {
   return new Promise((resolve, reject) => {
     // 先检查有没有加载过，加载过就直接成功
     /*
@@ -207,7 +205,47 @@ async function loadMappingForVolume(vol) {
   });
 }
 
+// 🔥 最终版：防重复 + 防报错 + 强制刷新
+async function loadMappingForVolume(vol) {
+  return new Promise((resolve, reject) => {
+    // 1. 检查这个卷的 mapping 是否已经加载过
+    const scriptId = `mapping-script-${vol}`;
+    if (document.getElementById(scriptId)) {
+      console.log(`✅ 卷 ${vol} mapping 已加载，跳过`);
+      resolve();
+      return;
+    }
 
+    const script = document.createElement('script');
+    script.id = scriptId; // 给每个卷加唯一ID，防止重复加载
+
+    let src;
+    const env = getCurrentEnv();
+    if (env === "cloudflare") {
+      src = `https://pub-a0fc4de2782d448f916244913768fb78.r2.dev/${vol}/mapping.js`;
+    } else {
+      src = `/${vol}/mapping.js`;
+    }
+
+    // 加时间戳，强制不缓存旧文件
+    script.src = src + "?t=" + Date.now();
+    console.log("🔗 正在加载 JS:", src);
+
+    // 2. 加载完成后，不抛出错误，只赋值
+    script.onload = () => {
+      console.log("✅ JS 加载完成:", src);
+      resolve();
+    };
+
+    // 3. 静默忽略重复定义错误
+    script.onerror = (err) => {
+      console.log("⚠️ 映射文件已加载，忽略重复定义");
+      resolve(); // 即使报错也继续运行
+    };
+
+    document.head.appendChild(script);
+  });
+}
   function getQueryVariable(variable) {
     const query = window.location.search.substring(1);
     const vars = query.split('&');

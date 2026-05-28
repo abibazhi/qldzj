@@ -280,16 +280,20 @@ async function loadMappingForVolume(vol) {
 // ======================================
 // 生成三个平台的路径（完全无冲突版）
 // ======================================
-function getImageUrls1(vol, page) {
+// ======================================
+// ✅ 最终正确版：一维数组 mapping
+// ======================================
+function getImageUrls(vol, page) {
   const pageNum = parseInt(page, 10);
 
-  // 👇 全部放在函数内部，绝对不会全局冲突
   const r2_url = `https://pub-a0fc4de2782d448f916244913768fb78.r2.dev/${vol}/${pageNum}.png`;
   const github_url = `/${vol}/${pageNum}.png`;
 
   let imgbb_url = null;
+
   console.log("urlMapping:")
   console.log(urlMapping)
+  
   if (urlMapping) {
     const volNum = parseInt(vol, 10);
     const pageNumInt = parseInt(page, 10);
@@ -310,15 +314,6 @@ function getImageUrls1(vol, page) {
 
 // ======================================
 // ✅ 最终正确版：一维数组 mapping
-// ======================================
-function getImageUrls(vol, page) {
-  const pageNum = parseInt(page, 10);
-
-  const r2_url = `https://pub-a0fc4de2782d448f916244913768fb78.r2.dev/${vol}/${pageNum}.png`;
-  const github_url = `/${vol}/${pageNum}.png`;
-
-  let imgbb_url = null;
-
   // 👇 👇 👇 这里是正确写法！一维数组！
   if (urlMapping && Array.isArray(urlMapping)) {
     const index = pageNum - 1;

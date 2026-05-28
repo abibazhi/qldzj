@@ -384,285 +384,33 @@ function tryLoadImage(url) {
 
 
   // 带回退的图片加载
-  // 新的（本地优先）
-  async function loadImage1(vol, page) {
-    showLoading();
-
-    // 1. 先加载当前卷的 mapping.js
-    await loadMappingForVolume(vol);
-
-    // 2. 加载完了，mappingData 才存在，这里赋值
-    const urlMapping = mappingData;
-
-    const localUrl = getLocalImageUrl(vol, page);
-    const imgbbUrl = getImgbbrl(vol, page);
-    
-    // 失败再试 imgbb
-    if (imgbbUrl) {
-      const imgbbResult = await tryLoadImage(imgbbUrl);
-      if (imgbbResult.success) {
-        container.style.backgroundImage = `url(${imgbbUrl})`;
-        currentSource = 'ImgBB';
-        sourceBadge.textContent = 'ImgBB';
-        sourceBadge.style.color = '#0f0';
-        hideLoading();
-        return;
-      }
-    }
-
-    // 先试本地
-    const localResult = await tryLoadImage(localUrl);
-    if (localResult.success) {
-      container.style.backgroundImage = `url(${localUrl})`;
-      currentSource = '本地';
-      sourceBadge.textContent = '本地';
-      sourceBadge.style.color = '#ff0';
-      hideLoading();
-      return;
-    }
-
-
-    hideLoading();
-    container.style.backgroundColor = '#222';
-    container.style.backgroundImage = 'none';
-  }
-
 
 // ======================================
 // 🔥 智能加载：根据域名自动选择优先顺序
 // ======================================
-async function loadImage2(vol, page) {
-
-  // ========== 调试日志开始 ==========
-  console.log('======================================');
-  console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
-  console.log('🌍 当前域名环境:', getCurrentEnv());
-  // ========== 调试日志结束 ==========
-
-  showLoading();
-  await loadMappingForVolume(vol);
-  urlMapping = mappingData;
-
-  const env = getCurrentEnv();
-  const { r2, github, imgbb } = getImageUrls(vol, page);
-
-  let primaryUrl, backupUrl, sourceText;
-
-  // ---------------------------
-  // 策略 1：Cloudflare / 自定义域名
-  // ---------------------------
-  if (env === "cloudflare") {
-    primaryUrl = r2;
-    backupUrl = imgbb;
-    sourceText = "R2 🚀";
-  }
-
-  // ---------------------------
-  // 策略 2：GitHub / 本地
-  // ---------------------------
-  else {
-    primaryUrl = github;
-    backupUrl = imgbb;
-    sourceText = env === "github" ? "GitHub 🛡️" : "本地 🖥️";
-  }
-
-  // ---------------------------
-  // 执行：先主 → 失败 → 备胎 ImgBB
-  // ---------------------------
-  const primaryResult = await tryLoadImage(primaryUrl);
-  if (primaryResult.success) {
-    container.style.backgroundImage = `url(${primaryUrl})`;
-    sourceBadge.textContent = sourceText;
-    hideLoading();
-    return;
-  }
-
-  // 备胎：ImgBB（所有环境共用）
-  if (backupUrl) {
-    const backupResult = await tryLoadImage(backupUrl);
-    if (backupResult.success) {
-      container.style.backgroundImage = `url(${backupUrl})`;
-      sourceBadge.textContent = "ImgBB 📦";
-      hideLoading();
-      return;
-    }
-  }
-
-  // 全部失败
-  container.style.backgroundImage = "none";
-  container.style.backgroundColor = "#222";
-  hideLoading();
-}
-
-async function loadImage3(vol, page) {
-  console.log('======================================');
-  console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
-  console.log('🌍 当前域名环境:', getCurrentEnv());
-
-  showLoading();
-
-  // ===========================================
-  // 🔥 最关键：mapping 加载失败，直接忽略，不崩溃！
-  // ===========================================
-  try {
-    console.log("🔍 尝试加载 mapping.js:", vol + "/mapping.js");
-    await loadMappingForVolume(vol);
-    urlMapping = mappingData;
-    console.log("✅ mapping.js 加载成功！");
-  } catch (err) {
-    console.log("⚠️ mapping.js 加载失败，但继续加载图片！", err);
-    urlMapping = null;
-  }
-
-  const env = getCurrentEnv();
-  const { r2, github, imgbb } = getImageUrls(vol, page);
-
-  let primaryUrl, backupUrl, sourceText;
-
-  if (env === "cloudflare") {
-    primaryUrl = r2;
-    backupUrl = imgbb;
-    sourceText = "R2 🚀";
-  } else {
-    primaryUrl = github;
-    backupUrl = imgbb;
-    sourceText = env === "github" ? "GitHub 🛡️" : "本地 🖥️";
-  }
-
-  console.log("🎯 主图片地址:", primaryUrl);
-
-  // 加载主图片
-  try {
-    const primaryResult = await tryLoadImage(primaryUrl);
-    if (primaryResult.success) {
-      container.style.backgroundImage = `url(${primaryUrl})`;
-      sourceBadge.textContent = sourceText;
-      hideLoading();
-      console.log("✅ 图片加载成功！");
-      return;
-    }
-  } catch (e) {
-    console.log("❌ 主图片加载失败");
-  }
-
-  // 兜底：显示错误
-  console.log("❌ 所有图片源都加载失败");
-  container.style.backgroundImage = "none";
-  container.style.backgroundColor = "#222";
-  hideLoading();
-}
-
-
 // ======================================
 // 🔥 核心：根据不同网站自动切换最优图片源
 // ======================================
-async function loadImage4(vol, page) {
-  console.log('======================================');
-  console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
-  console.log('🌍 当前域名环境:', getCurrentEnv());
-
-  showLoading();
-
-  // 加载 mapping（不阻塞流程）
-  try {
-    console.log("🔍 尝试加载 mapping.js:", vol + "/mapping.js");
-    await loadMappingForVolume(vol);
-    urlMapping = mappingData;
-    console.log("✅ mapping.js 加载成功！");
-  } catch (err) {
-    console.log("⚠️ mapping.js 加载失败，继续加载图片！");
-    urlMapping = null;
-  }
-
-  const env = getCurrentEnv();
-  const { r2, github, imgbb } = getImageUrls(vol, page);
-
-  let primaryUrl, backupUrl, sourceText;
-
-  // =======================
-  // 🔥 你要的核心逻辑在这里
-  // =======================
-/*
-  if (env === "cloudflare") {
-    // ✅ CF 网站：R2 优先，ImgBB 备用
-    primaryUrl = r2;
-    backupUrl = imgbb;
-    sourceText = "R2 🚀";
-  } else {
-    // ✅ GitHub.io 网站：IMGBB 优先，GitHub 备用（国内最稳）
-    primaryUrl = imgbb;
-    backupUrl = github;
-    sourceText = "ImgBB 📦";
-  }
-*/
-  if (env === "cloudflare") {
-    primaryUrl = r2;
-    backupUrl = imgbb;
-    sourceText = "R2 🚀";
-  } else {
-    // GitHub 模式：优先 imgbb，没有就自动 fallback 到 github
-    primaryUrl = imgbb || github;
-    backupUrl = imgbb ? github : null;
-    sourceText = imgbb ? "ImgBB 📦" : "GitHub 🛡️";
-  }
-
-
-  console.log("🎯 主地址:", primaryUrl);
-  console.log("🎯 备用地址:", backupUrl || "无");
-
-  // 加载主图
-  try {
-    const res = await tryLoadImage(primaryUrl);
-    if (res.success) {
-      container.style.backgroundImage = `url(${primaryUrl})`;
-      sourceBadge.textContent = sourceText;
-      hideLoading();
-      console.log("✅ 图片加载成功！");
-      return;
-    }
-  } catch (e) {}
-
-  // 加载备用图
-  if (backupUrl) {
-    try {
-      const res = await tryLoadImage(backupUrl);
-      if (res.success) {
-        container.style.backgroundImage = `url(${backupUrl})`;
-        sourceBadge.textContent = "备用 🛟";
-        hideLoading();
-        console.log("✅ 备用图片加载成功！");
-        return;
-      }
-    } catch (e) {}
-  }
-
-  // 彻底失败
-  container.style.backgroundImage = "none";
-  container.style.backgroundColor = "#222";
-  hideLoading();
-  console.log("❌ 所有图片源加载失败");
-}
-
 // ======================================
 // 🔥 双平台智能图片加载策略（最终完美版）
 // Cloudflare：R2 优先
 // GitHub.io：ImgBB 优先
 // ======================================
+// ======================================
+// 🔥 最终版：先加载 mapping → 再拿图片地址
+// ======================================
 async function loadImage(vol, page) {
-  console.log("=== DEBUG ===");
-  console.log("vol, page:", vol, page);
-  console.log("mapping entry:", urlMapping?.[vol]?.[page]);
-  const { r2, github, imgbb } = getImageUrls(vol, page);
-  console.log("getImageUrls →", { r2, github, imgbb });
-
-
   console.log('======================================');
   console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
-  console.log('🌍 当前域名环境:', getCurrentEnv());
+
+  const env = getCurrentEnv();
+  console.log('🌍 当前域名环境:', env);
 
   showLoading();
 
-  // 安全加载 mapping，不阻塞主流程
+  // ======================================
+  // 第一步：先加载 mapping
+  // ======================================
   try {
     console.log("🔍 尝试加载 mapping.js:", vol + "/mapping.js");
     await loadMappingForVolume(vol);
@@ -673,26 +421,26 @@ async function loadImage(vol, page) {
     urlMapping = null;
   }
 
-  const env = getCurrentEnv();
-  const { r2, github, imgbb } = getImageUrls(vol, page);
+  // ======================================
+  // 第二步：mapping 加载完了，再拿图片地址
+  // ======================================
+  const imageUrls = getImageUrls(vol, page);
 
   let primaryUrl, backupUrl, sourceText;
 
   // ============================
-  // 你要的核心策略（100% 正确）
+  // 你要的策略：CF=R2优先，GitHub=ImgBB优先
   // ============================
   if (env === "cloudflare") {
-    // Cloudflare 网站：R2 优先
-    primaryUrl = r2;
-    backupUrl = imgbb;
+    primaryUrl = imageUrls.r2;
+    backupUrl = imageUrls.imgbb;
     sourceText = "R2 🚀";
   } else {
-    // GitHub 网站：ImgBB 优先（国内最稳）
-    primaryUrl = imgbb;
-    backupUrl = github;
+    primaryUrl = imageUrls.imgbb;
+    backupUrl = imageUrls.github;
     sourceText = "ImgBB 📦";
 
-    // 如果没有 ImgBB 地址，自动降级到 GitHub 原图
+    // 如果没有 imgbb，自动降级
     if (!primaryUrl) {
       primaryUrl = backupUrl;
       backupUrl = null;
@@ -703,7 +451,7 @@ async function loadImage(vol, page) {
   console.log("🎯 主地址:", primaryUrl);
   console.log("🎯 备用地址:", backupUrl || "无");
 
-  // 尝试加载主图
+  // 加载主图
   try {
     if (primaryUrl) {
       const res = await tryLoadImage(primaryUrl);
@@ -717,7 +465,7 @@ async function loadImage(vol, page) {
     }
   } catch (e) {}
 
-  // 尝试加载备用图
+  // 加载备用图
   try {
     if (backupUrl) {
       const res = await tryLoadImage(backupUrl);
@@ -731,13 +479,12 @@ async function loadImage(vol, page) {
     }
   } catch (e) {}
 
-  // 全部失败
+  // 失败
   container.style.backgroundImage = "none";
   container.style.backgroundColor = "#222";
   hideLoading();
   console.log("❌ 所有图片源加载失败");
 }
-
 
   async function changeImage(direction) {
     if (zoomed || isLoading) return;

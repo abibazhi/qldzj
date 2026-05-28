@@ -502,13 +502,13 @@ async function loadImage(vol, page) {
   // ======================
   let primary, backup, label;
   if (isGitHub) {
+    primary = localUrl;
+    backup = imgbbUrl;
+    label = "github";
+  } else {
     primary = imgbbUrl;
     backup = localUrl;
     label = "ImgBB";
-  } else {
-    primary = localUrl;
-    backup = imgbbUrl;
-    label = "本地";
   }
 
   // 尝试加载

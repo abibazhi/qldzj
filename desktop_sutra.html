@@ -70,6 +70,8 @@ var _hmt = _hmt || [];
 </div>
 
 <script defer>
+  // 下面这句不用再改168x2个地方
+  window.mappingData = window.mappingData || {};
 
 // ======================================
 // 🔥 自动判断当前环境：Cloudflare / GitHub / 本地
@@ -136,7 +138,7 @@ async function loadMappingForVolumae1(vol) {
 }
 
 
-async function loadMappingForVolume(vol) {
+async function loadMappingForVolume2(vol) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
 
@@ -166,6 +168,42 @@ async function loadMappingForVolume(vol) {
   });
 }
 
+
+async function loadMappingForVolume(vol) {
+  return new Promise((resolve, reject) => {
+    // 先检查有没有加载过，加载过就直接成功
+    if (window.mappingData) {
+      console.log("✅ mappingData 已存在，跳过加载");
+      resolve();
+      return;
+    }
+
+    const script = document.createElement('script');
+    let src;
+    const env = getCurrentEnv();
+
+    if (env === "cloudflare") {
+      src = `https://pub-a0fc4de2782d448f916244913768fb78.r2.dev/${vol}/mapping.js`;
+    } else {
+      src = `/${vol}/mapping.js`;
+    }
+
+    console.log("🔗 正在加载 JS:", src);
+    script.src = src;
+
+    script.onload = () => {
+      console.log("✅ JS 加载完成:", src);
+      resolve();
+    };
+
+    script.onerror = (err) => {
+      console.error("❌ JS 加载失败:", src, err);
+      reject(err);
+    };
+
+    document.head.appendChild(script);
+  });
+}
 
 
   function getQueryVariable(variable) {
@@ -544,6 +582,7 @@ async function loadImage(vol, page) {
   // =======================
   // 🔥 你要的核心逻辑在这里
   // =======================
+/*
   if (env === "cloudflare") {
     // ✅ CF 网站：R2 优先，ImgBB 备用
     primaryUrl = r2;
@@ -555,6 +594,18 @@ async function loadImage(vol, page) {
     backupUrl = github;
     sourceText = "ImgBB 📦";
   }
+*/
+  if (env === "cloudflare") {
+    primaryUrl = r2;
+    backupUrl = imgbb;
+    sourceText = "R2 🚀";
+  } else {
+    // GitHub 模式：优先 imgbb，没有就自动 fallback 到 github
+    primaryUrl = imgbb || github;
+    backupUrl = imgbb ? github : null;
+    sourceText = imgbb ? "ImgBB 📦" : "GitHub 🛡️";
+  }
+
 
   console.log("🎯 主地址:", primaryUrl);
   console.log("🎯 备用地址:", backupUrl || "无");

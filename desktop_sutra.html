@@ -70,6 +70,24 @@ var _hmt = _hmt || [];
 </div>
 
 <script defer>
+
+// ======================================
+// 🔥 自动判断当前环境：Cloudflare / GitHub / 本地
+// ======================================
+function getCurrentEnv() {
+  const host = window.location.host.toLowerCase();
+  
+  if (host.includes("github.io")) {
+    return "github";
+  }
+  
+  if (host.includes("daxumi.top") || host.includes("cloudflare")) {
+    return "cloudflare";
+  }
+
+  return "local";
+}
+
   // ========== 配置区域 ==========
   // 加载策略: 'local' (仅本地), 'imgbb' (仅远程), 'fallback' (远程优先，失败回退本地)
   let urlMapping = null; // 存储映射表
@@ -171,6 +189,34 @@ var _hmt = _hmt || [];
     return `../${vol}/${pageNum}.png`;
   }
 
+// ======================================
+// 生成三个平台的路径（完全兼容你现有代码）
+// ======================================
+function getImageUrls(vol, page) {
+  const pageNum = parseInt(page, 10);
+
+  // 1. R2 正式地址
+  const r2 = `https://pub-a0fc4de2782d448f916244913768fb78.r2.dev/${vol}/${pageNum}.png`;
+
+  // 2. GitHub / 本地 相对路径
+  const github = `/${vol}/${pageNum}.png`;
+
+  // 3. ImgBB 备胎（沿用你原来的 mapping 逻辑）
+  let imgbb = null;
+  if (urlMapping) {
+    const volNum = parseInt(vol, 10);
+    const pageNumInt = parseInt(page, 10);
+    if (urlMapping[volNum] && urlMapping[volNum][pageNumInt - 1]) {
+      const id = urlMapping[volNum][pageNumInt - 1];
+      imgbb = `https://i.ibb.co/${id}/${vol}-${pageNum}-png.png`;
+    }
+  }
+
+  return { r2, github, imgbb };
+}
+
+
+
   // 获取 ImgBB 图片路径（适配只存随机ID的 mapping.json）
   function getImgbbrl(vol, page) {
     if (!urlMapping) return null;
@@ -216,7 +262,7 @@ var _hmt = _hmt || [];
 
   // 带回退的图片加载
   // 新的（本地优先）
-  async function loadImage(vol, page) {
+  async function loadImage1(vol, page) {
     showLoading();
 
     // 1. 先加载当前卷的 mapping.js
@@ -257,6 +303,66 @@ var _hmt = _hmt || [];
     container.style.backgroundColor = '#222';
     container.style.backgroundImage = 'none';
   }
+
+
+// ======================================
+// 🔥 智能加载：根据域名自动选择优先顺序
+// ======================================
+async function loadImage(vol, page) {
+  showLoading();
+  await loadMappingForVolume(vol);
+  urlMapping = mappingData;
+
+  const env = getCurrentEnv();
+  const { r2, github, imgbb } = getImageUrls(vol, page);
+
+  let primaryUrl, backupUrl, sourceText;
+
+  // ---------------------------
+  // 策略 1：Cloudflare / 自定义域名
+  // ---------------------------
+  if (env === "cloudflare") {
+    primaryUrl = r2;
+    backupUrl = imgbb;
+    sourceText = "R2 🚀";
+  }
+
+  // ---------------------------
+  // 策略 2：GitHub / 本地
+  // ---------------------------
+  else {
+    primaryUrl = github;
+    backupUrl = imgbb;
+    sourceText = env === "github" ? "GitHub 🛡️" : "本地 🖥️";
+  }
+
+  // ---------------------------
+  // 执行：先主 → 失败 → 备胎 ImgBB
+  // ---------------------------
+  const primaryResult = await tryLoadImage(primaryUrl);
+  if (primaryResult.success) {
+    container.style.backgroundImage = `url(${primaryUrl})`;
+    sourceBadge.textContent = sourceText;
+    hideLoading();
+    return;
+  }
+
+  // 备胎：ImgBB（所有环境共用）
+  if (backupUrl) {
+    const backupResult = await tryLoadImage(backupUrl);
+    if (backupResult.success) {
+      container.style.backgroundImage = `url(${backupUrl})`;
+      sourceBadge.textContent = "ImgBB 📦";
+      hideLoading();
+      return;
+    }
+  }
+
+  // 全部失败
+  container.style.backgroundImage = "none";
+  container.style.backgroundColor = "#222";
+  hideLoading();
+}
 
 
 

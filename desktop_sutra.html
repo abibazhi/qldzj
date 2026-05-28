@@ -288,6 +288,8 @@ function getImageUrls1(vol, page) {
   const github_url = `/${vol}/${pageNum}.png`;
 
   let imgbb_url = null;
+  console.log("urlMapping:")
+  console.log(urlMapping)
   if (urlMapping) {
     const volNum = parseInt(vol, 10);
     const pageNumInt = parseInt(page, 10);
@@ -296,6 +298,8 @@ function getImageUrls1(vol, page) {
       imgbb_url = `https://i.ibb.co/${id}/${vol}-${pageNum}-png.png`;
     }
   }
+
+  console.log("imgbb_url= " + imgbb_url)
 
   return {
     r2: r2_url,

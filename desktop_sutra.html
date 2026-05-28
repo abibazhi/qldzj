@@ -98,7 +98,7 @@ function getCurrentEnv() {
   // =============================
 
   // 动态加载对应卷的 mapping.js（极简干净版）
-  async function loadMappingForVolume(vol) {
+  async function loadMappingForVolume1(vol) {
 
     // 👇 加这一行：如果页面上已经加载过这个卷的js，直接返回，不重复加载
     if (document.querySelector(`script[src="/${vol}/mapping.js"]`)) return;
@@ -113,6 +113,27 @@ function getCurrentEnv() {
       document.body.appendChild(script);
     });
   }
+
+
+async function loadMappingForVolume(vol) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    const src = `/${vol}/mapping.js`;
+    
+    console.log("🔗 正在加载 JS:", src); // 最关键！
+    
+    script.src = src;
+    script.onload = () => {
+      console.log("✅ JS 加载完成:", src);
+      resolve();
+    };
+    script.onerror = (err) => {
+      console.error("❌ JS 加载失败:", src, err);
+      reject(err);
+    };
+    document.head.appendChild(script);
+  });
+}
 
 
 
@@ -341,7 +362,7 @@ function tryLoadImage(url) {
 // ======================================
 // 🔥 智能加载：根据域名自动选择优先顺序
 // ======================================
-async function loadImage(vol, page) {
+async function loadImage2(vol, page) {
 
   // ========== 调试日志开始 ==========
   console.log('======================================');
@@ -404,7 +425,63 @@ async function loadImage(vol, page) {
   hideLoading();
 }
 
+async function loadImage(vol, page) {
+  console.log('======================================');
+  console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
+  console.log('🌍 当前域名环境:', getCurrentEnv());
 
+  showLoading();
+
+  // ===========================================
+  // 🔥 最关键：mapping 加载失败，直接忽略，不崩溃！
+  // ===========================================
+  try {
+    console.log("🔍 尝试加载 mapping.js:", vol + "/mapping.js");
+    await loadMappingForVolume(vol);
+    urlMapping = mappingData;
+    console.log("✅ mapping.js 加载成功！");
+  } catch (err) {
+    console.log("⚠️ mapping.js 加载失败，但继续加载图片！", err);
+    urlMapping = null;
+  }
+
+  const env = getCurrentEnv();
+  const { r2, github, imgbb } = getImageUrls(vol, page);
+
+  let primaryUrl, backupUrl, sourceText;
+
+  if (env === "cloudflare") {
+    primaryUrl = r2;
+    backupUrl = imgbb;
+    sourceText = "R2 🚀";
+  } else {
+    primaryUrl = github;
+    backupUrl = imgbb;
+    sourceText = env === "github" ? "GitHub 🛡️" : "本地 🖥️";
+  }
+
+  console.log("🎯 主图片地址:", primaryUrl);
+
+  // 加载主图片
+  try {
+    const primaryResult = await tryLoadImage(primaryUrl);
+    if (primaryResult.success) {
+      container.style.backgroundImage = `url(${primaryUrl})`;
+      sourceBadge.textContent = sourceText;
+      hideLoading();
+      console.log("✅ 图片加载成功！");
+      return;
+    }
+  } catch (e) {
+    console.log("❌ 主图片加载失败");
+  }
+
+  // 兜底：显示错误
+  console.log("❌ 所有图片源都加载失败");
+  container.style.backgroundImage = "none";
+  container.style.backgroundColor = "#222";
+  hideLoading();
+}
 
   async function changeImage(direction) {
     if (zoomed || isLoading) return;

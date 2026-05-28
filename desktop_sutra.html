@@ -117,7 +117,7 @@ function getCurrentEnv() {
   }
 
 
-async function loadMappingForVolumae1(vol) {
+async function loadMappingForVolumae2(vol) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
     const src = `/${vol}/mapping.js`;
@@ -138,7 +138,7 @@ async function loadMappingForVolumae1(vol) {
 }
 
 
-async function loadMappingForVolume2(vol) {
+async function loadMappingForVolume3(vol) {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
 
@@ -172,11 +172,13 @@ async function loadMappingForVolume2(vol) {
 async function loadMappingForVolume(vol) {
   return new Promise((resolve, reject) => {
     // 先检查有没有加载过，加载过就直接成功
+    /*
     if (window.mappingData) {
       console.log("✅ mappingData 已存在，跳过加载");
       resolve();
       return;
     }
+    */
 
     const script = document.createElement('script');
     let src;

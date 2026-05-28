@@ -283,6 +283,9 @@ async function loadMappingForVolume(vol) {
 // ======================================
 // ✅ 最终正确版：一维数组 mapping
 // ======================================
+// ======================================
+// 带调试日志 + 正确读取一维数组 mapping
+// ======================================
 function getImageUrls(vol, page) {
   const pageNum = parseInt(page, 10);
 
@@ -291,19 +294,33 @@ function getImageUrls(vol, page) {
 
   let imgbb_url = null;
 
-  //console.log("urlMapping:")
-  //console.log(urlMapping)
-  
-  if (urlMapping) {
-    const volNum = parseInt(vol, 10);
+  // ======================
+  // 调试日志 1：看 mapping
+  // ======================
+  console.log("【DEBUG】urlMapping =", urlMapping);
+  console.log("【DEBUG】当前卷 vol =", vol);
+  console.log("【DEBUG】当前页 page =", page);
+
+  // ======================
+  // 正确读取一维数组
+  // ======================
+  if (urlMapping && Array.isArray(urlMapping)) {
     const pageNumInt = parseInt(page, 10);
-    if (urlMapping[volNum] && urlMapping[volNum][pageNumInt - 1]) {
-      const id = urlMapping[volNum][pageNumInt - 1];
+    const index = pageNumInt - 1;
+
+    console.log("【DEBUG】计算数组索引 index =", index);
+    console.log("【DEBUG】取出的 imgbb ID =", urlMapping[index]);
+
+    if (index >= 0 && urlMapping[index]) {
+      const id = urlMapping[index];
       imgbb_url = `https://i.ibb.co/${id}/${vol}-${pageNum}-png.png`;
     }
   }
 
-  // console.log("imgbb_url= " + imgbb_url)
+  // ======================
+  // 调试日志 2：看最终结果
+  // ======================
+  console.log("【DEBUG】最终 imgbb_url =", imgbb_url);
 
   return {
     r2: r2_url,
@@ -311,8 +328,6 @@ function getImageUrls(vol, page) {
     imgbb: imgbb_url
   };
 }
-
-
 
   // 获取 ImgBB 图片路径（适配只存随机ID的 mapping.json）
   function getImgbbrl(vol, page) {

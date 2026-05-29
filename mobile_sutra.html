@@ -136,7 +136,7 @@ var _hmt = _hmt || [];
     <img id="imageView" src="" alt="乾隆大藏经图片"/>
   </div>
   <div class="loading-indicator" id="loadingIndicator">加载中...</div>
-  <div class="error-message" id="errorMessage">图片加载失败</div>
+  <div class="error-message" id="errorMessage">加载失败</div>
   <div class="page-info" id="pageInfo"></div>
   <div class="source-badge" id="sourceBadge">---</div>
 
@@ -289,22 +289,26 @@ var _hmt = _hmt || [];
   }
 
   // ==========================
-  // 三个图片源：GitHub + ImgBB
+  // 统一图片地址函数（与桌面版完全一致）
+  // 返回：r2、github、imgbb
   // ==========================
-  function getGitHubImageUrl(vol, page) {
+  function getImageUrls(vol, page) {
     const vol3 = String(vol).padStart(3, '0');
     const pageNum = parseInt(page, 10);
-    return `https://raw.githubusercontent.com/jm33-pub/qldzj/main/${vol3}/${pageNum}.png`;
-  }
 
-  function getImgbbUrl(vol, page) {
-    if (!mappingData || !Array.isArray(mappingData)) return null;
-    const pageIdx = parseInt(page) - 1;
-    if (pageIdx < 0 || pageIdx >= mappingData.length) return null;
-    const randomId = mappingData[pageIdx];
-    if (!randomId) return null;
-    const vol3 = String(vol).padStart(3, '0');
-    return `https://i.ibb.co/${randomId}/${vol3}-${page}-png.png`;
+    const r2 = `https://pub-a0fc4de2782d448f916244913768fb78.r2.dev/${vol3}/${pageNum}.png`;
+    const github = `https://raw.githubusercontent.com/jm33-pub/qldzj/main/${vol3}/${pageNum}.png`;
+
+    let imgbb = null;
+    if (mappingData && Array.isArray(mappingData)) {
+      const index = pageNum - 1;
+      if (index >= 0 && mappingData[index]) {
+        const id = mappingData[index];
+        imgbb = `https://i.ibb.co/${id}/${vol3}-${pageNum}-png.png`;
+      }
+    }
+
+    return { r2, github, imgbb };
   }
 
   // ==========================
@@ -317,8 +321,11 @@ var _hmt = _hmt || [];
     const host = location.host.toLowerCase();
     const isGitHub = host.includes("github.io");
 
-    const imgbbUrl = getImgbbUrl(vol, page);
-    const githubUrl = getGitHubImageUrl(vol, page);
+    // 统一获取三源
+    const urls = getImageUrls(vol, page);
+    const r2Url = urls.r2;
+    const githubUrl = urls.github;
+    const imgbbUrl = urls.imgbb;
 
     updatePageInfo();
 

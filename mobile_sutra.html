@@ -288,10 +288,7 @@ var _hmt = _hmt || [];
     imageWrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
   }
 
-  // ==========================
-  // 统一图片地址函数（与桌面版完全一致）
-  // 返回：r2、github、imgbb
-  // ==========================
+  // 统一图片地址函数，返回 r2、github、imgbb
   function getImageUrls(vol, page) {
     const vol3 = String(vol).padStart(3, '0');
     const pageNum = parseInt(page, 10);
@@ -311,9 +308,7 @@ var _hmt = _hmt || [];
     return { r2, github, imgbb };
   }
 
-  // ==========================
   // 核心加载逻辑
-  // ==========================
   async function loadImage(vol, page) {
     showLoading();
     await loadMappingForVolume(vol);
@@ -321,7 +316,6 @@ var _hmt = _hmt || [];
     const host = location.host.toLowerCase();
     const isGitHub = host.includes("github.io");
 
-    // 统一获取三源
     const urls = getImageUrls(vol, page);
     const r2Url = urls.r2;
     const githubUrl = urls.github;
@@ -329,7 +323,7 @@ var _hmt = _hmt || [];
 
     updatePageInfo();
 
-    // 判断手机流量
+    // 判断是否为手机蜂窝网络
     function isMobileData() {
       const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
       if (conn) return conn.type === 'cellular';
@@ -337,25 +331,33 @@ var _hmt = _hmt || [];
     }
     const usingMobileData = isMobileData();
 
-    let primary, backup, label;
+    let primary = null, secondary = null, tertiary = null, label = "";
 
+    // GitHub Pages 域名：固定 GitHub 优先
     if (isGitHub) {
       primary = githubUrl;
-      backup = imgbbUrl;
+      secondary = r2Url;
+      tertiary = imgbbUrl;
       label = "GitHub";
-    } else {
+    } 
+    // qldzj.daxumi.top 域名：按网络区分
+    else {
       if (usingMobileData) {
-        primary = githubUrl;
-        backup = imgbbUrl;
-        label = "GitHub(流量)";
+        // 4G/5G 流量：R2 优先
+        primary = r2Url;
+        secondary = githubUrl;
+        tertiary = imgbbUrl;
+        label = "R2(流量)";
       } else {
+        // WiFi 网络：ImgBB 优先
         primary = imgbbUrl;
-        backup = githubUrl;
+        secondary = r2Url;
+        tertiary = githubUrl;
         label = "ImgBB(WiFi)";
       }
     }
 
-    // 主图加载
+    // 依次尝试三个源
     if (primary) {
       const res = await tryLoadImage(primary);
       if (res.success) {
@@ -366,12 +368,20 @@ var _hmt = _hmt || [];
         return;
       }
     }
-
-    // 备用图加载
-    if (backup) {
-      const res = await tryLoadImage(backup);
+    if (secondary) {
+      const res = await tryLoadImage(secondary);
       if (res.success) {
-        imageView.src = backup;
+        imageView.src = secondary;
+        sourceBadge.textContent = "次源";
+        hideLoading();
+        resetView();
+        return;
+      }
+    }
+    if (tertiary) {
+      const res = await tryLoadImage(tertiary);
+      if (res.success) {
+        imageView.src = tertiary;
         sourceBadge.textContent = "备用";
         hideLoading();
         resetView();
@@ -380,10 +390,10 @@ var _hmt = _hmt || [];
     }
 
     hideLoading();
-    showError("加载失败");
+    showError("所有源加载失败");
   }
 
-  // 图片加载测试
+  // 图片加载检测
   function tryLoadImage(url) {
     return new Promise((resolve) => {
       const img = new Image();
@@ -454,7 +464,7 @@ var _hmt = _hmt || [];
     }
   }
 
-  // 缩放
+  // 缩放处理
   function zoomAtCenter(centerX, centerY, scaleRatio) {
     const oldScale = scale;
     scale = Math.max(1, Math.min(5, scale * scaleRatio));
@@ -475,7 +485,7 @@ var _hmt = _hmt || [];
     updateTransform();
   }
 
-  // 触摸操作
+  // 触摸事件
   imageWrapper.addEventListener('touchstart', (e) => {
     if (e.touches.length === 2) {
       touchMode = 'scale';
@@ -542,7 +552,7 @@ var _hmt = _hmt || [];
   });
   resetBtn.addEventListener('click', resetView);
 
-  // 启动
+  // 页面初始化
   window.onload = async () => {
     updatePageInfo();
     await loadImage(currentVol, currentPage);

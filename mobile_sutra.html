@@ -485,7 +485,7 @@ async function loadImage1(vol, page) {
 
 
 // 🔥 双平台自动切换：GitHub=ImgBB，Cloudflare=本地
-async function loadImage(vol, page) {
+async function loadImage1(vol, page) {
   showLoading();
   await loadMappingForVolume(vol);
 
@@ -497,9 +497,7 @@ async function loadImage(vol, page) {
 
   updatePageInfo();
 
-  // ======================
   // 核心策略（和桌面版完全一致）
-  // ======================
   let primary, backup, label;
   if (isGitHub) {
     primary = localUrl;
@@ -539,8 +537,79 @@ async function loadImage(vol, page) {
   showError("加载失败");
 }
 
+async function loadImage(vol, page) {
+  showLoading();
+  await loadMappingForVolume(vol);
 
+  const host = location.host.toLowerCase();
+  const isGitHub = host.includes("github.io");
 
+  const imgbbUrl = getImgbbrl(vol, page);
+  const localUrl = getLocalImageUrl(vol, page);
+
+  updatePageInfo();
+
+  // 判断手机是否使用流量（4G/5G）
+  function isMobileData() {
+    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (conn) {
+      return conn.type === 'cellular';
+    }
+    return /Android|iPhone|Mobile/.test(navigator.userAgent);
+  }
+  const usingMobileData = isMobileData();
+
+  // ======================
+  // 最终智能策略
+  // ======================
+  let primary, backup, label;
+
+  if (isGitHub) {
+    // GitHub 一律本地优先
+    primary = localUrl;
+    backup = imgbbUrl;
+    label = "github";
+  } else {
+    if (usingMobileData) {
+      // 手机流量 → 走最稳的 github 本地
+      primary = localUrl;
+      backup = imgbbUrl;
+      label = "本地(流量)";
+    } else {
+      // WiFi → ImgBB 优先
+      primary = imgbbUrl;
+      backup = localUrl;
+      label = "ImgBB(WiFi)";
+    }
+  }
+
+  // 尝试加载主地址
+  if (primary) {
+    const res = await tryLoadImage(primary);
+    if (res.success) {
+      imageView.src = primary;
+      sourceBadge.textContent = label;
+      hideLoading();
+      resetView();
+      return;
+    }
+  }
+
+  // 失败回退备用
+  if (backup) {
+    const res = await tryLoadImage(backup);
+    if (res.success) {
+      imageView.src = backup;
+      sourceBadge.textContent = "备用";
+      hideLoading();
+      resetView();
+      return;
+    }
+  }
+
+  hideLoading();
+  showError("加载失败");
+}
 
 
 

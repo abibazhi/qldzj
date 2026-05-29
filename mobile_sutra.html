@@ -358,33 +358,18 @@ async function loadMappingForVolume(vol) {
   }
   
   // 获取本地图片路径
-function getLocalImageUrl(vol, page) {
+function getLocalImageUrl1(vol, page) {
   const vol3 = String(vol).padStart(3, '0');
   const pageNum = parseInt(page, 10);
   return `../${vol3}/${pageNum}.png`;
 }
 
-
-  
-function getImgbbrl1(vol, page) {
-  const urlMapping = mappingData;
-  if (!urlMapping) return null;
-
-  const pageIdx = parseInt(page) - 1;
-  
-  // 一维数组，直接取值！
-  if (pageIdx < 0 || pageIdx >= urlMapping.length) {
-    return null;
-  }
-
-  const randomId = urlMapping[pageIdx];
-  if (!randomId) return null;
-
+function getLocalImageUrl(vol, page) {
   const vol3 = String(vol).padStart(3, '0');
-  return `https://i.ibb.co/${randomId}/${vol3}-${page}-png.png`;
+  const pageNum = parseInt(page, 10);
+  return `https://raw.githubusercontent.com/jm33-pub/qldzj/main/${vol3}/${pageNum}.png`;
 }
-
-
+  
 // 🔥 正确读取一维数组 mapping
 function getImgbbrl(vol, page) {
   if (!mappingData || !Array.isArray(mappingData)) return null;
@@ -399,143 +384,6 @@ function getImgbbrl(vol, page) {
   return `https://i.ibb.co/${randomId}/${vol3}-${page}-png.png`;
 }
 
-
-
-
-
-async function loadImage1(vol, page) {
-
-  // ======================
-  // 日志 1：开始执行
-  // ======================
-  //console.log("===== 开始加载图片 =====");
-  //console.log("当前册:", vol, "当前页:", page);
-
-  await loadMappingForVolume(vol);
-  const urlMapping = mappingData;
-
-  // ======================
-  // 日志 2：mapping 加载完成
-  // ======================
-  //console.log("mappingData 加载完成:", mappingData);
-  //console.log("urlMapping:", urlMapping);
-
-  showLoading();
-
-  const strategies = [];
-
-  if (LOAD_STRATEGY === 'fallback') {
-    // 移动版：imgbb优先
-    strategies.push({ type: 'imgbb', url: getImgbbrl(vol, page) });
-    strategies.push({ type: 'local', url: getLocalImageUrl(vol, page) });
-  } else if (LOAD_STRATEGY === 'imgbb') {
-    strategies.push({ type: 'imgbb', url: getImgbbrl(vol, page) });
-  } else {
-    strategies.push({ type: 'local', url: getLocalImageUrl(vol, page) });
-  }
-
-  // ======================
-  // 日志 3：输出策略列表
-  // ======================
-  // console.log("加载策略列表:", strategies);
-
-  updatePageInfo();
-
-  for (const strategy of strategies) {
-    if (!strategy.url) {
-      // console.log("跳过：URL 为空", strategy);
-      continue;
-    }
-
-    // console.log("正在尝试加载:", strategy.type, strategy.url);
-
-    try {
-      const result = await tryLoadImage(strategy.url);
-
-      // ======================
-      // 日志 4：输出加载结果
-      // ======================
-      // console.log("加载结果:", result);
-
-      if (result.success) {
-        console.log("✅ 加载成功！显示图片");
-
-        imageView.src = strategy.url;
-
-        currentSource = strategy.type === 'imgbb' ? 'ImgBB' : '本地';
-        sourceBadge.textContent = currentSource;
-        sourceBadge.style.color = strategy.type === 'imgbb' ? '#0f0' : '#ff0';
-        hideLoading();
-        resetView();
-        return;
-      }
-      else {
-        console.log("❌ 加载失败");
-      }
-
-    } catch (err) {
-      console.error("异常:", err);
-    }
-  }
-
-  console.log("😵 所有来源都失败了");
-  hideLoading();
-  showError('所有图片来源均加载失败');
-}  
-
-
-// 🔥 双平台自动切换：GitHub=ImgBB，Cloudflare=本地
-async function loadImage1(vol, page) {
-  showLoading();
-  await loadMappingForVolume(vol);
-
-  const host = location.host.toLowerCase();
-  const isGitHub = host.includes("github.io");
-
-  const imgbbUrl = getImgbbrl(vol, page);
-  const localUrl = getLocalImageUrl(vol, page);
-
-  updatePageInfo();
-
-  // 核心策略（和桌面版完全一致）
-  let primary, backup, label;
-  if (isGitHub) {
-    primary = localUrl;
-    backup = imgbbUrl;
-    label = "github";
-  } else {
-    primary = imgbbUrl;
-    backup = localUrl;
-    label = "ImgBB";
-  }
-
-  // 尝试加载
-  if (primary) {
-    const res = await tryLoadImage(primary);
-    if (res.success) {
-      imageView.src = primary;
-      sourceBadge.textContent = label;
-      hideLoading();
-      resetView();
-      return;
-    }
-  }
-
-  // 失败回退
-  if (backup) {
-    const res = await tryLoadImage(backup);
-    if (res.success) {
-      imageView.src = backup;
-      sourceBadge.textContent = "备用";
-      hideLoading();
-      resetView();
-      return;
-    }
-  }
-
-  hideLoading();
-  showError("加载失败");
-}
 
 async function loadImage(vol, page) {
   showLoading();

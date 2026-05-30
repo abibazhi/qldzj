@@ -53,7 +53,9 @@
     }
   </style>
 
-  <!-- 🔥 只加这一行引入新引擎 -->
+  <script type="module" src="./js/utils.js"></script>
+  <script type="module" src="./js/pageNav.js"></script>
+  <!-- 🔥 这一行引入新引擎 -->
   <script type="module" src="./js/imageLoader.js"></script>
 
 <script>
@@ -74,18 +76,10 @@ var _hmt = _hmt || [];
 </div>
 
 <script defer>
+import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
 
 
-  // ========== 配置区域 ==========
-  // 加载策略: 'local' (仅本地), 'imgbb' (仅远程), 'fallback' (远程优先，失败回退本地)
-  let urlMapping = null; // 存储映射表
-  //document.addEventListener('DOMContentLoaded', function() {
-  //  urlMapping = mappingData;
-  //});
-  let currentSource = 'local';     // 当前图片来源
-  // =============================
-
-
+/*
   function getQueryVariable(variable) {
     const query = window.location.search.substring(1);
     const vars = query.split('&');
@@ -128,6 +122,9 @@ var _hmt = _hmt || [];
 
   let currentPage = startPage;
   let currentVol = startVol;
+
+*/
+
   let zoomed = false;
   let isLoading = false;
 
@@ -145,13 +142,6 @@ var _hmt = _hmt || [];
   function hideLoading() {
     isLoading = false;
     loadingIndicator.style.display = 'none';
-  }
-
-  // 获取本地图片路径
-  // 换成这个
-  function getLocalImageUrl(vol, page) {
-    const pageNum = parseInt(page, 10);
-    return `../${vol}/${pageNum}.png`;
   }
 
 
@@ -178,7 +168,7 @@ async function loadImage(vol, page) {
   hideLoading();
 }
 
-async function changeImage(direction) {
+async function changeImage1(direction) {
   // ========== 日志 1：看看有没有进这个函数 ==========
   console.log("=== 触发翻页 ===", "方向:", direction, "当前缩放:", zoomed, "是否加载中:", isLoading);
 
@@ -262,6 +252,23 @@ async function changeImage(direction) {
   } catch (err) {
     console.error('💥 图片加载失败:', err);
   }
+}
+
+
+// 翻页入口（仅调用公共计算逻辑）
+async function changeImage(direction) {
+
+  if (zoomed || isLoading) {
+    console.log("❌ 被拦截：缩放中 或 加载中");
+    return;
+  }
+
+  const res = calcNextPage(direction);
+  if (!res.ok) return;
+
+  const { newVol, newPage } = res;
+  await loadImage(newVol, newPage);
+  setCurrentPage(newVol, newPage);
 }
 
 
@@ -374,17 +381,6 @@ container.addEventListener('click', (event) => {
 
     zoomed = false;
   }
-
-  // 页面初始化
-  window.onload1 = async () => {
-    console.log('桌面版页面加载启动...');
-    
-    try {
-      await loadImage(currentVol, currentPage);
-    } catch (err) {
-      console.error('初始图片加载失败:', err);
-    }
-  };
 
 // 页面初始化（加强调试版）
 window.onload = async () => {

@@ -8,7 +8,7 @@
  * true  = 调试：每次强制重新加载 mapping.js，不使用浏览器缓存
  * false = 上线：允许浏览器缓存 mapping.js，速度更快
  */
-export const ALWAYS_RELOAD_MAPPING = true;
+export const ALWAYS_RELOAD_MAPPING = false;
 
 /**
  * 图片加载超时时间（单位：毫秒）

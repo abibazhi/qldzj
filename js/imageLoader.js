@@ -139,45 +139,38 @@ export async function testImage1(url) {
   });
 }
 
-
-// ==============================
-// 测试单张图片（带自动切源）
-// ==============================
+// 测试图片是否能加载：成功返回true，失败返回false
 export async function testImage(url) {
   return new Promise(resolve => {
     const img = createImage(url);
-    const start = Date.now();
     let done = false;
 
+    // 超时保护：太久没加载也算失败
     const timer = setTimeout(() => {
       done = true;
-      log(`❌ ${url} | 超时`);
-      lastWorkingSource = null; // 👈 加在这里：超时清空坏源
+      console.log(`【测试】⏱️ 超时: ${url}`);
       resolve(false);
     }, IMG_TIMEOUT);
 
+    // 图片加载成功
     img.onload = () => {
       if (done) return;
       clearTimeout(timer);
-      log(`✅ ${url} | 成功`);
+      console.log(`【测试】✅ 成功: ${url}`);
       resolve(true);
     };
 
+    // 图片加载失败
     img.onerror = () => {
       if (done) return;
       clearTimeout(timer);
-      log(`❌ ${url} | 失败`);
-      lastWorkingSource = null; // 👈 加在这里：失败清空坏源
+      console.log(`【测试】❌ 失败: ${url}`);
       resolve(false);
     };
 
     img.src = url;
   });
 }
-
-
-
-
 // ==============================
 // 🔥 生产核心：智能获取最优图片
 // ==============================
@@ -198,32 +191,69 @@ export async function getBestImageUrl1(vol, page) {
   return null;
 }
 
-export async function getBestImageUrl(vol, page) {
-  await loadMapping(vol);
-  const sources = buildSources(vol, page);
 
-  // 🔥 【快速通道】如果有可用的源，直接用同一种源加载新图（秒切）
+export async function getBestImageUrl(vol, page) {
+  console.log("\n========================================");
+  console.log("【翻页】开始加载 → 卷:", vol, "页:", page);
+
+  // 1. 加载当前卷的 mapping（只加载一次）
+  await loadMapping(vol);
+
+  // 2. 生成当前页的所有图源列表（R2 / ImgBB / GitHub）
+  const sources = buildSources(vol, page);
+  console.log("【图源】可用源:", sources.map(s => s.key));
+
+  // --------------------------------------------------------------------
+  // 【快速通道】如果上次有成功的源，优先用同一种源（速度最快）
+  // --------------------------------------------------------------------
   if (lastWorkingSource) {
-    // 找到同类型的源（R2 还是 R2，ImgBB 还是 ImgBB）
+    console.log("【快速通道】上次使用的源:", lastWorkingSource.key);
+
+    // 找到同类型的源（比如上次是R2，这次还用R2）
     const target = sources.find(s => s.key === lastWorkingSource.key);
+
     if (target) {
-      lastWorkingSource = target;  // 只更新地址，不重复测试
-      return target;
+      console.log("【快速通道】尝试加载:", target.key, target.url);
+
+      // 测试能不能加载
+      const ok = await testImage(target.url);
+
+      if (ok) {
+        console.log("【快速通道】✅ 成功！直接使用，不切换");
+        lastWorkingSource = target; // 保存当前新地址
+        return target;
+      }
+
+      // 如果快速通道失败 → 不空白！继续往下走
+      console.log("【快速通道】❌ 失效！自动切换到完整重试流程");
     }
+
+    // 失效后清空，下次重新选择
     lastWorkingSource = null;
   }
 
-  // 第一次加载，正常找源
+  // --------------------------------------------------------------------
+  // 【自动降级】一个一个试，直到成功，绝不空白！
+  // --------------------------------------------------------------------
+  console.log("【自动重试】开始遍历所有可用源...");
   for (const s of sources) {
+    console.log("【重试】尝试:", s.key, s.url);
+
     const ok = await testImage(s.url);
     if (ok) {
-      lastWorkingSource = s;
+      console.log("【重试】✅ 找到可用源:", s.key);
+      lastWorkingSource = s; // 缓存这个源，下次快速通道
       return s;
     }
   }
 
+  // 所有源都挂了（极少出现）
+  console.log("【错误】所有源都加载失败");
   return null;
 }
+
+
+
 
 
 // 加在文件最后一行

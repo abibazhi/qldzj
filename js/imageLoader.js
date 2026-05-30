@@ -165,3 +165,6 @@ export async function getBestImageUrl(vol, page) {
 
   return null;
 }
+
+// 加在文件最后一行
+window.getBestImageUrl = getBestImageUrl;

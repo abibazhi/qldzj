@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>最终测试台（生产兼容版）</title>
+<style>
+  body{background:#111;color:#fff;font-family:Arial}
+  .panel{max-width:800px;margin:auto;padding:10px}
+  #debug-log{background:#181818;padding:10px;margin:10px 0;height:260px;overflow-y:auto;border:1px solid #444}
+  .item{background:#222;margin:5px;padding:8px;border-radius:6px}
+  .item.ok{border-left:3px solid #0a0}
+  .item.no{border-left:3px solid #f33}
+  .url{color:#999;font-size:12px;word-break:break-all}
+  button{padding:8px 12px;margin:5px;background:#09c;color:#fff;border:none;border-radius:6px;cursor:pointer}
+</style>
+
+<div class="panel">
+  <h2>📊 图源测试台</h2>
+  <p id="info">环境：检测中...</p>
+
+  <div>
+    Vol: <input id="vol" value="1" size="4">
+    Page: <input id="page" value="1" size="4">
+    <button onclick="startTest()">🚀 测试</button>
+    <button onclick="randomTest()">🎲 随机</button>
+  </div>
+
+  <div id="debug-log"></div>
+  <div id="result"></div>
+</div>
+
+<script type="module">
+  import { log, getCurrentEnv, getNetworkType } from './utils.js';
+  import { loadMapping, buildSources, testImage } from './imageLoader.js';
+
+  const info = document.getElementById('info');
+  const volEl = document.getElementById('vol');
+  const pageEl = document.getElementById('page');
+  const resultEl = document.getElementById('result');
+
+  // 显示环境信息
+  info.textContent = `环境：${getCurrentEnv()} | 网络：${getNetworkType()}`;
+
+  // 随机测试
+  window.randomTest = () => {
+    volEl.value = Math.floor(Math.random() * 167) + 1;
+    pageEl.value = Math.floor(Math.random() * 600) + 1;
+    startTest();
+  };
+
+  // 开始测试
+  window.startTest = async () => {
+    resultEl.innerHTML = "测试中...";
+    const vol = volEl.value;
+    const page = pageEl.value;
+
+    log("=== 开始测试 卷" + vol + " 页" + page + " ===");
+    
+    await loadMapping(vol);
+    const list = buildSources(vol, page);
+
+    let out = "";
+    for (const item of list) {
+      log("测试：" + item.key);
+      const ok = await testImage(item.url);
+      out += `
+        <div class="item ${ok ? 'ok' : 'no'}">
+          ${item.key}：${ok ? "✅ 正常" : "❌ 失败"}
+          <div class="url">${item.url}</div>
+        </div>
+      `;
+    }
+
+    resultEl.innerHTML = out;
+    log("=== 测试完成 ===");
+  };
+
+  log("✅ 加载完成");
+</script>
+</body>
+</html>

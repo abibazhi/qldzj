@@ -163,23 +163,6 @@ async function changeImage(direction) {
     container.style.cursor = 'auto';
   });
 
-  container.addEventListener('click1', (event) => {
-    if (isLoading) return;
-
-    const rect = event.target.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const width = rect.width;
-
-    const isLeftEdge = clickX < width * edgeThreshold;
-    const isRightEdge = clickX > width * (1 - edgeThreshold);
-
-    if (isLeftEdge) {
-      changeImage(-1);
-    } else if (isRightEdge) {
-      changeImage(1);
-    }
-  });
-
 container.addEventListener('click', (event) => {
   const rect = event.target.getBoundingClientRect();
   const clickX = event.clientX - rect.left;

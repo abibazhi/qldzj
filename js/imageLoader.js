@@ -167,7 +167,7 @@ export async function getBestImageUrl1(vol, page) {
 }
 
 
-export async function getBestImageUrl(vol, page) {
+export async function getBestImageUrl2(vol, page) {
   await loadMapping(vol);
   const sources = buildSources(vol, page);
 
@@ -197,6 +197,23 @@ export async function getBestImageUrl(vol, page) {
   return null;
 }
 
+
+
+export async function getBestImageUrl(vol, page) {
+  await loadMapping(vol);
+  const sources = buildSources(vol, page);
+
+  // 👇 只遍历一次，只发一次请求
+  for (const s of sources) {
+    const ok = await testImage(s.url);
+    if (ok) {
+      lastWorkingSource = s;
+      return s;
+    }
+  }
+
+  return null;
+}
 
 // 加在文件最后一行
 window.getBestImageUrl = getBestImageUrl;

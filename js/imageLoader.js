@@ -142,7 +142,7 @@ export async function testImage(url) {
 // ==============================
 // 🔥 生产核心：智能获取最优图片
 // ==============================
-export async function getBestImageUrl(vol, page) {
+export async function getBestImageUrl1(vol, page) {
   await loadMapping(vol);
   const sources = buildSources(vol, page);
 
@@ -165,6 +165,38 @@ export async function getBestImageUrl(vol, page) {
 
   return null;
 }
+
+
+export async function getBestImageUrl(vol, page) {
+  await loadMapping(vol);
+  const sources = buildSources(vol, page);
+
+  // 只缓存来源类型，不缓存死 URL
+  if (lastWorkingSource) {
+    const target = sources.find(s => s.key === lastWorkingSource.key);
+    if (target) {
+      const ok = await testImage(target.url);
+      if (ok) {
+        lastWorkingSource = target;
+        return target;
+      }
+    }
+
+    log(" 缓存源失效，重新探测");
+    lastWorkingSource = null;
+  }
+
+  for (const s of sources) {
+    const ok = await testImage(s.url);
+    if (ok) {
+      lastWorkingSource = s;
+      return s;
+    }
+  }
+
+  return null;
+}
+
 
 // 加在文件最后一行
 window.getBestImageUrl = getBestImageUrl;

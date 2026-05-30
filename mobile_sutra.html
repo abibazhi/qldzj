@@ -120,6 +120,10 @@
     }
   </style>
 
+
+  <!-- 🔥 模块顺序：工具 → 翻页 → 图片加载 -->
+  <script type="module" src="./js/utils.js"></script>
+  <script type="module" src="./js/pageNav.js"></script>
   <!-- 🔥 加这一行引入新引擎 -->
   <script type="module" src="./js/imageLoader.js"></script>
 
@@ -151,8 +155,19 @@ var _hmt = _hmt || [];
   </div>
 </div>
 
-<script>
+<script type="module">
+  // 🔥 直接导入公共翻页状态
+  import {
+    currentVol,
+    currentPage,
+    calcNextPage,
+    setCurrentPage,
+    RANGE
+  } from './js/pageNav.js';
+  
   import { getBestImageUrl } from './js/imageLoader.js'
+
+
   // ========== 配置区域 ==========
   // 是否优先使用 ImgBB（true=优先ImgBB，失败回退本地；false=直接本地）
   const PREFER_IMGBB = true;
@@ -164,7 +179,7 @@ var _hmt = _hmt || [];
   
 
   
-  function getQueryVariable(variable) {
+  function getQueryVariable1(variable) {
     const query = window.location.search.substring(1);
     const vars = query.split('&');
     for (let i = 0; i < vars.length; i++) {
@@ -175,10 +190,12 @@ var _hmt = _hmt || [];
   }
   
   // 获取URL参数
+  /*
   const startParam = getQueryVariable('start') || '001001';
   const endParam = getQueryVariable('end') || '999999';
-  
-  function parseParam(param) {
+  */
+
+  function parseParam1(param) {
     if (!/^\d+$/.test(param)) {
       return { vol: 1, page: 1 };
     }
@@ -196,7 +213,7 @@ var _hmt = _hmt || [];
       return { vol: 1, page: 1 };
     }
   }
-  
+  /*
   const startData = parseParam(startParam);
   const endData = parseParam(endParam);
   
@@ -207,7 +224,8 @@ var _hmt = _hmt || [];
   const startPage = startData.page;
   const endVol = endData.vol;
   const endPage = endData.page;
-  
+  */
+
   // 缩放和拖拽相关变量
   let scale = 1;
   let translateX = 0;
@@ -253,7 +271,7 @@ var _hmt = _hmt || [];
   }
   
   function updatePageInfo() {
-    const volFormatted = String(currentVol).padStart(3, '0');
+    //const volFormatted = String(currentVol).padStart(3, '0');
     pageInfo.textContent = `第 ${currentVol} 册 第 ${currentPage} 页`;
   }
   
@@ -278,8 +296,26 @@ async function loadImage(vol, page) {
   hideLoading();
 }
 
+// 🔥 🔥 🔥 翻页：完全复用公共逻辑！！！
+async function changeImage(direction) {
+  if (isLoading) return;
+
+  // 公共计算
+  const res = calcNextPage(direction);
+  if (!res.ok) {
+    showError(direction > 0 ? "已经是最后一页" : "已经是第一页");
+    return;
+  }
+
+  const { newVol, newPage } = res;
+  await loadImage(newVol, newPage);
   
-  async function changeImage(direction) {
+  // 更新全局状态
+  setCurrentPage(newVol, newPage);
+  updatePageInfo();
+}
+  
+  async function changeImage1(direction) {
     if (isLoading) return;
     
     let newVol = currentVol;

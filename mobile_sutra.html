@@ -168,64 +168,6 @@ var _hmt = _hmt || [];
   import { getBestImageUrl } from './js/imageLoader.js'
 
 
-  // ========== 配置区域 ==========
-  // 是否优先使用 ImgBB（true=优先ImgBB，失败回退本地；false=直接本地）
-  const PREFER_IMGBB = true;
-  
-  // ImgBB 图片 URL 模板：{vol} 和 {page} 会被替换
-  const IMGBB_URL_TEMPLATE = 'https://i.ibb.co/{path}';
-  
-  let LOAD_STRATEGY = 'fallback';  // 改为 'fallback' 启用 ImgBB 优先加载
-  
-
-  
-  function getQueryVariable1(variable) {
-    const query = window.location.search.substring(1);
-    const vars = query.split('&');
-    for (let i = 0; i < vars.length; i++) {
-      const pair = vars[i].split('=');
-      if (pair[0] === variable) return decodeURIComponent(pair[1]);
-    }
-    return false;
-  }
-  
-  // 获取URL参数
-  /*
-  const startParam = getQueryVariable('start') || '001001';
-  const endParam = getQueryVariable('end') || '999999';
-  */
-
-  function parseParam1(param) {
-    if (!/^\d+$/.test(param)) {
-      return { vol: 1, page: 1 };
-    }
-    if (param.length === 6) {
-      return {
-        vol: parseInt(param.slice(0, 3), 10),
-        page: parseInt(param.slice(3, 6), 10)
-      };
-    } else if (param.length === 7) {
-      return {
-        vol: parseInt(param.slice(0, 3), 10),
-        page: parseInt(param.slice(3, 7), 10)
-      };
-    } else {
-      return { vol: 1, page: 1 };
-    }
-  }
-  /*
-  const startData = parseParam(startParam);
-  const endData = parseParam(endParam);
-  
-  let currentVol = startData.vol;
-  let currentPage = startData.page;
-  
-  const startVol = startData.vol;
-  const startPage = startData.page;
-  const endVol = endData.vol;
-  const endPage = endData.page;
-  */
-
   // 缩放和拖拽相关变量
   let scale = 1;
   let translateX = 0;
@@ -271,7 +213,6 @@ var _hmt = _hmt || [];
   }
   
   function updatePageInfo() {
-    //const volFormatted = String(currentVol).padStart(3, '0');
     pageInfo.textContent = `第 ${currentVol} 册 第 ${currentPage} 页`;
   }
   
@@ -314,54 +255,6 @@ async function changeImage(direction) {
   setCurrentPage(newVol, newPage);
   updatePageInfo();
 }
-  
-  async function changeImage1(direction) {
-    if (isLoading) return;
-    
-    let newVol = currentVol;
-    let newPage = currentPage + direction;
-    
-    if (direction > 0) {
-      if (newPage > 9999) {
-        newPage = 1;
-        newVol += 1;
-      }
-    } else {
-      if (newPage < 1) {
-        newPage = 9999;
-        newVol -= 1;
-      }
-    }
-    
-    if (newVol < startVol || (newVol === startVol && newPage < startPage)) {
-      showError('已经是第一页');
-      return;
-    }
-    
-    if (newVol > endVol || (newVol === endVol && newPage > endPage)) {
-      showError('已经是最后一页');
-      return;
-    }
-    
-    if (newVol < 1) {
-      showError('已经是第一页');
-      return;
-    }
-    
-    const prevVol = currentVol;
-    const prevPage = currentPage;
-    
-    currentVol = newVol;
-    currentPage = newPage;
-    
-    try {
-      await loadImage(currentVol, currentPage);
-    } catch (err) {
-      currentVol = prevVol;
-      currentPage = prevPage;
-      showError(err.message);
-    }
-  }
   
   function zoomAtCenter(centerX, centerY, scaleRatio) {
     const oldScale = scale;

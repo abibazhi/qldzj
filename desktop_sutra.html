@@ -57,7 +57,7 @@ var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
   hm.src = "https://hm.baidu.com/hm.js?7784bc9ab299071f3a78b249954402c8";
-  var s = document.getElementsByTagName("script")[0]; 
+  var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
@@ -69,114 +69,26 @@ var _hmt = _hmt || [];
   <div id="sourceBadge" class="source-badge">---</div>
 </div>
 
-<script defer>
+<script type="module">
+  import { getBestImageUrl } from './js/imageLoader.js';
 
-// ======================================
-// 🔥 自动判断当前环境：Cloudflare / GitHub / 本地
-// ======================================
-function getCurrentEnv() {
-  const host = window.location.host.toLowerCase();
-  
-  if (host.includes("github.io")) {
-    return "github";
-  }
-  
-  if (host.includes("daxumi.top") || host.includes("cloudflare")) {
-    return "cloudflare";
-  }
+  const container = document.getElementById('imageContainer');
+  const loadingIndicator = document.getElementById('loadingIndicator');
+  const sourceBadge = document.getElementById('sourceBadge');
+  let isLoading = false;
+  let zoomed = false;
 
-  return "local";
-}
-
-  // ========== 配置区域 ==========
-  // 加载策略: 'local' (仅本地), 'imgbb' (仅远程), 'fallback' (远程优先，失败回退本地)
-  let urlMapping = null; // 存储映射表
-  //document.addEventListener('DOMContentLoaded', function() {
-  //  urlMapping = mappingData;
-  //});
-  let currentSource = 'local';     // 当前图片来源
-  // =============================
-
-  // 动态加载对应卷的 mapping.js（极简干净版）
-  async function loadMappingForVolume1(vol) {
-
-    // 👇 加这一行：如果页面上已经加载过这个卷的js，直接返回，不重复加载
-    if (document.querySelector(`script[src="/${vol}/mapping.js"]`)) return;
-
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      // 👇 去掉版本号，让浏览器自动缓存
-      script.src = `/${vol}/mapping.js`;
-
-      script.onload = resolve;
-      script.onerror = reject;
-      document.body.appendChild(script);
-    });
+  function showLoading() {
+    if (isLoading) return;
+    isLoading = true;
+    loadingIndicator.style.display = 'block';
   }
 
+  function hideLoading() {
+    isLoading = false;
+    loadingIndicator.style.display = 'none';
+  }
 
-async function loadMappingForVolumae2(vol) {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement('script');
-    const src = `/${vol}/mapping.js`;
-    
-    console.log("🔗 正在加载 JS:", src); // 最关键！
-    
-    script.src = src;
-    script.onload = () => {
-      console.log("✅ JS 加载完成:", src);
-      resolve();
-    };
-    script.onerror = (err) => {
-      console.error("❌ JS 加载失败:", src, err);
-      reject(err);
-    };
-    document.head.appendChild(script);
-  });
-}
-
-
-// 🔥 最终版：防重复 + 防报错 + 强制刷新
-async function loadMappingForVolume(vol) {
-  return new Promise((resolve, reject) => {
-    // 1. 检查这个卷的 mapping 是否已经加载过
-    const scriptId = `mapping-script-${vol}`;
-    if (document.getElementById(scriptId)) {
-      console.log(`✅ 卷 ${vol} mapping 已加载，跳过`);
-      resolve();
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.id = scriptId; // 给每个卷加唯一ID，防止重复加载
-
-    let src;
-    const env = getCurrentEnv();
-    if (env === "cloudflare") {
-      src = `https://pub-a0fc4de2782d448f916244913768fb78.r2.dev/${vol}/mapping.js`;
-    } else {
-      src = `/${vol}/mapping.js`;
-    }
-
-    // 加时间戳，强制不缓存旧文件
-    script.src = src + "?t=" + Date.now();
-    console.log("🔗 正在加载 JS:", src);
-
-    // 2. 加载完成后，不抛出错误，只赋值
-    script.onload = () => {
-      console.log("✅ JS 加载完成:", src);
-      resolve();
-    };
-
-    // 3. 静默忽略重复定义错误
-    script.onerror = (err) => {
-      console.log("⚠️ 映射文件已加载，忽略重复定义");
-      resolve(); // 即使报错也继续运行
-    };
-
-    document.head.appendChild(script);
-  });
-}
   function getQueryVariable(variable) {
     const query = window.location.search.substring(1);
     const vars = query.split('&');
@@ -190,11 +102,9 @@ async function loadMappingForVolume(vol) {
   const startParam = getQueryVariable('start') || '001001';
   const endParam = getQueryVariable('end') || '999999';
 
-  // 检测参数长度并相应分割
   function splitVolumeAndPage(param) {
     const len = param.length;
     let vol, page;
-
     if (len === 6) {
       vol = param.slice(0, 3);
       page = param.slice(3, 6);
@@ -205,256 +115,39 @@ async function loadMappingForVolume(vol) {
       vol = param.slice(0, 3);
       page = param.slice(3);
     }
-
     return { vol, page };
   }
 
   const start = splitVolumeAndPage(startParam);
   const end = splitVolumeAndPage(endParam);
 
-  const startVol = start.vol;
-  const startPage = start.page;
-  const endVol = end.vol;
-  const endPage = end.page;
-
-  let currentPage = startPage;
-  let currentVol = startVol;
-  let zoomed = false;
-  let isLoading = false;
-
+  let currentPage = start.page;
+  let currentVol = start.vol;
   const edgeThreshold = 0.05;
-  const container = document.getElementById('imageContainer');
-  const loadingIndicator = document.getElementById('loadingIndicator');
-  const sourceBadge = document.getElementById('sourceBadge');
 
-  function showLoading() {
-    if (isLoading) return;
-    isLoading = true;
-    loadingIndicator.style.display = 'block';
-  }
-
-  function hideLoading() {
-    isLoading = false;
-    loadingIndicator.style.display = 'none';
-  }
-
-  // 获取本地图片路径
-  // 换成这个
-  function getLocalImageUrl(vol, page) {
-    const pageNum = parseInt(page, 10);
-    return `../${vol}/${pageNum}.png`;
-  }
-
-// ======================================
-// 生成三个平台的路径（完全兼容你现有代码）
-// ======================================
-// ======================================
-// 生成三个平台的路径（完全无冲突版）
-// ======================================
-// ======================================
-// ✅ 最终正确版：一维数组 mapping
-// ======================================
-// ======================================
-// 带调试日志 + 正确读取一维数组 mapping
-// ======================================
-function getImageUrls(vol, page) {
-  const pageNum = parseInt(page, 10);
-
-  const r2_url = `https://pub-a0fc4de2782d448f916244913768fb78.r2.dev/${vol}/${pageNum}.png`;
-  const github_url = `/${vol}/${pageNum}.png`;
-
-  let imgbb_url = null;
-
-  // ======================
-  // 调试日志 1：看 mapping
-  // ======================
-  console.log("【DEBUG】urlMapping =", urlMapping);
-  console.log("【DEBUG】当前卷 vol =", vol);
-  console.log("【DEBUG】当前页 page =", page);
-
-  // ======================
-  // 正确读取一维数组
-  // ======================
-  if (urlMapping && Array.isArray(urlMapping)) {
-    const pageNumInt = parseInt(page, 10);
-    const index = pageNumInt - 1;
-
-    console.log("【DEBUG】计算数组索引 index =", index);
-    console.log("【DEBUG】取出的 imgbb ID =", urlMapping[index]);
-
-    if (index >= 0 && urlMapping[index]) {
-      const id = urlMapping[index];
-      imgbb_url = `https://i.ibb.co/${id}/${vol}-${pageNum}-png.png`;
+  async function loadImage(vol, page) {
+    showLoading();
+    const best = await getBestImageUrl(vol, page);
+    if (best) {
+      container.style.backgroundImage = `url(${best.url})`;
+      sourceBadge.textContent = best.key;
+    } else {
+      container.style.backgroundImage = "none";
+      container.style.backgroundColor = "#222";
+      sourceBadge.textContent = "失败";
     }
+    hideLoading();
   }
-
-  // ======================
-  // 调试日志 2：看最终结果
-  // ======================
-  console.log("【DEBUG】最终 imgbb_url =", imgbb_url);
-
-  return {
-    r2: r2_url,
-    github: github_url,
-    imgbb: imgbb_url
-  };
-}
-
-  // 获取 ImgBB 图片路径（适配只存随机ID的 mapping.json）
-  function getImgbbrl(vol, page) {
-    if (!urlMapping) return null;
-    //const key = `${vol}_${parseInt(page, 10)}`;
-    //const randomId = urlMapping[key];
-
-    const volNum = parseInt(vol, 10);
-    const pageNum = parseInt(page, 10);
-    const randomId = urlMapping[volNum][pageNum - 1];
-
-    if (!randomId) return null;
-    
-    // 拼接完整 URL
-    //const pageNum = parseInt(page, 10);
-    const filename = `${vol}-${pageNum}-png.png`;
-    return `https://i.ibb.co/${randomId}/${filename}`;
-  }
-
-
-  // 尝试加载单张图片
-function tryLoadImage(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-
-    // 调试日志
-    console.log('🔗 尝试加载图片地址:', url);
-
-    const timeout = setTimeout(() => {
-      img.onload = null;
-      img.onerror = null;
-      console.log('⏰ 加载超时:', url);
-      resolve({ success: false, error: 'timeout' });
-    }, 10000);
-
-    img.onload = () => {
-      clearTimeout(timeout);
-      console.log('✅ 图片加载成功:', url);
-      resolve({ success: true, img: img });
-    };
-
-    img.onerror = () => {
-      clearTimeout(timeout);
-      console.log('❌ 图片加载失败:', url);
-      resolve({ success: false, error: 'load error' });
-    };
-
-    img.src = url;
-  });
-}
-
-
-  // 带回退的图片加载
-
-// ======================================
-// 🔥 智能加载：根据域名自动选择优先顺序
-// ======================================
-// ======================================
-// 🔥 核心：根据不同网站自动切换最优图片源
-// ======================================
-// ======================================
-// 🔥 双平台智能图片加载策略（最终完美版）
-// Cloudflare：R2 优先
-// GitHub.io：ImgBB 优先
-// ======================================
-// ======================================
-// 🔥 最终版：先加载 mapping → 再拿图片地址
-// ======================================
-// ======================================
-// 最终双平台智能加载（零错误）
-// ======================================
-async function loadImage(vol, page) {
-  console.log('======================================');
-  console.log('🖼️ 加载图片 vol=', vol, ' page=', page);
-
-  const env = getCurrentEnv();
-  console.log('🌍 当前域名环境:', env);
-
-  showLoading();
-
-  try {
-    console.log("🔍 尝试加载 mapping.js:", vol + "/mapping.js");
-    await loadMappingForVolume(vol);
-    urlMapping = mappingData;
-    console.log("✅ mapping.js 加载成功！");
-  } catch (err) {
-    console.log("⚠️ mapping.js 加载失败，继续加载图片！");
-    urlMapping = null;
-  }
-
-  const imageUrls = getImageUrls(vol, page);
-
-  let primaryUrl, backupUrl, sourceText;
-
-  if (env === "cloudflare") {
-    primaryUrl = imageUrls.r2;
-    backupUrl = imageUrls.imgbb;
-    sourceText = "R2 🚀";
-  } else {
-    primaryUrl = imageUrls.imgbb;
-    backupUrl = imageUrls.github;
-    sourceText = "ImgBB 📦";
-
-    if (!primaryUrl) {
-      primaryUrl = backupUrl;
-      backupUrl = null;
-      sourceText = "GitHub 🛡️";
-    }
-  }
-
-  console.log("🎯 主地址:", primaryUrl);
-  console.log("🎯 备用地址:", backupUrl || "无");
-
-  try {
-    if (primaryUrl) {
-      const res = await tryLoadImage(primaryUrl);
-      if (res.success) {
-        container.style.backgroundImage = `url(${primaryUrl})`;
-        sourceBadge.textContent = sourceText;
-        hideLoading();
-        console.log("✅ 图片加载成功！");
-        return;
-      }
-    }
-  } catch (e) {}
-
-  try {
-    if (backupUrl) {
-      const res = await tryLoadImage(backupUrl);
-      if (res.success) {
-        container.style.backgroundImage = `url(${backupUrl})`;
-        sourceBadge.textContent = "备用 🛟";
-        hideLoading();
-        console.log("✅ 备用图片加载成功！");
-        return;
-      }
-    }
-  } catch (e) {}
-
-  container.style.backgroundImage = "none";
-  container.style.backgroundColor = "#222";
-  hideLoading();
-  console.log("❌ 所有图片源加载失败");
-}
-
-
 
   async function changeImage(direction) {
     if (zoomed || isLoading) return;
 
     let currentPageNum = parseInt(currentPage, 10);
     let currentVolNum = parseInt(currentVol, 10);
-    let startPageNum = parseInt(startPage, 10);
-    let startVolNum = parseInt(startVol, 10);
-    let endPageNum = parseInt(endPage, 10);
-    let endVolNum = parseInt(endVol, 10);
+    let startPageNum = parseInt(start.page, 10);
+    let startVolNum = parseInt(start.vol, 10);
+    let endPageNum = parseInt(end.page, 10);
+    let endVolNum = parseInt(end.vol, 10);
 
     let newPage = currentPageNum + direction;
     let newVol = currentVolNum;
@@ -467,22 +160,15 @@ async function loadImage(vol, page) {
       }
     } else {
       if (newPage < 1) {
-        if (currentPageNum === 1) {
-          return;
-        } else {
-          const maxPage = currentPage.length === 4 ? 9999 : 999;
-          newPage = maxPage;
-          newVol -= 1;
-        }
+        if (currentPageNum === 1) return;
+        const maxPage = currentPage.length === 4 ? 9999 : 999;
+        newPage = maxPage;
+        newVol -= 1;
       }
     }
 
     newVol = newVol.toString().padStart(3, '0');
-    if (currentPage.length === 4) {
-      newPage = newPage.toString().padStart(4, '0');
-    } else {
-      newPage = newPage.toString().padStart(3, '0');
-    }
+    newPage = newPage.toString().padStart(currentPage.length, '0');
 
     if (
       (parseInt(newVol, 10) < startVolNum) ||
@@ -493,13 +179,9 @@ async function loadImage(vol, page) {
       return;
     }
 
-    try {
-      await loadImage(newVol, newPage);
-      currentPage = newPage;
-      currentVol = newVol;
-    } catch (err) {
-      console.error('图片加载失败:', err);
-    }
+    await loadImage(newVol, newPage);
+    currentPage = newPage;
+    currentVol = newVol;
   }
 
   function updateCursor(event) {
@@ -528,100 +210,31 @@ async function loadImage(vol, page) {
 
   container.addEventListener('click', (event) => {
     if (isLoading) return;
-
     const rect = event.target.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const width = rect.width;
-
     const isLeftEdge = clickX < width * edgeThreshold;
     const isRightEdge = clickX > width * (1 - edgeThreshold);
-
-    if (isLeftEdge) {
-      changeImage(-1);
-    } else if (isRightEdge) {
-      changeImage(1);
-    }
+    if (isLeftEdge) changeImage(-1);
+    else if (isRightEdge) changeImage(1);
   });
-
-  container.addEventListener('dblclick', handleDoubleClick);
 
   function handleDoubleClick(event) {
     if (isLoading) return;
-
     if (zoomed) {
-      zoomOut();
+      container.style.transform = 'scale(1)';
+      zoomed = false;
       return;
     }
-
-    const rect = container.getBoundingClientRect();
-    const y = event.clientY - rect.top;
-    const height = rect.height;
-
-    const isTopEdge = y < height * 0.05;
-    const isBottomEdge = y > height * 0.95;
-
-    if (isTopEdge) {
-      zoomToPosition(0, 'top');
-    } else if (isBottomEdge) {
-      zoomToPosition(0, 'bottom');
-    }
-  }
-
-  function zoomToPosition(clickX, position) {
-    const scale = 2.4;
-    let transformOriginY = 'center';
-
-    if (position === 'top') {
-      transformOriginY = '11.8%';
-    } else if (position === 'bottom') {
-      transformOriginY = '80%';
-    }
-
-    container.style.transformOrigin = `50% ${transformOriginY}`;
-    container.style.transform = `scale(${scale})`;
-    container.style.backgroundSize = 'contain';
-    container.style.backgroundPosition = 'center';
-
+    container.style.transform = 'scale(2.4)';
     zoomed = true;
   }
 
-  function zoomOut() {
-    container.style.transformOrigin = 'center';
-    container.style.transform = 'scale(1)';
-    container.style.backgroundSize = 'contain';
-    container.style.backgroundPosition = 'center';
+  container.addEventListener('dblclick', handleDoubleClick);
 
-    zoomed = false;
-  }
-
-  // 页面初始化
-  window.onload1 = async () => {
-    console.log('桌面版页面加载启动...');
-    
-    try {
-      await loadImage(currentVol, currentPage);
-    } catch (err) {
-      console.error('初始图片加载失败:', err);
-    }
-  };
-
-// 页面初始化（加强调试版）
-window.onload = async () => {
-  console.log('✅ 桌面版页面加载启动...');
-  console.log('📌 当前卷号:', currentVol);
-  console.log('📌 当前页码:', currentPage);
-
-  try {
-    console.log('🚀 开始加载第一张图片:', currentVol, currentPage);
+  window.onload = async () => {
     await loadImage(currentVol, currentPage);
-    console.log('✅ 初始图片加载完成！');
-  } catch (err) {
-    console.error('❌ 初始图片加载失败:', err);
-    console.error('❌ 失败详情:', err.message || err);
-  }
-};
-
-
+  };
 </script>
 
 </body>

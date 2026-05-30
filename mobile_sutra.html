@@ -120,7 +120,7 @@
     }
   </style>
 
-  <!-- 🔥 只加这一行引入新引擎 -->
+  <!-- 🔥 加这一行引入新引擎 -->
   <script type="module" src="./js/imageLoader.js"></script>
 
 <script>
@@ -152,6 +152,7 @@ var _hmt = _hmt || [];
 </div>
 
 <script>
+  import { getBestImageUrl } from './js/imageLoader.js'
   // ========== 配置区域 ==========
   // 是否优先使用 ImgBB（true=优先ImgBB，失败回退本地；false=直接本地）
   const PREFER_IMGBB = true;
@@ -263,7 +264,7 @@ var _hmt = _hmt || [];
 async function loadImage(vol, page) {
   showLoading();
   try {
-    const best = await window.getBestImageUrl(vol, page);
+    const best = await getBestImageUrl(vol, page);
     if (best) {
       imageView.src = best.url;
       sourceBadge.textContent = best.key;

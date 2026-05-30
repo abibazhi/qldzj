@@ -161,72 +161,7 @@ var _hmt = _hmt || [];
   
   let LOAD_STRATEGY = 'fallback';  // 改为 'fallback' 启用 ImgBB 优先加载
   
-  // 动态加载当前卷的 mapping.js（防重复加载）
-  async function loadMappingForVolume1(vol) {
-    // 防止重复加载，避免报错
-    vol = vol.toString().padStart(3, '0');
 
-    const exists = document.querySelector(`script[src="/${vol}/mapping.js"]`);
-    if (exists) return;
-
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = `/${vol}/mapping.js`;
-      script.onload = resolve;
-      script.onerror = reject;
-      document.body.appendChild(script);
-    });
-  }
-
-// 🔥 最终版：防重复 + 防报错 + 自动识别域名
-async function loadMappingForVolume(vol) {
-  return new Promise((resolve, reject) => {
-    const vol3 = vol.toString().padStart(3, '0');
-    const scriptId = `mapping-script-${vol3}`;
-    
-    // 同一卷只加载一次，不重复
-    if (document.getElementById(scriptId)) {
-      console.log(`✅ 卷 ${vol3} 已加载，跳过`);
-      resolve();
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.id = scriptId;
-    let src;
-
-    // 自动判断域名
-    const host = location.host.toLowerCase();
-    if (host.includes("github.io")) {
-      src = `/${vol3}/mapping.js`;
-    } else {
-      src = `https://pub-a0fc4de2782d448f916244913768fb78.r2.dev/${vol3}/mapping.js`;
-    }
-
-    // 防缓存
-    script.src = src + "?t=" + Date.now();
-    console.log("🔗 加载 mapping:", src);
-
-    script.onload = () => {
-      console.log("✅ 加载完成:", src);
-      resolve();
-    };
-
-    // 忽略重复定义错误
-    script.onerror = () => {
-      console.log("⚠️ 已加载，忽略");
-      resolve();
-    };
-
-    document.head.appendChild(script);
-  });
-}
-
-
-
-    
-  // 当前图片来源标识
-  let currentSource = 'local';
   
   function getQueryVariable(variable) {
     const query = window.location.search.substring(1);
@@ -325,110 +260,6 @@ async function loadMappingForVolume(vol) {
     imageWrapper.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
   }
   
-  // 获取本地图片路径
-function getLocalImageUrl1(vol, page) {
-  const vol3 = String(vol).padStart(3, '0');
-  const pageNum = parseInt(page, 10);
-  return `../${vol3}/${pageNum}.png`;
-}
-
-function getLocalImageUrl(vol, page) {
-  const vol3 = String(vol).padStart(3, '0');
-  const pageNum = parseInt(page, 10);
-  return `https://raw.githubusercontent.com/jm33-pub/qldzj/main/${vol3}/${pageNum}.png`;
-}
-  
-// 🔥 正确读取一维数组 mapping
-function getImgbbrl(vol, page) {
-  if (!mappingData || !Array.isArray(mappingData)) return null;
-
-  const pageIdx = parseInt(page) - 1;
-  if (pageIdx < 0 || pageIdx >= mappingData.length) return null;
-
-  const randomId = mappingData[pageIdx];
-  if (!randomId) return null;
-
-  const vol3 = String(vol).padStart(3, '0');
-  return `https://i.ibb.co/${randomId}/${vol3}-${page}-png.png`;
-}
-
-
-async function loadImage1(vol, page) {
-  showLoading();
-  await loadMappingForVolume(vol);
-
-  const host = location.host.toLowerCase();
-  const isGitHub = host.includes("github.io");
-
-  const imgbbUrl = getImgbbrl(vol, page);
-  const localUrl = getLocalImageUrl(vol, page);
-
-  updatePageInfo();
-
-  // 判断手机是否使用流量（4G/5G）
-  function isMobileData() {
-    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    if (conn) {
-      return conn.type === 'cellular';
-    }
-    return /Android|iPhone|Mobile/.test(navigator.userAgent);
-  }
-  const usingMobileData = isMobileData();
-
-  // ======================
-  // 最终智能策略
-  // ======================
-  let primary, backup, label;
-
-  if (isGitHub) {
-    // GitHub 一律本地优先
-    primary = localUrl;
-    backup = imgbbUrl;
-    label = "github";
-  } else {
-    if (usingMobileData) {
-      // 手机流量 → 走最稳的 github 本地
-      primary = localUrl;
-      backup = imgbbUrl;
-      label = "本地(流量)";
-    } else {
-      // WiFi → ImgBB 优先
-      primary = imgbbUrl;
-      backup = localUrl;
-      label = "ImgBB(WiFi)";
-    }
-  }
-
-  // 尝试加载主地址
-  if (primary) {
-    const res = await tryLoadImage(primary);
-    if (res.success) {
-      imageView.src = primary;
-      sourceBadge.textContent = label;
-      hideLoading();
-      resetView();
-      return;
-    }
-  }
-
-  // 失败回退备用
-  if (backup) {
-    const res = await tryLoadImage(backup);
-    if (res.success) {
-      imageView.src = backup;
-      sourceBadge.textContent = "备用";
-      hideLoading();
-      resetView();
-      return;
-    }
-  }
-
-  hideLoading();
-  showError("加载失败");
-}
-
-
-
 async function loadImage(vol, page) {
   showLoading();
   try {
@@ -444,33 +275,6 @@ async function loadImage(vol, page) {
     showError("加载异常");
   }
   hideLoading();
-}
-
-
-
-function tryLoadImage(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-
-    const timeout = setTimeout(() => {
-      img.onload = null;
-      img.onerror = null;
-      resolve({ success: false });
-    }, 8000);
-
-    img.onload = () => {
-      clearTimeout(timeout);
-      resolve({ success: true }); // ✅ 这里必须返回成功
-    };
-
-    img.onerror = () => {
-      clearTimeout(timeout);
-      resolve({ success: false });
-    };
-
-    img.src = url;
-  });
 }
 
   
@@ -629,11 +433,6 @@ function tryLoadImage(url) {
   // 页面初始化
   window.onload = async () => {
     console.log('页面加载启动...');
-    
-    // 如果策略不是纯本地，先加载映射表
-    // if (LOAD_STRATEGY !== 'local') {
-    //  await loadMapping();
-    // }
     
     updatePageInfo();
     await loadImage(currentVol, currentPage);

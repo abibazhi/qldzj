@@ -109,7 +109,7 @@ function createImage(url) {
 // ==============================
 // 测试单张图片
 // ==============================
-export async function testImage(url) {
+export async function testImage1(url) {
   return new Promise(resolve => {
     const img = createImage(url);
     const start = Date.now();
@@ -139,67 +139,50 @@ export async function testImage(url) {
   });
 }
 
+
+// ==============================
+// 测试单张图片（带自动切源）
+// ==============================
+export async function testImage(url) {
+  return new Promise(resolve => {
+    const img = createImage(url);
+    const start = Date.now();
+    let done = false;
+
+    const timer = setTimeout(() => {
+      done = true;
+      log(`❌ ${url} | 超时`);
+      lastWorkingSource = null; // 👈 加在这里：超时清空坏源
+      resolve(false);
+    }, IMG_TIMEOUT);
+
+    img.onload = () => {
+      if (done) return;
+      clearTimeout(timer);
+      log(`✅ ${url} | 成功`);
+      resolve(true);
+    };
+
+    img.onerror = () => {
+      if (done) return;
+      clearTimeout(timer);
+      log(`❌ ${url} | 失败`);
+      lastWorkingSource = null; // 👈 加在这里：失败清空坏源
+      resolve(false);
+    };
+
+    img.src = url;
+  });
+}
+
+
+
+
 // ==============================
 // 🔥 生产核心：智能获取最优图片
 // ==============================
+
 export async function getBestImageUrl1(vol, page) {
-  await loadMapping(vol);
-  const sources = buildSources(vol, page);
-
-  if (lastWorkingSource) {
-    const s = lastWorkingSource;
-    const ok = await testImage(s.url);
-    if (ok) return s;
-
-    log("⚠️ 缓存源失效，重新探测");
-    lastWorkingSource = null;
-  }
-
-  for (const s of sources) {
-    const ok = await testImage(s.url);
-    if (ok) {
-      lastWorkingSource = s;
-      return s;
-    }
-  }
-
-  return null;
-}
-
-
-export async function getBestImageUrl2(vol, page) {
-  await loadMapping(vol);
-  const sources = buildSources(vol, page);
-
-  // 只缓存来源类型，不缓存死 URL
-  if (lastWorkingSource) {
-    const target = sources.find(s => s.key === lastWorkingSource.key);
-    if (target) {
-      const ok = await testImage(target.url);
-      if (ok) {
-        lastWorkingSource = target;
-        return target;
-      }
-    }
-
-    log(" 缓存源失效，重新探测");
-    lastWorkingSource = null;
-  }
-
-  for (const s of sources) {
-    const ok = await testImage(s.url);
-    if (ok) {
-      lastWorkingSource = s;
-      return s;
-    }
-  }
-
-  return null;
-}
-
-
-
-export async function getBestImageUrl(vol, page) {
   await loadMapping(vol);
   const sources = buildSources(vol, page);
 
@@ -214,6 +197,34 @@ export async function getBestImageUrl(vol, page) {
 
   return null;
 }
+
+export async function getBestImageUrl(vol, page) {
+  await loadMapping(vol);
+  const sources = buildSources(vol, page);
+
+  // 🔥 【快速通道】如果有可用的源，直接用同一种源加载新图（秒切）
+  if (lastWorkingSource) {
+    // 找到同类型的源（R2 还是 R2，ImgBB 还是 ImgBB）
+    const target = sources.find(s => s.key === lastWorkingSource.key);
+    if (target) {
+      lastWorkingSource = target;  // 只更新地址，不重复测试
+      return target;
+    }
+    lastWorkingSource = null;
+  }
+
+  // 第一次加载，正常找源
+  for (const s of sources) {
+    const ok = await testImage(s.url);
+    if (ok) {
+      lastWorkingSource = s;
+      return s;
+    }
+  }
+
+  return null;
+}
+
 
 // 加在文件最后一行
 window.getBestImageUrl = getBestImageUrl;

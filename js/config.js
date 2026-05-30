@@ -20,7 +20,7 @@ export const IMG_TIMEOUT = 10000;
  * Cloudflare R2 公共地址
  */
 // export const R2_BASE = "https://pub-a0fc4de2782d448f916244913768fb78.r2.dev";
-export const R2_BASE = img.daxumi.top;
+export const R2_BASE = "img.daxumi.top";
 
 /**
  * GitHub Pages 地址（用于跨域备用图）

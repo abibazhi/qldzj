@@ -175,23 +175,6 @@ export async function testImage(url) {
 // 🔥 生产核心：智能获取最优图片
 // ==============================
 
-export async function getBestImageUrl1(vol, page) {
-  await loadMapping(vol);
-  const sources = buildSources(vol, page);
-
-  // 👇 只遍历一次，只发一次请求
-  for (const s of sources) {
-    const ok = await testImage(s.url);
-    if (ok) {
-      lastWorkingSource = s;
-      return s;
-    }
-  }
-
-  return null;
-}
-
-
 export async function getBestImageUrl(vol, page) {
   console.log("\n========================================");
   console.log("【翻页】开始加载 → 卷:", vol, "页:", page);
@@ -257,4 +240,4 @@ export async function getBestImageUrl(vol, page) {
 
 
 // 加在文件最后一行
-window.getBestImageUrl = getBestImageUrl;
+//window.getBestImageUrl = getBestImageUrl;

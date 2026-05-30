@@ -76,54 +76,8 @@ var _hmt = _hmt || [];
 </div>
 
 <script type="module">
-import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
-
-
-/*
-  function getQueryVariable(variable) {
-    const query = window.location.search.substring(1);
-    const vars = query.split('&');
-    for (let i = 0; i < vars.length; i++) {
-      const pair = vars[i].split('=');
-      if (pair[0] === variable) return decodeURIComponent(pair[1]);
-    }
-    return false;
-  }
-
-  const startParam = getQueryVariable('start') || '001001';
-  const endParam = getQueryVariable('end') || '999999';
-
-  // 检测参数长度并相应分割
-  function splitVolumeAndPage(param) {
-    const len = param.length;
-    let vol, page;
-
-    if (len === 6) {
-      vol = param.slice(0, 3);
-      page = param.slice(3, 6);
-    } else if (len === 7) {
-      vol = param.slice(0, 3);
-      page = param.slice(3, 7);
-    } else {
-      vol = param.slice(0, 3);
-      page = param.slice(3);
-    }
-
-    return { vol, page };
-  }
-
-  const start = splitVolumeAndPage(startParam);
-  const end = splitVolumeAndPage(endParam);
-
-  const startVol = start.vol;
-  const startPage = start.page;
-  const endVol = end.vol;
-  const endPage = end.page;
-
-  let currentPage = startPage;
-  let currentVol = startVol;
-
-*/
+  import { getBestImageUrl } from './js/imageLoader.js'
+  import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
 
   let zoomed = false;
   let isLoading = false;
@@ -167,93 +121,6 @@ async function loadImage(vol, page) {
 
   hideLoading();
 }
-
-async function changeImage1(direction) {
-  // ========== 日志 1：看看有没有进这个函数 ==========
-  console.log("=== 触发翻页 ===", "方向:", direction, "当前缩放:", zoomed, "是否加载中:", isLoading);
-
-  if (zoomed || isLoading) {
-    console.log("❌ 被拦截：缩放中 或 加载中");
-    return;
-  }
-
-  // ========== 日志 2：打印当前状态 ==========
-  console.log("当前卷:", currentVol, "当前页:", currentPage);
-
-  let currentPageNum = parseInt(currentPage, 10);
-  let currentVolNum = parseInt(currentVol, 10);
-  let startPageNum = parseInt(startPage, 10);
-  let startVolNum = parseInt(startVol, 10);
-  let endPageNum = parseInt(endPage, 10);
-  let endVolNum = parseInt(endVol, 10);
-
-  let newPage = currentPageNum + direction;
-  let newVol = currentVolNum;
-
-  // ========== 日志 3：计算后的新页码 ==========
-  console.log("计算后原始 newPage:", newPage, "newVol:", newVol);
-
-  if (direction > 0) {
-    const maxPage = currentPage.length === 4 ? 9999 : 999;
-    if (newPage > maxPage) {
-      newPage = 1;
-      newVol += 1;
-      console.log("→ 翻到下一卷");
-    }
-  } else {
-    if (newPage < 1) {
-      if (currentPageNum === 1) {
-        console.log("❌ 已经是第一页，不能往前");
-        return;
-      } else {
-        const maxPage = currentPage.length === 4 ? 9999 : 999;
-        newPage = maxPage;
-        newVol -= 1;
-        console.log("→ 翻到上一卷");
-      }
-    }
-  }
-
-  newVol = newVol.toString().padStart(3, '0');
-  if (currentPage.length === 4) {
-    newPage = newPage.toString().padStart(4, '0');
-  } else {
-    newPage = newPage.toString().padStart(3, '0');
-  }
-
-  // ========== 日志 4：最终要切换的目标 ==========
-  console.log("✅ 最终要切换到：卷", newVol, "页", newPage);
-
-  // ========== 日志 5：范围检查 ==========
-  const outOfRange =
-    (parseInt(newVol, 10) < startVolNum) ||
-    (parseInt(newVol, 10) === startVolNum && parseInt(newPage, 10) < startPageNum) ||
-    (parseInt(newVol, 10) > endVolNum) ||
-    (parseInt(newVol, 10) === endVolNum && parseInt(newPage, 10) > endPageNum);
-
-  if (outOfRange) {
-    console.log("❌ 超出范围，禁止翻页");
-    return;
-  }
-
-  // ========== 日志 6：开始加载 ==========
-  console.log("🚀 开始加载新图片...");
-
-  try {
-    await loadImage(newVol, newPage);
-
-    // ========== 日志 7：加载完成，更新页码 ==========
-    console.log("✅ 加载完成！更新当前页为:", newVol, newPage);
-    
-    currentPage = newPage;
-    currentVol = newVol;
-
-    console.log("=== 翻页成功完成 ===");
-  } catch (err) {
-    console.error('💥 图片加载失败:', err);
-  }
-}
-
 
 // 翻页入口（仅调用公共计算逻辑）
 async function changeImage(direction) {

@@ -11,6 +11,7 @@
       overflow: hidden;
     }
 
+    /* 🔥 给容器加 蓝色 边框，方便你看位置 */
     .container {
       width: 100vw;
       height: 100vh;
@@ -19,7 +20,7 @@
       background-position: center;
       background-color: transparent;
       padding: 10px;
-      box-shadow: 0 0 0 5px silver;
+      box-shadow: 0 0 0 5px blue; /* 🔥 蓝色框 */
       box-sizing: border-box;
       touch-action: pan-x pan-y;
       transition: transform 0.3s ease-in-out;
@@ -52,7 +53,7 @@
       pointer-events: none;
     }
 
-    /* 仅增加工具栏样式，不影响原有布局 */
+    /* 工具栏 */
     .controls {
       position: fixed;
       bottom: 20px;
@@ -72,6 +73,20 @@
       font-size: 20px;
       cursor: pointer;
       user-select: none;
+    }
+
+    /* 悬浮提示 */
+    .hover-tooltip {
+      position: fixed;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 14px;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
     }
   </style>
 
@@ -96,45 +111,54 @@ var _hmt = _hmt || [];
   <div id="sourceBadge" class="source-badge">---</div>
 </div>
 
-<!-- 底部工具栏 -->
 <div class="controls">
   <button class="control-btn" id="zoomOutBtn">-</button>
   <button class="control-btn" id="resetBtn">1:1</button>
   <button class="control-btn" id="zoomInBtn">+</button>
 </div>
 
+<!-- 悬浮提示 -->
+<div id="hoverTip" class="hover-tooltip">提示</div>
+
 <script type="module">
   import { getBestImageUrl } from './js/imageLoader.js'
-  import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
+  import { currentVol, currentPage, calcNextPage, setCurrentPage, isFirstPage, isLastPage } from './js/pageNav.js';
 
   let zoomed = false;
   let isLoading = false;
-
   const edgeThreshold = 0.05;
+
   const container = document.getElementById('imageContainer');
   const loadingIndicator = document.getElementById('loadingIndicator');
   const sourceBadge = document.getElementById('sourceBadge');
   const zoomInBtn = document.getElementById('zoomInBtn');
   const zoomOutBtn = document.getElementById('zoomOutBtn');
   const resetBtn = document.getElementById('resetBtn');
+  const hoverTip = document.getElementById('hoverTip');
+
+  // 提示工具
+  function showTip(x, y, text) {
+    hoverTip.style.left = x + 'px';
+    hoverTip.style.top = y + 'px';
+    hoverTip.textContent = text;
+    hoverTip.style.opacity = 1;
+  }
+  function hideTip() {
+    hoverTip.style.opacity = 0;
+  }
 
   function showLoading() {
     if (isLoading) return;
     isLoading = true;
     loadingIndicator.style.display = 'block';
   }
-
   function hideLoading() {
     isLoading = false;
     loadingIndicator.style.display = 'none';
   }
 
-  // ======================
-  // 完全恢复你原来的图片加载
-  // ======================
   async function loadImage(vol, page) {
     showLoading();
-
     try {
       const best = await getBestImageUrl(vol, page);
       if (best) {
@@ -142,23 +166,24 @@ var _hmt = _hmt || [];
         sourceBadge.textContent = best.key;
       } else {
         container.style.backgroundImage = "none";
-        container.style.backgroundColor = "#222";
         sourceBadge.textContent = "失败";
       }
-    } catch (e) {
-      console.error(e);
-    }
-
+    } catch (e) { console.error(e); }
     hideLoading();
   }
 
-  // ======================
-  // 完全恢复你原来的翻页
-  // ======================
   async function changeImage(direction) {
-    if (zoomed || isLoading) {
+    if (zoomed || isLoading) return;
+
+    if (direction === -1 && isFirstPage()) {
+      alert("📖 已经是第一页");
       return;
     }
+    if (direction === 1 && isLastPage()) {
+      alert("📖 已经是最后一页");
+      return;
+    }
+
     const res = calcNextPage(direction);
     if (!res.ok) return;
     const { newVol, newPage } = res;
@@ -166,124 +191,95 @@ var _hmt = _hmt || [];
     setCurrentPage(newVol, newPage);
   }
 
-  // ======================
-  // 完全恢复你原来的鼠标
-  // ======================
-  function updateCursor(event) {
-    const rect = event.target.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    const width = rect.width;
-    const height = rect.height;
+  // 鼠标提示
+  container.addEventListener('mousemove', e => {
+    const r = container.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+    const w = r.width;
+    const h = r.height;
 
-    const isTopEdge = y < height * edgeThreshold;
-    const isBottomEdge = y > height * (1 - edgeThreshold);
-    const isLeftEdge = x < width * edgeThreshold;
-    const isRightEdge = x > width * (1 - edgeThreshold);
+    const left = x < w * edgeThreshold;
+    const right = x > w * (1 - edgeThreshold);
+    const top = y < h * 0.05;
+    const bottom = y > h * 0.95;
 
-    if (isTopEdge || isBottomEdge || isLeftEdge || isRightEdge) {
-      container.style.cursor = 'pointer';
+    if (left) {
+      showTip(e.clientX, e.clientY - 30, "← 上一页");
+    } else if (right) {
+      showTip(e.clientX, e.clientY - 30, "下一页 →");
+    } else if (top) {
+      showTip(e.clientX, e.clientY + 20, "双击放大顶部");
+    } else if (bottom) {
+      showTip(e.clientX, e.clientY - 50, "双击放大底部");
     } else {
-      container.style.cursor = 'auto';
-    }
-  }
-
-  container.addEventListener('mousemove', updateCursor);
-  container.addEventListener('mouseleave', () => {
-    container.style.cursor = 'auto';
-  });
-
-  // ======================
-  // 完全恢复你原来的点击翻页
-  // ======================
-  container.addEventListener('click', (event) => {
-    const rect = event.target.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const width = rect.width;
-    const isLeftEdge = clickX < width * edgeThreshold;
-    const isRightEdge = clickX > width * (1 - edgeThreshold);
-
-    if (isLeftEdge) {
-      changeImage(-1);
-    } else if (isRightEdge) {
-      changeImage(1);
+      hideTip();
     }
   });
 
-  // ======================
-  // 🔥 100% 还原你原来的双击逻辑
-  // ======================
-  container.addEventListener('dblclick', handleDoubleClick);
-  function handleDoubleClick(event) {
+  container.addEventListener('mouseleave', hideTip);
+
+  // 点击翻页
+  container.addEventListener('click', e => {
+    const r = container.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const w = r.width;
+    if (x < w * edgeThreshold) changeImage(-1);
+    else if (x > w * (1 - edgeThreshold)) changeImage(1);
+  });
+
+  // 双击恢复你原版逻辑
+  container.addEventListener('dblclick', e => {
     if (isLoading) return;
+    if (zoomed) { zoomOut(); return; }
 
-    // 已经放大 → 只缩小
-    if (zoomed) {
-      zoomOut();
-      return;
-    }
+    const r = container.getBoundingClientRect();
+    const y = e.clientY - r.top;
+    const h = r.height;
+    const top = y < h * 0.05;
+    const bottom = y > h * 0.95;
 
-    const rect = container.getBoundingClientRect();
-    const y = event.clientY - rect.top;
-    const height = rect.height;
+    if (top) zoomToPosition('top');
+    else if (bottom) zoomToPosition('bottom');
+  });
 
-    const isTopEdge = y < height * 0.05;
-    const isBottomEdge = y > height * 0.95;
-
-    // 只有双击顶部/底部才放大
-    // 双击中间、左右 → 完全不响应！（你要的效果）
-    if (isTopEdge) {
-      zoomToPosition(0, 'top');
-    } else if (isBottomEdge) {
-      zoomToPosition(0, 'bottom');
-    }
-  }
-
-  // ======================
-  // 🔥 你原来的经验值参数全部保留
-  // ======================
-  function zoomToPosition(clickX, position) {
+  // 你原版放大逻辑
+  function zoomToPosition(pos) {
     const scale = 2.4;
-    let transformOriginY = 'center';
-
-    if (position === 'top') {
-      transformOriginY = '11.8%';
-    } else if (position === 'bottom') {
-      transformOriginY = '80%';
-    }
-
-    container.style.transformOrigin = `50% ${transformOriginY}`;
+    let y = 'center';
+    if (pos === 'top') y = '11.8%';
+    if (pos === 'bottom') y = '80%';
+    container.style.transformOrigin = `50% ${y}`;
     container.style.transform = `scale(${scale})`;
-    container.style.backgroundSize = 'contain';
-    container.style.backgroundPosition = 'center';
-
     zoomed = true;
   }
 
   function zoomOut() {
     container.style.transformOrigin = 'center';
     container.style.transform = 'scale(1)';
-    container.style.backgroundSize = 'contain';
-    container.style.backgroundPosition = 'center';
     zoomed = false;
   }
 
-  // ======================
-  // 工具栏按钮（新增，不影响原有逻辑）
-  // ======================
+  // ==============================
+  // 工具栏：改为正常中心放大
+  // ==============================
   zoomInBtn.addEventListener('click', () => {
-    if (zoomed) return;
-    zoomToPosition(0, 'top');
+    container.style.transformOrigin = 'center';
+    container.style.transform = 'scale(2.0)';
+    zoomed = true;
   });
   zoomOutBtn.addEventListener('click', zoomOut);
   resetBtn.addEventListener('click', zoomOut);
 
-  // ======================
-  // 初始化
-  // ======================
-  window.onload = async () => {
-    await loadImage(currentVol, currentPage);
-  };
+  // 按钮提示
+  zoomInBtn.addEventListener('mouseenter', () => showTip(0,0, "放大"));
+  zoomOutBtn.addEventListener('mouseenter', () => showTip(0,0, "缩小"));
+  resetBtn.addEventListener('mouseenter', () => showTip(0,0, "重置 1:1"));
+  zoomInBtn.addEventListener('mouseleave', hideTip);
+  zoomOutBtn.addEventListener('mouseleave', hideTip);
+  resetBtn.addEventListener('mouseleave', hideTip);
+
+  window.onload = () => loadImage(currentVol, currentPage);
 </script>
 
 </body>

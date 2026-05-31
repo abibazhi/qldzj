@@ -126,6 +126,10 @@ imageWrapper.addEventListener('touchstart', (e) => {
       touchMode = 'drag';
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
+      
+      // 👇 👇 只加这两行！！！ 👇 👇
+      startTranslateX = translateX;
+      startTranslateY = translateY;
     } else {
       touchMode = 'swipe';
       startX = e.touches[0].clientX;

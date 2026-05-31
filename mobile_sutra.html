@@ -148,9 +148,8 @@ imageWrapper.addEventListener('touchmove', (e) => {
     lastScaleDistance = dist;
   } else if (touchMode === 'drag' && e.touches.length === 1) {
     e.preventDefault();
-    const dx = e.touches[0].clientX - startX;
-    const dy = e.touches[0].clientY - startY;
-    
+    const currentX = event.touches[0].clientX;
+    const currentY = event.touches[0].clientY;    
     //drag(dx, dy, imageWrapper);
     // 🔥 调用你原来风格的绝对定位拖拽
     dragAbsolute({

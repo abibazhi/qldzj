@@ -11,7 +11,6 @@
       overflow: hidden;
     }
 
-    /* 蓝色边框调试 */
     .container {
       width: 100vw;
       height: 100vh;
@@ -54,7 +53,6 @@
       pointer-events: none;
     }
 
-    /* 工具栏 */
     .controls {
       position: fixed;
       bottom: 20px;
@@ -76,7 +74,6 @@
       user-select: none;
     }
 
-    /* 区域悬浮提示 */
     .hover-tooltip {
       position: fixed;
       background: rgba(0,0,0,0.7);
@@ -90,7 +87,6 @@
       transition: opacity 0.2s;
     }
 
-    /* 红色临时提示框（同移动端样式） */
     #floatTip {
       position: fixed;
       top: 30px;
@@ -109,7 +105,6 @@
   <script type="module" src="./js/utils.js"></script>
   <script type="module" src="./js/pageNav.js"></script>
   <script type="module" src="./js/imageLoader.js"></script>
-  <!-- 引入通用缩放/拖拽/提示工具 -->
   <script type="module" src="./js/viewerTool.js"></script>
 
 <script>
@@ -136,14 +131,12 @@ var _hmt = _hmt || [];
 </div>
 
 <div id="hoverTip" class="hover-tooltip">提示</div>
-<!-- 红色自动消失提示框 -->
 <div id="floatTip"></div>
 
 <script type="module">
 import { getBestImageUrl } from './js/imageLoader.js';
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
-// 导入通用工具
-import { resetView, stepZoom, initDrag, showTempTip, currentScale } from './js/viewerTool.js';
+import { resetView, stepZoom, initDrag, showTempTip, currentScale, applyTransform } from './js/viewerTool.js';
 
 let isLoading = false;
 const edgeThreshold = 0.05;
@@ -156,10 +149,8 @@ const zoomOutBtn = document.getElementById('zoomOutBtn');
 const resetBtn = document.getElementById('resetBtn');
 const hoverTip = document.getElementById('hoverTip');
 
-// 初始化鼠标拖拽
 initDrag(container);
 
-// 区域悬浮提示
 function showTip(x, y, text) {
   hoverTip.style.left = x + 'px';
   hoverTip.style.top = y + 'px';
@@ -196,7 +187,6 @@ async function loadImage(vol, page) {
   hideLoading();
 }
 
-// 翻页逻辑 + 红色浮窗提示（替换弹窗）
 async function changeImage(direction) {
   if (currentScale > 1 || isLoading) return;
 
@@ -211,7 +201,6 @@ async function changeImage(direction) {
   setCurrentPage(newVol, newPage);
 }
 
-// 容器鼠标悬浮文字
 container.addEventListener('mousemove', e => {
   const r = container.getBoundingClientRect();
   const x = e.clientX - r.left;
@@ -239,7 +228,6 @@ container.addEventListener('mousemove', e => {
 
 container.addEventListener('mouseleave', hideTip);
 
-// 左右点击翻页
 container.addEventListener('click', e => {
   const r = container.getBoundingClientRect();
   const x = e.clientX - r.left;
@@ -248,7 +236,7 @@ container.addEventListener('click', e => {
   else if (x > w * (1 - edgeThreshold)) changeImage(1);
 });
 
-// 双击顶部/底部 定点放大（保留原有经验值）
+// 🔥 双击逻辑：干净、标准、无hack
 container.addEventListener('dblclick', e => {
   if (isLoading) return;
   if (currentScale > 1) {
@@ -262,30 +250,17 @@ container.addEventListener('dblclick', e => {
   const top = y < h * 0.05;
   const bottom = y > h * 0.95;
 
-  if (top) zoomToPosition('top');
-  else if (bottom) zoomToPosition('bottom');
+  if (top) {
+    applyTransform(container, 2.4, '50%', '11.8%');
+  } else if (bottom) {
+    applyTransform(container, 2.4, '50%', '80%');
+  }
 });
 
-// 原有定点放大逻辑（双击专用）
-function zoomToPosition(pos) {
-  const scale = 2.4;
-  let y = 'center';
-  if (pos === 'top') y = '11.8%';
-  if (pos === 'bottom') y = '80%';
-  container.style.transformOrigin = `50% ${y}`;
-  container.style.transform = `scale(${scale})`;
-  // 同步到全局缩放变量
-  import('./viewerTool.js').then(mod => {
-    mod.currentScale = scale;
-  });
-}
-
-// 工具栏按钮事件（复用通用缩放）
 zoomInBtn.addEventListener('click', () => stepZoom(container, true));
 zoomOutBtn.addEventListener('click', () => stepZoom(container, false));
 resetBtn.addEventListener('click', () => resetView(container));
 
-// 按钮悬浮提示
 zoomInBtn.addEventListener('mouseenter', () => {
   const rect = zoomInBtn.getBoundingClientRect();
   showTip(rect.x, rect.y - 40, "放大");

@@ -12,15 +12,8 @@
   <script type="module" src="./js/imageLoader.js"></script>
   <script type="module" src="./js/viewerControl.js"></script>
 
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?7784bc9ab2990154982c78b2431e2141";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
+  <!-- 公共百度统计 -->
+  <script src="js/tongji.baidu.js"></script>
 </head>
 <body>
 
@@ -53,7 +46,6 @@ let startTime = 0;
 let startTranslateX = 0;
 let startTranslateY = 0;
 
-// 双指缩放锁定焦点专用
 let scaleStartCenterX = 0;
 let scaleStartCenterY = 0;
 let scaleStartScale = 1;
@@ -117,9 +109,6 @@ async function changeImage(direction) {
   updatePageInfo();
 }
 
-// ------------------------------
-// 触摸手势
-// ------------------------------
 imageWrapper.addEventListener('touchstart', (e) => {
   if (e.touches.length === 2) {
     touchMode = 'scale';

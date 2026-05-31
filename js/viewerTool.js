@@ -43,6 +43,17 @@ export function applyTransform(el, scale) {
   el.style.transform = `scale(${currentScale}) translate(0, 0)`;
 }
 
+// ======================
+// 🔥 桌面双击专用：指定位置放大（你原来的完美效果）
+// ======================
+export function applyTransformAtOrigin(el, scale, originX, originY) {
+  currentScale = scale;
+  currentX = 0;
+  currentY = 0;
+  el.style.transformOrigin = `${originX} ${originY}`;
+  el.style.transform = `scale(${currentScale}) translate(0, 0)`;
+}
+
 // 统一渲染
 function updateTransform(el) {
   el.style.transform = `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`;

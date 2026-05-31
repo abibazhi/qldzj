@@ -130,7 +130,8 @@
 <script type="module">
 import { getBestImageUrl } from './js/imageLoader.js';
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
-import { resetView, stepZoom, initDrag, showTempTip, currentScale, applyTransform } from './js/viewerTool.js';
+import {resetView, stepZoom, initDrag, showTempTip, currentScale, applyTransform, applyTransformAtOrigin } from './js/viewerTool.js';
+
 
 let isLoading = false;
 const edgeThreshold = 0.05;
@@ -245,9 +246,9 @@ container.addEventListener('dblclick', e => {
   const bottom = y > h * 0.95;
 
   if (top) {
-    applyTransform(container, 2.4, '50%', '11.8%');
+    applyTransformAtOrigin(container, 2.4, '50%', '11.8%');
   } else if (bottom) {
-    applyTransform(container, 2.4, '50%', '80%');
+    applyTransformAtOrigin(container, 2.4, '50%', '80%');
   }
 });
 

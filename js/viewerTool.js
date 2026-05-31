@@ -1,4 +1,4 @@
-// 通用视图工具：缩放 + 拖拽 + 提示（桌面/手机共用）
+// 通用视图工具：缩放 + 拖拽 + 提示（桌面/手机共用，顺滑版）
 export let currentScale = 1;
 export const scaleStep = 0.2;
 export const minScale = 1;
@@ -12,11 +12,21 @@ let currentX = 0;
 let currentY = 0;
 let targetEl = null;
 
+// 惯性/顺滑相关
+let rafId = null;
+let lastX = 0;
+let lastY = 0;
+let velocityX = 0;
+let velocityY = 0;
+const friction = 0.92; // 惯性衰减（越小停得越快）
+
 // 重置所有视图状态
 export function resetView(el) {
   currentScale = 1;
   currentX = 0;
   currentY = 0;
+  velocityX = 0;
+  velocityY = 0;
   el.style.transformOrigin = 'center';
   el.style.transform = `scale(1) translate(0, 0)`;
 }
@@ -34,33 +44,78 @@ export function stepZoom(el, isIncrease) {
   el.style.transform = `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`;
 }
 
-// 初始化拖拽监听（鼠标/触屏通用基础逻辑）
+// 渲染（统一走 rAF，保证 60fps）
+function render() {
+  if (!targetEl) return;
+  targetEl.style.transform = `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`;
+}
+
+// 惯性动画
+function inertiaLoop() {
+  if (Math.abs(velocityX) < 0.05 && Math.abs(velocityY) < 0.05) return;
+  currentX += velocityX;
+  currentY += velocityY;
+  velocityX *= friction;
+  velocityY *= friction;
+  render();
+  requestAnimationFrame(inertiaLoop);
+}
+
+// 初始化拖拽监听（鼠标/触屏通用，顺滑版）
 export function initDrag(el) {
   targetEl = el;
 
+  // 开启硬件加速（关键顺滑）
+  el.style.willChange = 'transform';
+  el.style.transform = 'translateZ(0)';
+
   // 鼠标按下
   el.addEventListener('mousedown', (e) => {
-    // 仅放大状态允许拖拽
     if (currentScale <= 1) return;
     isDragging = true;
     dragStartX = e.clientX - currentX;
     dragStartY = e.clientY - currentY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    velocityX = 0;
+    velocityY = 0;
     el.style.cursor = 'grab';
+    e.preventDefault();
   });
 
-  // 鼠标移动
+  // 鼠标移动（用 rAF 节流，不再狂触发）
   document.addEventListener('mousemove', (e) => {
     if (!isDragging || currentScale <= 1) return;
-    currentX = e.clientX - dragStartX;
-    currentY = e.clientY - dragStartY;
-    el.style.transform = `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`;
+
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => {
+      currentX = e.clientX - dragStartX;
+      currentY = e.clientY - dragStartY;
+
+      // 计算速度（用于松手惯性）
+      velocityX = e.clientX - lastX;
+      velocityY = e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
+
+      render();
+    });
   });
 
-  // 鼠标抬起/离开
+  // 鼠标抬起/离开（触发惯性）
   document.addEventListener('mouseup', () => {
     if (isDragging) {
       isDragging = false;
-      el.style.cursor = 'auto';
+      targetEl.style.cursor = 'auto';
+      inertiaLoop(); // 松手后惯性滑动
+    }
+  });
+
+  document.addEventListener('mouseleave', () => {
+    if (isDragging) {
+      isDragging = false;
+      targetEl.style.cursor = 'auto';
+      inertiaLoop();
     }
   });
 }
@@ -68,7 +123,6 @@ export function initDrag(el) {
 // 临时消息提示（红色浮窗，自动消失，和移动端风格统一）
 let tipTimer = null;
 export function showTempTip(text) {
-  // 复用页面内提示元素
   const tipDom = document.getElementById('floatTip');
   if (!tipDom) return;
 

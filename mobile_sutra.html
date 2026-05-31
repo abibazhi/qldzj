@@ -3,27 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title>乾隆大藏经 图片浏览</title>
-
+  <title>乾隆大藏经</title>
   <link rel="stylesheet" href="css/viewerControl.css">
 
   <script type="module" src="./js/utils.js"></script>
   <script type="module" src="./js/pageNav.js"></script>
   <script type="module" src="./js/imageLoader.js"></script>
-  <!-- 🔥 换成通用工具 -->
   <script type="module" src="./js/viewerTool.js"></script>
-
-  <!-- 百度统计 -->
   <script src="js/tongji.baidu.js"></script>
 </head>
 <body>
 
 <div class="container">
   <div class="image-wrapper" id="imageWrapper">
-    <img id="imageView" src="" alt="乾隆大藏经图片"/>
+    <img id="imageView" src="" alt="图片">
   </div>
   <div class="loading-indicator" id="loadingIndicator">加载中...</div>
-  <div class="error-message" id="errorMessage">图片加载失败</div>
+  <div class="error-message" id="errorMessage">加载失败</div>
   <div class="page-info" id="pageInfo"></div>
   <div class="source-badge" id="sourceBadge">---</div>
 
@@ -34,151 +30,75 @@
   </div>
 </div>
 
-<!-- 红色自动消失提示条 -->
-<div id="floatTip" style="
-  position: fixed;
-  top: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #c0392b;
-  color: #fff;
-  padding: 8px 20px;
-  border-radius: 4px;
-  font-size: 14px;
-  z-index: 10000;
-  display: none;
-"></div>
+<div id="floatTip" style="position:fixed;top:30px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;padding:8px 20px;border-radius:4px;z-index:10000;display:none;"></div>
 
 <script type="module">
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
 import { getBestImageUrl } from './js/imageLoader.js';
-// 🔥 导入通用工具
-import { stepZoom, resetView, initDrag, showTempTip, currentScale, applyTransform } from './js/viewerTool.js';
+import { resetView, stepZoom, initDrag, showTempTip, currentScale } from './js/viewerTool.js';
 
-let lastScaleDistance = 0;
 let isLoading = false;
-let touchMode = null;
-let startX = 0, startY = 0;
-let startTime = 0;
+let isSwipe = false;
+let startX = 0, startTime = 0;
 
 const imageWrapper = document.getElementById('imageWrapper');
 const imageView = document.getElementById('imageView');
 const loadingIndicator = document.getElementById('loadingIndicator');
-const errorMessage = document.getElementById('errorMessage');
 const pageInfo = document.getElementById('pageInfo');
 const sourceBadge = document.getElementById('sourceBadge');
 const zoomInBtn = document.getElementById('zoomInBtn');
 const zoomOutBtn = document.getElementById('zoomOutBtn');
 const resetBtn = document.getElementById('resetBtn');
 
-// 初始化拖拽
 initDrag(imageWrapper);
 
-function showLoading() {
-  if (isLoading) return;
-  isLoading = true;
-  loadingIndicator.style.display = 'block';
-  errorMessage.style.display = 'none';
-}
-function hideLoading() {
-  isLoading = false;
-  loadingIndicator.style.display = 'none';
-}
-
-function updatePageInfo() {
-  pageInfo.textContent = `第 ${currentVol} 册 第 ${currentPage} 页`;
-}
+function showLoading() { isLoading = true; loadingIndicator.style.display = 'block'; }
+function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
+function updatePageInfo() { pageInfo.textContent = `第 ${currentVol} 册 第 ${currentPage} 页`; }
 
 async function loadImage(vol, page) {
   showLoading();
   try {
     const best = await getBestImageUrl(vol, page);
-    if (best) {
-      imageView.src = best.url;
-      sourceBadge.textContent = best.key;
-    } else {
-      showTempTip("加载失败");
-    }
-  } catch (e) {
-    console.error(e);
-    showTempTip("加载异常");
-  }
+    best ? (imageView.src = best.url, sourceBadge.textContent = best.key) : showTempTip("加载失败");
+  } catch (e) { showTempTip("加载异常"); }
   hideLoading();
 }
 
 async function changeImage(direction) {
   if (isLoading) return;
   const res = calcNextPage(direction);
-  if (!res.ok) {
-    // 🔥 红色提示
-    showTempTip(direction > 0 ? "已经是最后一页" : "已经是第一页");
-    return;
-  }
+  if (!res.ok) return showTempTip(direction > 0 ? "已经是最后一页" : "已经是第一页");
   const { newVol, newPage } = res;
   await loadImage(newVol, newPage);
   setCurrentPage(newVol, newPage);
   updatePageInfo();
 }
 
-// 触摸事件（双指缩放 + 拖拽 + 滑动翻页）
+// 滑动翻页
 imageWrapper.addEventListener('touchstart', (e) => {
-  if (e.touches.length === 2) {
-    touchMode = 'scale';
-    const t1 = e.touches[0];
-    const t2 = e.touches[1];
-    const dx = t1.clientX - t2.clientX;
-    const dy = t1.clientY - t2.clientY;
-    lastScaleDistance = Math.hypot(dx, dy);
-  } 
-  else if (e.touches.length === 1) {
-    if (currentScale > 1) {
-      touchMode = 'drag';
-    } else {
-      touchMode = 'swipe';
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      startTime = Date.now();
-    }
-  }
-});
-
-imageWrapper.addEventListener('touchmove', (e) => {
-  if (touchMode === 'scale' && e.touches.length === 2) {
-    e.preventDefault();
-    const t1 = e.touches[0];
-    const t2 = e.touches[1];
-    const dx = t1.clientX - t2.clientX;
-    const dy = t1.clientY - t2.clientY;
-    const currentDist = Math.hypot(dx, dy);
-    const ratio = currentDist / lastScaleDistance;
-
-    const newScale = Math.max(1, Math.min(5, currentScale * ratio));
-    applyTransform(imageWrapper, newScale);
-    lastScaleDistance = currentDist;
+  if (currentScale <= 1) {
+    isSwipe = true;
+    startX = e.touches[0].clientX;
+    startTime = Date.now();
   }
 });
 
 imageWrapper.addEventListener('touchend', (e) => {
-  if (touchMode === 'swipe') {
-    const endX = e.changedTouches[0].clientX;
-    const dx = endX - startX;
-    const dur = Date.now() - startTime;
-    if (Math.abs(dx) > 50 && dur < 500) {
-      changeImage(dx > 0 ? -1 : 1);
-    }
+  if (!isSwipe) return;
+  const endX = e.changedTouches[0].clientX;
+  const dx = endX - startX;
+  if (Math.abs(dx) > 50 && Date.now() - startTime < 500) {
+    changeImage(dx > 0 ? -1 : 1);
   }
-  touchMode = null;
+  isSwipe = false;
 });
 
-// 按钮事件
 zoomInBtn.addEventListener('click', () => stepZoom(imageWrapper, true));
 zoomOutBtn.addEventListener('click', () => stepZoom(imageWrapper, false));
 resetBtn.addEventListener('click', () => resetView(imageWrapper));
 
-window.onload = async () => {
-  updatePageInfo();
-  await loadImage(currentVol, currentPage);
-};
+window.onload = async () => { updatePageInfo(); await loadImage(currentVol, currentPage); };
 </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-// 通用视图工具：缩放 + 拖拽 + 提示（带调试日志）
+// 通用视图工具：缩放 + 拖拽 + 提示（最终手感修复版）
 export let currentScale = 1;
 export const scaleStep = 0.2;
 export const minScale = 1;
@@ -41,59 +41,37 @@ export function applyTransform(el, scale, originX = '50%', originY = 'center') {
   currentY = 0;
   el.style.transformOrigin = `${originX} ${originY}`;
   el.style.transform = `scale(${scale}) translate(0, 0)`;
-  
-  // 调试日志
-  console.log('[viewerTool] 定点放大 →', { scale, originX, originY });
 }
 
-// ========== 拖拽：带调试日志 ==========
+// ========== 修复：极致跟手拖拽 ==========
 export function initDrag(el) {
   targetEl = el;
   el.style.willChange = 'transform';
 
   el.addEventListener('mousedown', (e) => {
     if (currentScale <= 1) return;
-
     isDragging = true;
     dragStartX = e.clientX - currentX;
     dragStartY = e.clientY - currentY;
     el.style.cursor = 'grab';
     e.preventDefault();
-
-    // 调试：按下
-    console.log('=== 鼠标按下，开始拖拽 ===');
-    console.log('缩放比例 currentScale:', currentScale);
-    console.log('起始鼠标位置 (e.clientX/e.clientY):', e.clientX, e.clientY);
-    console.log('初始偏移 dragStartX / dragStartY:', dragStartX, dragStartY);
   });
 
   document.addEventListener('mousemove', (e) => {
     if (!isDragging || currentScale <= 1) return;
 
-    // 实时计算偏移
+    // 直接赋值，无任何延迟、无任何计算
     currentX = e.clientX - dragStartX;
     currentY = e.clientY - dragStartY;
 
-    // 应用偏移
+    // 直接设置，无中间层
     targetEl.style.transform = `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`;
-
-    // 调试：拖动中
-    console.log('拖动中 →', {
-      mouseX: e.clientX,
-      mouseY: e.clientY,
-      currentX,
-      currentY,
-      isDragging,
-    });
   });
 
   document.addEventListener('mouseup', () => {
     if (isDragging) {
       isDragging = false;
       targetEl.style.cursor = 'auto';
-
-      // 调试：结束
-      console.log('=== 鼠标抬起，停止拖拽 ===');
     }
   });
 

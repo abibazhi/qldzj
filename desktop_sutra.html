@@ -21,8 +21,10 @@
       padding: 10px;
       box-shadow: 0 0 0 5px blue;
       box-sizing: border-box;
-      touch-action: pan-x pan-y;
-      transition: transform 0.3s ease-in-out;
+      touch-action: none; /* 👈 加这个 */
+      transition: transform 0.05s linear; /* 👈 改这个，变成极低延迟 */
+      /* touch-action: pan-x pan-y;*/
+      /*transition: transform 0.3s ease-in-out;*/
       position: relative;
       user-select: none;
     }

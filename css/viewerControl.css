@@ -25,7 +25,8 @@
   align-items: center;
 
   transform-origin: center center; /* 缩放中心点：屏幕正中心 */
-  transition: transform 0.2s ease-out; /* 缩放动画流畅度 */
+  /* transition: transform 0.2s ease-out;*/ /* 缩放动画流畅度 */
+  transition: transform 0.35s ease-out; /* 缩放动画流畅度 */
 }
 
 /* 图片本身：自适应屏幕，不触发事件 */

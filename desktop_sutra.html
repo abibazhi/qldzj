@@ -52,7 +52,7 @@
       pointer-events: none;
     }
 
-    /* 桌面版缩放工具栏 */
+    /* 仅增加工具栏样式，不影响原有布局 */
     .controls {
       position: fixed;
       bottom: 20px;
@@ -78,14 +78,13 @@
   <script type="module" src="./js/utils.js"></script>
   <script type="module" src="./js/pageNav.js"></script>
   <script type="module" src="./js/imageLoader.js"></script>
-  <script type="module" src="./js/viewerControl.js"></script>
 
 <script>
 var _hmt = _hmt || [];
 (function() {
   var hm = document.createElement("script");
   hm.src = "https://hm.baidu.com/hm.js?7784bc9ab299071f3a78b249954402c8";
-  var s = document.getElementsByTagName("script")[0]; 
+  var s = document.getElementsByTagName("script")[0];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
@@ -97,7 +96,7 @@ var _hmt = _hmt || [];
   <div id="sourceBadge" class="source-badge">---</div>
 </div>
 
-<!-- 桌面版缩放工具栏 -->
+<!-- 底部工具栏 -->
 <div class="controls">
   <button class="control-btn" id="zoomOutBtn">-</button>
   <button class="control-btn" id="resetBtn">1:1</button>
@@ -105,120 +104,186 @@ var _hmt = _hmt || [];
 </div>
 
 <script type="module">
-import { getBestImageUrl } from './js/imageLoader.js'
-import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
-import { zoomIn, zoomOut, resetView, isZoomed, getTransform } from './js/viewerControl.js';
+  import { getBestImageUrl } from './js/imageLoader.js'
+  import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
 
-let zoomed = false;
-let isLoading = false;
+  let zoomed = false;
+  let isLoading = false;
 
-const edgeThreshold = 0.05;
-const container = document.getElementById('imageContainer');
-const loadingIndicator = document.getElementById('loadingIndicator');
-const sourceBadge = document.getElementById('sourceBadge');
-const zoomInBtn = document.getElementById('zoomInBtn');
-const zoomOutBtn = document.getElementById('zoomOutBtn');
-const resetBtn = document.getElementById('resetBtn');
+  const edgeThreshold = 0.05;
+  const container = document.getElementById('imageContainer');
+  const loadingIndicator = document.getElementById('loadingIndicator');
+  const sourceBadge = document.getElementById('sourceBadge');
+  const zoomInBtn = document.getElementById('zoomInBtn');
+  const zoomOutBtn = document.getElementById('zoomOutBtn');
+  const resetBtn = document.getElementById('resetBtn');
 
-function showLoading() {
-  if (isLoading) return;
-  isLoading = true;
-  loadingIndicator.style.display = 'block';
-}
+  function showLoading() {
+    if (isLoading) return;
+    isLoading = true;
+    loadingIndicator.style.display = 'block';
+  }
 
-function hideLoading() {
-  isLoading = false;
-  loadingIndicator.style.display = 'none';
-}
+  function hideLoading() {
+    isLoading = false;
+    loadingIndicator.style.display = 'none';
+  }
 
-async function loadImage(vol, page) {
-  showLoading();
-  try {
-    const best = await getBestImageUrl(vol, page);
-    if (best) {
-      container.style.backgroundImage = `url(${best.url})`;
-      sourceBadge.textContent = best.key;
-    } else {
-      container.style.backgroundImage = "none";
-      container.style.backgroundColor = "#222";
-      sourceBadge.textContent = "失败";
+  // ======================
+  // 完全恢复你原来的图片加载
+  // ======================
+  async function loadImage(vol, page) {
+    showLoading();
+
+    try {
+      const best = await getBestImageUrl(vol, page);
+      if (best) {
+        container.style.backgroundImage = `url(${best.url})`;
+        sourceBadge.textContent = best.key;
+      } else {
+        container.style.backgroundImage = "none";
+        container.style.backgroundColor = "#222";
+        sourceBadge.textContent = "失败";
+      }
+    } catch (e) {
+      console.error(e);
     }
-  } catch (e) {
-    console.error(e);
+
+    hideLoading();
   }
-  hideLoading();
-}
 
-async function changeImage(direction) {
-  if (isZoomed() || isLoading) {
-    console.log("❌ 缩放中 或 加载中，禁止翻页");
-    return;
+  // ======================
+  // 完全恢复你原来的翻页
+  // ======================
+  async function changeImage(direction) {
+    if (zoomed || isLoading) {
+      return;
+    }
+    const res = calcNextPage(direction);
+    if (!res.ok) return;
+    const { newVol, newPage } = res;
+    await loadImage(newVol, newPage);
+    setCurrentPage(newVol, newPage);
   }
-  const res = calcNextPage(direction);
-  if (!res.ok) return;
-  const { newVol, newPage } = res;
-  await loadImage(newVol, newPage);
-  setCurrentPage(newVol, newPage);
-}
 
-function updateCursor(event) {
-  const rect = event.target.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-  const width = rect.width;
-  const height = rect.height;
+  // ======================
+  // 完全恢复你原来的鼠标
+  // ======================
+  function updateCursor(event) {
+    const rect = event.target.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const width = rect.width;
+    const height = rect.height;
 
-  const isTopEdge = y < height * edgeThreshold;
-  const isBottomEdge = y > height * (1 - edgeThreshold);
-  const isLeftEdge = x < width * edgeThreshold;
-  const isRightEdge = x > width * (1 - edgeThreshold);
+    const isTopEdge = y < height * edgeThreshold;
+    const isBottomEdge = y > height * (1 - edgeThreshold);
+    const isLeftEdge = x < width * edgeThreshold;
+    const isRightEdge = x > width * (1 - edgeThreshold);
 
-  if (isTopEdge || isBottomEdge || isLeftEdge || isRightEdge) {
-    container.style.cursor = 'pointer';
-  } else {
+    if (isTopEdge || isBottomEdge || isLeftEdge || isRightEdge) {
+      container.style.cursor = 'pointer';
+    } else {
+      container.style.cursor = 'auto';
+    }
+  }
+
+  container.addEventListener('mousemove', updateCursor);
+  container.addEventListener('mouseleave', () => {
     container.style.cursor = 'auto';
+  });
+
+  // ======================
+  // 完全恢复你原来的点击翻页
+  // ======================
+  container.addEventListener('click', (event) => {
+    const rect = event.target.getBoundingClientRect();
+    const clickX = event.clientX - rect.left;
+    const width = rect.width;
+    const isLeftEdge = clickX < width * edgeThreshold;
+    const isRightEdge = clickX > width * (1 - edgeThreshold);
+
+    if (isLeftEdge) {
+      changeImage(-1);
+    } else if (isRightEdge) {
+      changeImage(1);
+    }
+  });
+
+  // ======================
+  // 🔥 100% 还原你原来的双击逻辑
+  // ======================
+  container.addEventListener('dblclick', handleDoubleClick);
+  function handleDoubleClick(event) {
+    if (isLoading) return;
+
+    // 已经放大 → 只缩小
+    if (zoomed) {
+      zoomOut();
+      return;
+    }
+
+    const rect = container.getBoundingClientRect();
+    const y = event.clientY - rect.top;
+    const height = rect.height;
+
+    const isTopEdge = y < height * 0.05;
+    const isBottomEdge = y > height * 0.95;
+
+    // 只有双击顶部/底部才放大
+    // 双击中间、左右 → 完全不响应！（你要的效果）
+    if (isTopEdge) {
+      zoomToPosition(0, 'top');
+    } else if (isBottomEdge) {
+      zoomToPosition(0, 'bottom');
+    }
   }
-}
 
-container.addEventListener('mousemove', updateCursor);
-container.addEventListener('mouseleave', () => {
-  container.style.cursor = 'auto';
-});
+  // ======================
+  // 🔥 你原来的经验值参数全部保留
+  // ======================
+  function zoomToPosition(clickX, position) {
+    const scale = 2.4;
+    let transformOriginY = 'center';
 
-container.addEventListener('click', (event) => {
-  const rect = event.target.getBoundingClientRect();
-  const clickX = event.clientX - rect.left;
-  const width = rect.width;
-  const isLeftEdge = clickX < width * edgeThreshold;
-  const isRightEdge = clickX > width * (1 - edgeThreshold);
+    if (position === 'top') {
+      transformOriginY = '11.8%';
+    } else if (position === 'bottom') {
+      transformOriginY = '80%';
+    }
 
-  if (isLeftEdge) {
-    changeImage(-1);
-  } else if (isRightEdge) {
-    changeImage(1);
+    container.style.transformOrigin = `50% ${transformOriginY}`;
+    container.style.transform = `scale(${scale})`;
+    container.style.backgroundSize = 'contain';
+    container.style.backgroundPosition = 'center';
+
+    zoomed = true;
   }
-});
 
-// 双击放大（保留原有逻辑）
-container.addEventListener('dblclick', handleDoubleClick);
-function handleDoubleClick(event) {
-  if (isLoading) return;
-  if (isZoomed()) {
-    resetView(container);
-    return;
+  function zoomOut() {
+    container.style.transformOrigin = 'center';
+    container.style.transform = 'scale(1)';
+    container.style.backgroundSize = 'contain';
+    container.style.backgroundPosition = 'center';
+    zoomed = false;
   }
-  zoomIn(container);
-}
 
-// 工具栏按钮
-zoomInBtn.addEventListener('click', () => zoomIn(container));
-zoomOutBtn.addEventListener('click', () => zoomOut(container));
-resetBtn.addEventListener('click', () => resetView(container));
+  // ======================
+  // 工具栏按钮（新增，不影响原有逻辑）
+  // ======================
+  zoomInBtn.addEventListener('click', () => {
+    if (zoomed) return;
+    zoomToPosition(0, 'top');
+  });
+  zoomOutBtn.addEventListener('click', zoomOut);
+  resetBtn.addEventListener('click', zoomOut);
 
-window.onload = async () => {
-  console.log('✅ 桌面版加载');
-  await loadImage(currentVol, currentPage);
-};
+  // ======================
+  // 初始化
+  // ======================
+  window.onload = async () => {
+    await loadImage(currentVol, currentPage);
+  };
 </script>
 
 </body>

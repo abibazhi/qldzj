@@ -126,6 +126,13 @@ import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/page
 let zoomed = false;
 let isLoading = false;
 const edgeThreshold = 0.05;
+// 新增：记录当前缩放比例，支持连续缩放
+let currentScale = 1;
+// 缩放步长，和移动端保持一致
+const scaleStep = 0.2;
+// 缩放上下限
+const minScale = 1;
+const maxScale = 5;
 
 const container = document.getElementById('imageContainer');
 const loadingIndicator = document.getElementById('loadingIndicator');
@@ -172,9 +179,7 @@ async function loadImage(vol, page) {
   hideLoading();
 }
 
-// ==============================
-// 🔥 和手机版完全一样的提示逻辑
-// ==============================
+// 翻页逻辑（同移动端）
 async function changeImage(direction) {
   if (zoomed || isLoading) return;
 
@@ -189,7 +194,7 @@ async function changeImage(direction) {
   setCurrentPage(newVol, newPage);
 }
 
-// 鼠标提示
+// 鼠标悬浮提示
 container.addEventListener('mousemove', e => {
   const r = container.getBoundingClientRect();
   const x = e.clientX - r.left;
@@ -226,7 +231,7 @@ container.addEventListener('click', e => {
   else if (x > w * (1 - edgeThreshold)) changeImage(1);
 });
 
-// 双击恢复你原版逻辑
+// 双击逻辑（保留原有顶部/底部放大）
 container.addEventListener('dblclick', e => {
   if (isLoading) return;
   if (zoomed) { zoomOut(); return; }
@@ -241,7 +246,7 @@ container.addEventListener('dblclick', e => {
   else if (bottom) zoomToPosition('bottom');
 });
 
-// 你原版放大逻辑
+// 原有定点放大（双击顶部/底部使用）
 function zoomToPosition(pos) {
   const scale = 2.4;
   let y = 'center';
@@ -249,30 +254,51 @@ function zoomToPosition(pos) {
   if (pos === 'bottom') y = '80%';
   container.style.transformOrigin = `50% ${y}`;
   container.style.transform = `scale(${scale})`;
+  currentScale = scale;
   zoomed = true;
 }
 
+// 全局复位（1:1）
 function zoomOut() {
+  currentScale = 1;
   container.style.transformOrigin = 'center';
   container.style.transform = 'scale(1)';
   zoomed = false;
 }
 
-// ==============================
-// 工具栏：正常中心放大
-// ==============================
-zoomInBtn.addEventListener('click', () => {
+// ========== 连续缩放逻辑（居中，同移动端体验） ==========
+function doZoom(increase) {
+  // 始终以中心为缩放原点
   container.style.transformOrigin = 'center';
-  container.style.transform = 'scale(2.0)';
-  zoomed = true;
-});
-zoomOutBtn.addEventListener('click', zoomOut);
+  if (increase) {
+    currentScale += scaleStep;
+    if (currentScale > maxScale) currentScale = maxScale;
+  } else {
+    currentScale -= scaleStep;
+    if (currentScale < minScale) currentScale = minScale;
+  }
+  container.style.transform = `scale(${currentScale})`;
+  zoomed = currentScale !== 1;
+}
+
+// 按钮事件：支持连续点击缩放
+zoomInBtn.addEventListener('click', () => doZoom(true));
+zoomOutBtn.addEventListener('click', () => doZoom(false));
 resetBtn.addEventListener('click', zoomOut);
 
-// 按钮提示
-zoomInBtn.addEventListener('mouseenter', () => showTip(zoomInBtn.getBoundingClientRect().x, zoomInBtn.getBoundingClientRect().y - 40, "放大"));
-zoomOutBtn.addEventListener('mouseenter', () => showTip(zoomOutBtn.getBoundingClientRect().x, zoomOutBtn.getBoundingClientRect().y - 40, "缩小"));
-resetBtn.addEventListener('mouseenter', () => showTip(reset.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y - 40, "重置 1:1"));
+// 按钮悬浮提示
+zoomInBtn.addEventListener('mouseenter', () => {
+  const rect = zoomInBtn.getBoundingClientRect();
+  showTip(rect.x, rect.y - 40, "放大");
+});
+zoomOutBtn.addEventListener('mouseenter', () => {
+  const rect = zoomOutBtn.getBoundingClientRect();
+  showTip(rect.x, rect.y - 40, "缩小");
+});
+resetBtn.addEventListener('mouseenter', () => {
+  const rect = resetBtn.getBoundingClientRect();
+  showTip(rect.x, rect.y - 40, "重置 1:1");
+});
 
 zoomInBtn.addEventListener('mouseleave', hideTip);
 zoomOutBtn.addEventListener('mouseleave', hideTip);
@@ -280,5 +306,6 @@ resetBtn.addEventListener('mouseleave', hideTip);
 
 window.onload = () => loadImage(currentVol, currentPage);
 </script>
+
 </body>
 </html>

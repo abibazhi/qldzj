@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>乾隆大藏经 图片浏览</title>
 
-  <!-- 引入抽离的看图样式 -->
   <link rel="stylesheet" href="css/viewerControl.css">
 
   <script type="module" src="./js/utils.js"></script>
   <script type="module" src="./js/pageNav.js"></script>
   <script type="module" src="./js/imageLoader.js"></script>
-  <!-- 引入抽离的看图控制器 -->
   <script type="module" src="./js/viewerControl.js"></script>
 
 <script>
@@ -45,13 +43,15 @@ var _hmt = _hmt || [];
 <script type="module">
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
 import { getBestImageUrl } from './js/imageLoader.js';
-import { zoomIn, zoomOut, resetView, zoomAtCenter, dragAbsolute, isZoomed } from './js/viewerControl.js';
+import { zoomIn, zoomOut, resetView, zoomAtCenter, dragAbsolute, isZoomed, getTransform } from './js/viewerControl.js';
 
 let lastScaleDistance = 0;
 let isLoading = false;
 let touchMode = null;
 let startX = 0, startY = 0;
 let startTime = 0;
+let startTranslateX = 0;
+let startTranslateY = 0;
 
 const imageWrapper = document.getElementById('imageWrapper');
 const imageView = document.getElementById('imageView');
@@ -126,10 +126,11 @@ imageWrapper.addEventListener('touchstart', (e) => {
       touchMode = 'drag';
       startX = e.touches[0].clientX;
       startY = e.touches[0].clientY;
-      
-      // 👇 👇 只加这两行！！！ 👇 👇
+
+      const { translateX, translateY } = getTransform();
       startTranslateX = translateX;
       startTranslateY = translateY;
+
     } else {
       touchMode = 'swipe';
       startX = e.touches[0].clientX;
@@ -152,10 +153,9 @@ imageWrapper.addEventListener('touchmove', (e) => {
     lastScaleDistance = dist;
   } else if (touchMode === 'drag' && e.touches.length === 1) {
     e.preventDefault();
-    const currentX = event.touches[0].clientX;
-    const currentY = event.touches[0].clientY;    
-    //drag(dx, dy, imageWrapper);
-    // 🔥 调用你原来风格的绝对定位拖拽
+    const currentX = e.touches[0].clientX;
+    const currentY = e.touches[0].clientY;
+
     dragAbsolute({
       startX: startX,
       startY: startY,
@@ -181,7 +181,6 @@ imageWrapper.addEventListener('touchend', (e) => {
   touchMode = null;
 });
 
-// 按钮
 zoomInBtn.addEventListener('click', () => zoomIn(imageWrapper));
 zoomOutBtn.addEventListener('click', () => zoomOut(imageWrapper));
 resetBtn.addEventListener('click', () => resetView(imageWrapper));

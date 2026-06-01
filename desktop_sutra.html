@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>乾隆大藏经图片浏览</title>
 
-  <!-- 🔥 统一用稳定的 Panzoom 库 -->
   <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 
   <style>
@@ -26,7 +25,6 @@
       overflow: hidden;
     }
 
-    /* 🔥 图片放在内部，由库控制缩放 */
     #zoomImage {
       max-width: 100%;
       max-height: 100%;
@@ -135,7 +133,6 @@ const resetBtn = document.getElementById('resetBtn');
 const hoverTip = document.getElementById('hoverTip');
 const floatTip = document.getElementById('floatTip');
 
-// 提示
 function showTempTip(msg) {
   floatTip.textContent = msg;
   floatTip.style.display = 'block';
@@ -149,7 +146,7 @@ function showTip(x, y, text) {
 }
 function hideTip() { hoverTip.style.opacity = 0; }
 
-// 🔥 初始化缩放拖拽
+// 🔥 初始化
 function initPanzoom() {
   panzoom = Panzoom(img, {
     maxScale: 5,
@@ -158,10 +155,17 @@ function initPanzoom() {
     cursor: 'grab',
     pinchAndZoom: true
   });
-  container.addEventListener('wheel', panzoom.zoomWithWheel);
+
+  // ✅ 滚轮改成【始终中心缩放】，不跟鼠标走
+  container.addEventListener('wheel', e => {
+    e.preventDefault();
+    const delta = e.deltaY < 0 ? 1 : -1;
+    const step = 0.15;
+    const newScale = panzoom.getScale() + delta * step;
+    panzoom.zoom(newScale, { focal: { x: 0.5, y: 0.5 } }); // 固定中心
+  });
 }
 
-// 加载
 function showLoading() { isLoading = true; loadingIndicator.style.display = 'block'; }
 function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
 
@@ -181,7 +185,6 @@ async function loadImage(vol, page) {
   panzoom.reset();
 }
 
-// 翻页
 async function changeImage(direction) {
   if (isLoading || panzoom.getScale() > 1) return;
   const res = calcNextPage(direction);
@@ -191,11 +194,13 @@ async function changeImage(direction) {
   setCurrentPage(newVol, newPage);
 }
 
-// 边缘提示 + 点击翻页
+// ✅ 放大时完全不显示翻页提示
 container.addEventListener('mousemove', e => {
+  const scale = panzoom.getScale();
+  if (scale > 1) return hideTip(); // 放大状态：直接不显示
+
   const r = container.getBoundingClientRect();
   const x = e.clientX - r.left;
-  const y = e.clientY - r.top;
   const w = r.width;
 
   if (x < w * edgeThreshold) {
@@ -209,6 +214,8 @@ container.addEventListener('mousemove', e => {
 container.addEventListener('mouseleave', hideTip);
 
 container.addEventListener('click', e => {
+  const scale = panzoom.getScale();
+  if (scale > 1) return;
   const r = container.getBoundingClientRect();
   const x = e.clientX - r.left;
   const w = r.width;
@@ -216,32 +223,15 @@ container.addEventListener('click', e => {
   else if (x > w * (1 - edgeThreshold)) changeImage(1);
 });
 
-// 双击：放大顶部/底部
-container.addEventListener('dblclick', e => {
-  const scale = panzoom.getScale();
-  if (scale > 1) {
-    panzoom.reset();
-    return;
-  }
-  const r = container.getBoundingClientRect();
-  const y = e.clientY - r.top;
-  const h = r.height;
-  if (y < h * 0.05) {
-    panzoom.zoomTo(2.4, 0.5, 0.118);
-  } else if (y > h * 0.95) {
-    panzoom.zoomTo(2.4, 0.5, 0.8);
-  }
-});
+// ❌ 双击放大顶部/底部：全部删掉了
 
-// 按钮
 zoomInBtn.onclick = () => panzoom.zoomIn();
 zoomOutBtn.onclick = () => panzoom.zoomOut();
 resetBtn.onclick = () => panzoom.reset();
 
-// 按钮提示
 zoomInBtn.onmouseenter = () => showTip(zoomInBtn.getBoundingClientRect().x, zoomInBtn.getBoundingClientRect().y-40, "放大");
 zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zoomOutBtn.getBoundingClientRect().y-40, "缩小");
-resetBtn.onmouseenter = () => showTip(reset.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
+resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
 zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
 
 window.onload = () => {

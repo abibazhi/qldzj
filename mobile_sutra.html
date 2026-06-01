@@ -6,17 +6,31 @@
   <title>乾隆大藏经</title>
   <link rel="stylesheet" href="css/viewerControl.css">
 
-  <!-- Panzoom MIT 稳定库 -->
   <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 
   <script type="module" src="./js/utils.js"></script>
   <script type="module" src="./js/pageNav.js"></script>
   <script type="module" src="./js/imageLoader.js"></script>
 
-  <!-- 调试 & 统计 -->
+  <!-- vConsole 调试：强制提到最顶层 -->
   <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.15.0/vConsole.min.js"></script>
-  <script>new VConsole();</script>
-  <script src="js/tongji.baidu.js"></script>
+
+  <style>
+    /* 🔥 强制让调试按钮显示在最上面 */
+    #vconsole {
+      z-index: 999999999 !important;
+    }
+    .image-wrapper {
+      display: block !important;
+      padding-top: 5px !important;
+    }
+    #imageView {
+      width: 98% !important;
+      height: auto !important;
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
 
@@ -57,24 +71,28 @@ const zoomOutBtn = document.getElementById('zoomOutBtn');
 const resetBtn = document.getElementById('resetBtn');
 const floatTip = document.getElementById('floatTip');
 
-// 弹窗提示
+// 🔥 延迟初始化 vConsole，保证一定出现
+setTimeout(() => {
+  if (window.VConsole) {
+    new VConsole();
+  }
+}, 500);
+
 function showTempTip(msg) {
   floatTip.textContent = msg;
   floatTip.style.display = 'block';
   setTimeout(() => floatTip.style.display = 'none', 2000);
 }
 
-// 初始化缩放拖拽：修复初始尺寸 & 重置行为
 function initPanzoom() {
   panzoom = Panzoom(imageView, {
     maxScale: 5,
     minScale: 1,
-    contain: null,       // 取消强制适配，使用图片原生尺寸
-    startScale: 1,       // 强制初始缩放为 1:1
+    step: 0.15,
     cursor: 'grab',
-    resetOnChange: false
+    panOnlyWhenZoomed: false,
+    pinchAndZoom: true
   });
-  // 鼠标滚轮缩放
   imageWrapper.addEventListener('wheel', panzoom.zoomWithWheel);
 }
 
@@ -82,64 +100,45 @@ function showLoading() { isLoading = true; loadingIndicator.style.display = 'blo
 function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
 function updatePageInfo() { pageInfo.textContent = `第 ${currentVol} 册 第 ${currentPage} 页`; }
 
-// 加载图片
 async function loadImage(vol, page) {
   showLoading();
   try {
     const best = await getBestImageUrl(vol, page);
-    if (best) {
-      imageView.src = best.url;
-      sourceBadge.textContent = best.key;
-      // 切换图片后重置为原始大小
-      if (panzoom) panzoom.reset();
-    } else {
-      showTempTip("加载失败");
-    }
-  } catch (e) {
-    showTempTip("加载异常");
-  }
+    best ? (imageView.src = best.url, sourceBadge.textContent = best.key) : showTempTip("加载失败");
+  } catch (e) { showTempTip("加载异常"); }
   hideLoading();
 }
 
-// 翻页逻辑
 async function changeImage(direction) {
   if (isLoading) return;
   const res = calcNextPage(direction);
-  if (!res.ok) {
-    return showTempTip(direction > 0 ? "已经是最后一页" : "已经是第一页");
-  }
+  if (!res.ok) return showTempTip(direction > 0 ? "已经是最后一页" : "已经是第一页");
   const { newVol, newPage } = res;
   await loadImage(newVol, newPage);
   setCurrentPage(newVol, newPage);
   updatePageInfo();
+  panzoom?.reset();
 }
 
-// 按钮事件
-zoomInBtn.addEventListener('click', () => panzoom?.zoomIn());
-zoomOutBtn.addEventListener('click', () => panzoom?.zoomOut());
-// 1:1 按钮：严格恢复原始尺寸 + 居中
-resetBtn.addEventListener('click', () => {
-  if (panzoom) panzoom.reset();
-});
+zoomInBtn.addEventListener('click', () => panzoom.zoomIn());
+zoomOutBtn.addEventListener('click', () => panzoom.zoomOut());
+resetBtn.addEventListener('click', () => panzoom.reset());
 
-// 触摸滑动翻页：仅原图状态生效
 imageWrapper.addEventListener('touchstart', (e) => {
-  if (!panzoom || panzoom.getScale() > 1) return;
+  if (panzoom.getScale() > 1) return;
   startX = e.touches[0].clientX;
   startTime = Date.now();
 });
 
 imageWrapper.addEventListener('touchend', (e) => {
-  if (!panzoom || panzoom.getScale() > 1) return;
+  if (panzoom.getScale() > 1) return;
   const endX = e.changedTouches[0].clientX;
   const dx = endX - startX;
-  const costTime = Date.now() - startTime;
-  if (Math.abs(dx) > 50 && costTime < 500) {
+  if (Math.abs(dx) > 50 && Date.now() - startTime < 500) {
     changeImage(dx > 0 ? -1 : 1);
   }
 });
 
-// 页面入口
 window.onload = async () => {
   initPanzoom();
   updatePageInfo();

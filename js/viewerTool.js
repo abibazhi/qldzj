@@ -95,18 +95,30 @@ export function initDrag(el) {
   // ======================
   // 移动端：触屏 + 双指缩放
   // ======================
-  let touch1, touch2, startDist, startScaleVal;
+  let touchStartData = null;
 
   el.addEventListener("touchstart", (e) => {
     if (e.touches.length === 2) {
-      // 双指开始缩放
-      touch1 = e.touches[0];
-      touch2 = e.touches[1];
-      startDist = getDist(touch1, touch2);
-      startScaleVal = currentScale;
+      // ==============================================
+      // 双指开始缩放：记录手指中心点、初始缩放、初始位移
+      // ==============================================
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      const centerX = (t1.clientX + t2.clientX) / 2;
+      const centerY = (t1.clientY + t2.clientY) / 2;
+      const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+
+      touchStartData = {
+        centerX,
+        centerY,
+        startDist: dist,
+        startScale: currentScale,
+        startX: currentX,
+        startY: currentY
+      };
       e.preventDefault();
     } else if (e.touches.length === 1 && currentScale > 1) {
-      // 单指开始拖拽
+      // 单指拖拽
       isDragging = true;
       const t = e.touches[0];
       startX = t.clientX;
@@ -118,33 +130,40 @@ export function initDrag(el) {
   });
 
   el.addEventListener("touchmove", (e) => {
-    if (e.touches.length === 2) {
-      // 双指缩放
+    // ==============================================
+    // 双指缩放核心修复：手指在哪里，哪里就固定不动
+    // 算法：保持手指中心点在屏幕上位置不变
+    // ==============================================
+    if (e.touches.length === 2 && touchStartData) {
+      e.preventDefault();
       const t1 = e.touches[0];
       const t2 = e.touches[1];
-      const dist = getDist(t1, t2);
-      const scale = startScaleVal * (dist / startDist);
-      applyTransform(el, scale);
+      const currDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      const scaleRatio = currDist / touchStartData.startDist;
+      const newScale = Math.max(minScale, Math.min(maxScale, touchStartData.startScale * scaleRatio));
+
+      // 计算新的偏移，让手指中心点保持不动
+      const scaleDiff = newScale / touchStartData.startScale;
+      currentX = touchStartData.startX + (touchStartData.centerX - touchStartData.centerX * scaleDiff);
+      currentY = touchStartData.startY + (touchStartData.centerY - touchStartData.centerY * scaleDiff);
+      currentScale = newScale;
+
+      updateTransform(el);
+    }
+    // 单指拖拽
+    else if (e.touches.length === 1 && isDragging) {
       e.preventDefault();
-    } else if (e.touches.length === 1 && isDragging) {
-      // 单指拖拽
       const t = e.touches[0];
       currentX = startTX + (t.clientX - startX);
       currentY = startTY + (t.clientY - startY);
       updateTransform(el);
-      e.preventDefault();
     }
   });
 
   el.addEventListener("touchend", () => {
     isDragging = false;
+    touchStartData = null;
   });
-
-  function getDist(t1, t2) {
-    const dx = t1.clientX - t2.clientX;
-    const dy = t1.clientY - t2.clientY;
-    return Math.hypot(dx, dy);
-  }
 }
 
 // 红色自动消失提示

@@ -6,29 +6,35 @@
   <title>乾隆大藏经</title>
   <link rel="stylesheet" href="css/viewerControl.css">
 
+  <!-- Panzoom 手势库（MIT 可商用） -->
   <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 
   <script type="module" src="./js/utils.js"></script>
   <script type="module" src="./js/pageNav.js"></script>
   <script type="module" src="./js/imageLoader.js"></script>
+  <script src="js/tongji.baidu.js"></script>
 
-  <!-- vConsole 调试：强制提到最顶层 -->
+  <!-- 调试控制台 vConsole -->
   <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.15.0/vConsole.min.js"></script>
 
   <style>
-    /* 🔥 强制让调试按钮显示在最上面 */
-    #vconsole {
-      z-index: 999999999 !important;
-    }
+    /* --------------------------
+     🔥 图片大小 & 位置 【你自己改这里】
+     -------------------------- */
     .image-wrapper {
       display: block !important;
-      padding-top: 5px !important;
+      padding-top: 5px !important;   /* 图片往上移：数字越大越往下 */
     }
     #imageView {
-      width: 98% !important;
+      width: 96% !important;         /* 初始宽度：96% = 稍小，100% = 撑满屏幕 */
       height: auto !important;
       display: block;
       margin: 0 auto;
+    }
+
+    /* vConsole 强制置顶，一定看得见 */
+    #vconsole {
+      z-index: 9999999 !important;
     }
   </style>
 </head>
@@ -71,12 +77,10 @@ const zoomOutBtn = document.getElementById('zoomOutBtn');
 const resetBtn = document.getElementById('resetBtn');
 const floatTip = document.getElementById('floatTip');
 
-// 🔥 延迟初始化 vConsole，保证一定出现
+// 延迟启动 vConsole，保证一定显示
 setTimeout(() => {
-  if (window.VConsole) {
-    new VConsole();
-  }
-}, 500);
+  new VConsole();
+}, 800);
 
 function showTempTip(msg) {
   floatTip.textContent = msg;
@@ -84,14 +88,17 @@ function showTempTip(msg) {
   setTimeout(() => floatTip.style.display = 'none', 2000);
 }
 
+// --------------------------
+// 🔥 修复：手势绑定在容器上，单指/双指 100% 正常
+// --------------------------
 function initPanzoom() {
-  panzoom = Panzoom(imageView, {
+  panzoom = Panzoom(imageWrapper, {
     maxScale: 5,
     minScale: 1,
     step: 0.15,
     cursor: 'grab',
-    panOnlyWhenZoomed: false,
-    pinchAndZoom: true
+    pinchAndZoom: true,
+    panOnlyWhenZoomed: false
   });
   imageWrapper.addEventListener('wheel', panzoom.zoomWithWheel);
 }
@@ -124,6 +131,7 @@ zoomInBtn.addEventListener('click', () => panzoom.zoomIn());
 zoomOutBtn.addEventListener('click', () => panzoom.zoomOut());
 resetBtn.addEventListener('click', () => panzoom.reset());
 
+// 滑动翻页
 imageWrapper.addEventListener('touchstart', (e) => {
   if (panzoom.getScale() > 1) return;
   startX = e.touches[0].clientX;

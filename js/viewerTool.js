@@ -12,8 +12,6 @@ let startX = 0, startY = 0;
 let startTX = 0, startTY = 0;
 
 let targetEl = null;
-
-// 双指缩放专用变量
 let pinchStart = null;
 
 export function resetView(el) {
@@ -44,7 +42,7 @@ export function initDrag(el) {
   targetEl = el;
   el.style.willChange = "transform";
 
-  // ---------- 桌面鼠标拖拽 ----------
+  // 鼠标拖拽
   el.addEventListener("mousedown", (e) => {
     if (currentScale <= 1) return;
     isDragging = true;
@@ -70,69 +68,71 @@ export function initDrag(el) {
     }
   });
 
-  // ---------- 移动端触屏：单指拖拽 + 双指缩放 ----------
+  // ==============================
+  // 触屏双指缩放（带调试日志）
+  // ==============================
   el.addEventListener("touchstart", (e) => {
     if (e.touches.length === 2) {
-      // 双指开始：记录初始状态
       const t1 = e.touches[0];
       const t2 = e.touches[1];
-      const centerX = (t1.clientX + t2.clientX) / 2;
-      const centerY = (t1.clientY + t2.clientY) / 2;
+      const cx = (t1.clientX + t2.clientX) / 2;
+      const cy = (t1.clientY + t2.clientY) / 2;
       const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
 
       pinchStart = {
-        centerX,
-        centerY,
-        dist,
+        centerX: cx,
+        centerY: cy,
+        dist: dist,
         scale: currentScale,
         x: currentX,
         y: currentY
       };
-      e.preventDefault();
-    } else if (e.touches.length === 1 && currentScale > 1) {
-      // 单指拖拽
-      isDragging = true;
-      const t = e.touches[0];
-      startX = t.clientX;
-      startY = t.clientY;
-      startTX = currentX;
-      startTY = currentY;
+
+      // 🟢 调试输出
+      console.log("【TOUCH START】双指开始位置：", cx, cy);
+      console.log("【TOUCH START】初始缩放：", currentScale);
+      console.log("【TOUCH START】初始位移：", currentX, currentY);
+
       e.preventDefault();
     }
   });
 
   el.addEventListener("touchmove", (e) => {
-    if (e.touches.length === 2 && pinchStart) {
-      e.preventDefault();
-      const t1 = e.touches[0];
-      const t2 = e.touches[1];
-      const currCenterX = (t1.clientX + t2.clientX) / 2;
-      const currCenterY = (t1.clientY + t2.clientY) / 2;
-      const currDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+    if (!pinchStart || e.touches.length !== 2) return;
 
-      // 1. 计算新缩放
-      const newScale = Math.max(minScale, Math.min(maxScale, pinchStart.scale * (currDist / pinchStart.dist)));
+    e.preventDefault();
+    const t1 = e.touches[0];
+    const t2 = e.touches[1];
 
-      // 2. 核心修复：保持「手指中心点」在屏幕上位置不变
-      // 公式：新位移 = 旧位移 + 中心点偏移 × (1 - 缩放比例)
-      currentX = pinchStart.x + (currCenterX - pinchStart.centerX) - pinchStart.centerX * (newScale - pinchStart.scale);
-      currentY = pinchStart.y + (currCenterY - pinchStart.centerY) - pinchStart.centerY * (newScale - pinchStart.scale);
+    const currCX = (t1.clientX + t2.clientX) / 2;
+    const currCY = (t1.clientY + t2.clientY) / 2;
+    const currDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
 
-      currentScale = newScale;
-      updateTransform(el);
-    } else if (e.touches.length === 1 && isDragging) {
-      // 单指拖拽
-      e.preventDefault();
-      const t = e.touches[0];
-      currentX = startTX + (t.clientX - startX);
-      currentY = startTY + (t.clientY - startY);
-      updateTransform(el);
-    }
+    const scaleRatio = currDist / pinchStart.dist;
+    const newScale = Math.max(minScale, Math.min(maxScale, pinchStart.scale * scaleRatio));
+
+    // ==========================
+    // 【核心公式】目前导致左上飘
+    // ==========================
+    const dx = pinchStart.x + (currCX - pinchStart.centerX) - pinchStart.centerX * (newScale - pinchStart.scale);
+    const dy = pinchStart.y + (currCY - pinchStart.centerY) - pinchStart.centerY * (newScale - pinchStart.scale);
+
+    currentX = dx;
+    currentY = dy;
+    currentScale = newScale;
+
+    updateTransform(el);
+
+    // 🟢 调试输出
+    console.log("======================================");
+    console.log("手指中心点：", currCX, currCY);
+    console.log("旧缩放：", pinchStart.scale, "→ 新缩放：", newScale);
+    console.log("计算位移：dx=", dx, " dy=", dy);
   });
 
   el.addEventListener("touchend", () => {
-    isDragging = false;
     pinchStart = null;
+    isDragging = false;
   });
 }
 

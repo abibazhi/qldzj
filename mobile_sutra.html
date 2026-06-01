@@ -6,7 +6,6 @@
   <title>乾隆大藏经</title>
   <link rel="stylesheet" href="css/viewerControl.css">
 
-  <!-- Panzoom 手势库（MIT 可商用） -->
   <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
 
   <script type="module" src="./js/utils.js"></script>
@@ -23,16 +22,16 @@
      -------------------------- */
     .image-wrapper {
       display: block !important;
-      padding-top: 5px !important;   /* 图片往上移：数字越大越往下 */
+      padding-top: 25px !important;   /* 往上移：调小数字 */
     }
     #imageView {
-      width: 96% !important;         /* 初始宽度：96% = 稍小，100% = 撑满屏幕 */
+      width: 100% !important;         /* 初始宽度：调大更满 */
       height: auto !important;
       display: block;
       margin: 0 auto;
     }
 
-    /* vConsole 强制置顶，一定看得见 */
+    /* vConsole 强制置顶 */
     #vconsole {
       z-index: 9999999 !important;
     }
@@ -64,7 +63,7 @@ import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/page
 import { getBestImageUrl } from './js/imageLoader.js';
 
 let isLoading = false;
-let startX = 0, startTime = 0;
+let startX = 0;
 let panzoom = null;
 
 const imageWrapper = document.getElementById('imageWrapper');
@@ -72,37 +71,29 @@ const imageView = document.getElementById('imageView');
 const loadingIndicator = document.getElementById('loadingIndicator');
 const pageInfo = document.getElementById('pageInfo');
 const sourceBadge = document.getElementById('sourceBadge');
-const zoomInBtn = document.getElementById('zoomInBtn');
-const zoomOutBtn = document.getElementById('zoomOutBtn');
-const resetBtn = document.getElementById('resetBtn');
 const floatTip = document.getElementById('floatTip');
 
-// 延迟启动 vConsole，保证一定显示
-setTimeout(() => {
-  new VConsole();
-}, 800);
-
+// 调试工具
+setTimeout(() => new VConsole(), 800);
 function showTempTip(msg) {
   floatTip.textContent = msg;
   floatTip.style.display = 'block';
   setTimeout(() => floatTip.style.display = 'none', 2000);
 }
 
-// --------------------------
-// 🔥 修复：手势绑定在容器上，单指/双指 100% 正常
-// --------------------------
+// 初始化手势
 function initPanzoom() {
   panzoom = Panzoom(imageWrapper, {
     maxScale: 5,
     minScale: 1,
     step: 0.15,
     cursor: 'grab',
-    pinchAndZoom: true,
-    panOnlyWhenZoomed: false
+    pinchAndZoom: true
   });
   imageWrapper.addEventListener('wheel', panzoom.zoomWithWheel);
 }
 
+// 加载 & 翻页
 function showLoading() { isLoading = true; loadingIndicator.style.display = 'block'; }
 function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
 function updatePageInfo() { pageInfo.textContent = `第 ${currentVol} 册 第 ${currentPage} 页`; }
@@ -111,7 +102,10 @@ async function loadImage(vol, page) {
   showLoading();
   try {
     const best = await getBestImageUrl(vol, page);
-    best ? (imageView.src = best.url, sourceBadge.textContent = best.key) : showTempTip("加载失败");
+    if (best) {
+      imageView.src = best.url;
+      sourceBadge.textContent = best.key;
+    } else showTempTip("加载失败");
   } catch (e) { showTempTip("加载异常"); }
   hideLoading();
 }
@@ -124,25 +118,33 @@ async function changeImage(direction) {
   await loadImage(newVol, newPage);
   setCurrentPage(newVol, newPage);
   updatePageInfo();
-  panzoom?.reset();
+  // 翻页自动恢复 1:1
+  panzoom.reset();
 }
 
-zoomInBtn.addEventListener('click', () => panzoom.zoomIn());
-zoomOutBtn.addEventListener('click', () => panzoom.zoomOut());
-resetBtn.addEventListener('click', () => panzoom.reset());
+// 按钮
+document.getElementById('zoomInBtn').onclick = () => panzoom.zoomIn();
+document.getElementById('zoomOutBtn').onclick = () => panzoom.zoomOut();
+document.getElementById('resetBtn').onclick = () => panzoom.reset();
 
-// 滑动翻页
-imageWrapper.addEventListener('touchstart', (e) => {
-  if (panzoom.getScale() > 1) return;
-  startX = e.touches[0].clientX;
-  startTime = Date.now();
+// --------------------------
+// ✅ 【完美翻页逻辑】
+// 只有 1:1 才能翻页，放大时绝不翻页
+// --------------------------
+imageWrapper.addEventListener('touchstart', e => {
+  // 🔥 只有缩放 == 1 时，才记录滑动起点
+  if (panzoom.getScale() === 1) {
+    startX = e.touches[0].clientX;
+  }
 });
 
-imageWrapper.addEventListener('touchend', (e) => {
-  if (panzoom.getScale() > 1) return;
-  const endX = e.changedTouches[0].clientX;
-  const dx = endX - startX;
-  if (Math.abs(dx) > 50 && Date.now() - startTime < 500) {
+imageWrapper.addEventListener('touchend', e => {
+  const scale = panzoom.getScale();
+  // 🔥 不是 1:1，直接不处理
+  if (scale !== 1) return;
+
+  const dx = e.changedTouches[0].clientX - startX;
+  if (Math.abs(dx) > 50) {
     changeImage(dx > 0 ? -1 : 1);
   }
 });

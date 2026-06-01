@@ -19,7 +19,7 @@ export function resetView(el) {
   currentX = 0;
   currentY = 0;
   el.style.transformOrigin = "center";
-  el.style.transform = `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`;
+  el.style.transform = `scale(1) translate(0, 0)`;
 }
 
 export function stepZoom(el, isIncrease) {
@@ -84,23 +84,30 @@ export function initDrag(el) {
     }
   });
 
-  // 触屏双指缩放（正确公式）
+  // ==============================
+  // 双指缩放（带调试日志）
+  // ==============================
   el.addEventListener("touchstart", (e) => {
     if (e.touches.length === 2) {
       const t1 = e.touches[0];
       const t2 = e.touches[1];
-      const cx = (t1.clientX + t2.clientX) / 2;
-      const cy = (t1.clientY + t2.clientY) / 2;
+      const cx = (t1.clientX + t2.clientX) * 0.5;
+      const cy = (t1.clientY + t2.clientY) * 0.5;
       const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
 
       pinchStart = {
         centerX: cx,
         centerY: cy,
-        dist,
+        dist: dist,
         scale: currentScale,
         x: currentX,
         y: currentY
       };
+
+      console.log("【START】捏合点:", cx, cy);
+      console.log("【START】初始 scale:", currentScale);
+      console.log("【START】初始 x,y:", currentX, currentY);
+
       e.preventDefault();
     } else if (e.touches.length === 1 && currentScale > 1) {
       isDragging = true;
@@ -124,20 +131,30 @@ export function initDrag(el) {
     const newScale = Math.max(minScale, Math.min(maxScale, pinchStart.scale * scaleRatio));
 
     // ==========================
-    // ✅ 【最终正确公式】
-    // 捏哪里，哪里就不动！
+    // 【核心算法】带日志输出
     // ==========================
-    const scale = newScale / pinchStart.scale;
-    currentX = (pinchStart.x - pinchStart.centerX) * scale + pinchStart.centerX;
-    currentY = (pinchStart.y - pinchStart.centerY) * scale + pinchStart.centerY;
+    const calcX = pinchStart.x + (pinchStart.centerX - pinchStart.centerX * scaleRatio);
+    const calcY = pinchStart.y + (pinchStart.centerY - pinchStart.centerY * scaleRatio);
 
+    currentX = calcX;
+    currentY = calcY;
     currentScale = newScale;
+
     updateTransform(el);
+
+    // 输出调试信息
+    console.log("======================================");
+    console.log("捏合点:", pinchStart.centerX, pinchStart.centerY);
+    console.log("scaleRatio:", scaleRatio);
+    console.log("newScale:", newScale);
+    console.log("计算结果 currentX:", currentX);
+    console.log("计算结果 currentY:", currentY);
   });
 
   el.addEventListener("touchend", () => {
     pinchStart = null;
     isDragging = false;
+    console.log("【END】捏合结束");
   });
 }
 

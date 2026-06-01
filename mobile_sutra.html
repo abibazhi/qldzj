@@ -6,21 +6,25 @@
   <title>乾隆大藏经</title>
   <link rel="stylesheet" href="css/viewerControl.css">
 
+  <!-- 🔥 稳定无坑 Panzoom 库（MIT 可商用） -->
+  <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+
   <script type="module" src="./js/utils.js"></script>
   <script type="module" src="./js/pageNav.js"></script>
   <script type="module" src="./js/imageLoader.js"></script>
-  <script type="module" src="./js/viewerTool.js"></script>
-  <script src="js/tongji.baidu.js"></script>
-  <!-- 移动端调试控制台 -->
-  <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.15.0/vconsole.min.js"></script>
+
+  <!-- 调试工具 -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.15.0/vConsole.min.js"></script>
   <script>new VConsole();</script>
+  <script src="js/tongji.baidu.js"></script>
 </head>
 <body>
 
 <div class="container">
   <div class="image-wrapper" id="imageWrapper">
-    <img id="imageView" src="" alt="图片">
+    <img id="imageView" src="" alt="经文图片">
   </div>
+
   <div class="loading-indicator" id="loadingIndicator">加载中...</div>
   <div class="error-message" id="errorMessage">加载失败</div>
   <div class="page-info" id="pageInfo"></div>
@@ -38,12 +42,13 @@
 <script type="module">
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
 import { getBestImageUrl } from './js/imageLoader.js';
-import { resetView, stepZoom, initDrag, showTempTip, currentScale } from './js/viewerTool.js';
 
+// ===== 全局状态 =====
 let isLoading = false;
-let isSwipe = false;
 let startX = 0, startTime = 0;
+let panzoom; // 缩放实例
 
+// ===== DOM 获取 =====
 const imageWrapper = document.getElementById('imageWrapper');
 const imageView = document.getElementById('imageView');
 const loadingIndicator = document.getElementById('loadingIndicator');
@@ -52,13 +57,33 @@ const sourceBadge = document.getElementById('sourceBadge');
 const zoomInBtn = document.getElementById('zoomInBtn');
 const zoomOutBtn = document.getElementById('zoomOutBtn');
 const resetBtn = document.getElementById('resetBtn');
+const floatTip = document.getElementById('floatTip');
 
-initDrag(imageWrapper);
+// ===== 提示工具 =====
+function showTempTip(msg) {
+  floatTip.textContent = msg;
+  floatTip.style.display = 'block';
+  setTimeout(() => floatTip.style.display = 'none', 2000);
+}
 
+// ===== 初始化 缩放拖拽（🔥 核心） =====
+function initPanzoom() {
+  panzoom = Panzoom(imageView, {
+    maxScale: 5,
+    minScale: 1,
+    contain: 'outside',
+    cursor: 'grab'
+  });
+  // 支持鼠标滚轮缩放
+  imageWrapper.addEventListener('wheel', panzoom.zoomWithWheel);
+}
+
+// ===== 加载/状态 =====
 function showLoading() { isLoading = true; loadingIndicator.style.display = 'block'; }
 function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
 function updatePageInfo() { pageInfo.textContent = `第 ${currentVol} 册 第 ${currentPage} 页`; }
 
+// ===== 加载图片 =====
 async function loadImage(vol, page) {
   showLoading();
   try {
@@ -68,6 +93,7 @@ async function loadImage(vol, page) {
   hideLoading();
 }
 
+// ===== 切换上下页 =====
 async function changeImage(direction) {
   if (isLoading) return;
   const res = calcNextPage(direction);
@@ -76,32 +102,38 @@ async function changeImage(direction) {
   await loadImage(newVol, newPage);
   setCurrentPage(newVol, newPage);
   updatePageInfo();
+  // 切换页面自动重置缩放
+  if (panzoom) panzoom.reset();
 }
 
-// 滑动翻页
+// ===== 按钮控制 =====
+zoomInBtn.addEventListener('click', () => panzoom.zoomIn());
+zoomOutBtn.addEventListener('click', () => panzoom.zoomOut());
+resetBtn.addEventListener('click', () => panzoom.reset());
+
+// ===== 滑动翻页（🔥 智能判断：没放大才翻页） =====
 imageWrapper.addEventListener('touchstart', (e) => {
-  if (currentScale <= 1) {
-    isSwipe = true;
-    startX = e.touches[0].clientX;
-    startTime = Date.now();
-  }
+  if (!panzoom || panzoom.getScale() > 1) return;
+  startX = e.touches[0].clientX;
+  startTime = Date.now();
 });
 
 imageWrapper.addEventListener('touchend', (e) => {
-  if (!isSwipe) return;
+  if (!panzoom || panzoom.getScale() > 1) return;
   const endX = e.changedTouches[0].clientX;
   const dx = endX - startX;
-  if (Math.abs(dx) > 50 && Date.now() - startTime < 500) {
+  const time = Date.now() - startTime;
+  if (Math.abs(dx) > 50 && time < 500) {
     changeImage(dx > 0 ? -1 : 1);
   }
-  isSwipe = false;
 });
 
-zoomInBtn.addEventListener('click', () => stepZoom(imageWrapper, true));
-zoomOutBtn.addEventListener('click', () => stepZoom(imageWrapper, false));
-resetBtn.addEventListener('click', () => resetView(imageWrapper));
-
-window.onload = async () => { updatePageInfo(); await loadImage(currentVol, currentPage); };
+// ===== 启动 =====
+window.onload = async () => {
+  initPanzoom();
+  updatePageInfo();
+  await loadImage(currentVol, currentPage);
+};
 </script>
 </body>
 </html>

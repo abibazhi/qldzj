@@ -80,12 +80,12 @@ export function initDrag(el) {
   document.addEventListener("mouseup", () => {
     if (isDragging) {
       isDragging = false;
-      targetEl.style.cursor = "auto";
+      targetEl.cursor = "auto";
     }
   });
 
   // ==============================
-  // ✅ 终极正确双指缩放（带日志）
+  // ✅ 终极正确：双指缩放（捏哪 哪不动）
   // ==============================
   el.addEventListener("touchstart", (e) => {
     if (e.touches.length === 2) {
@@ -131,11 +131,10 @@ export function initDrag(el) {
     const newScale = Math.max(minScale, Math.min(maxScale, pinchStart.scale * scaleRatio));
 
     // ==========================
-    // 🎯 【终极正确公式】
-    // 符号已经彻底修复！！！
+    // 🎯 世界标准正确公式
     // ==========================
-    const calcX = pinchStart.x + (pinchStart.centerX * scaleRatio - pinchStart.centerX);
-    const calcY = pinchStart.y + (pinchStart.centerY * scaleRatio - pinchStart.centerY);
+    const calcX = pinchStart.x + (pinchStart.centerX - pinchStart.centerX / scaleRatio);
+    const calcY = pinchStart.y + (pinchStart.centerY - pinchStart.centerY / scaleRatio);
 
     currentX = calcX;
     currentY = calcY;

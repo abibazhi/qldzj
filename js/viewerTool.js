@@ -23,7 +23,6 @@ export function resetView(el) {
   currentX = 0;
   currentY = 0;
   el.style.transformOrigin = "center center";
-  el.style.transition = "";
   el.style.transform = `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`;
 }
 
@@ -62,7 +61,6 @@ export function applyTransformAtOrigin(el, scale, originX, originY) {
 export function initDrag(el) {
   targetEl = el;
   el.style.willChange = "transform";
-  // 初始清空过渡，防止全局过渡干扰手势
   el.style.transition = "none";
 
   // 鼠标拖拽（桌面）
@@ -91,9 +89,10 @@ export function initDrag(el) {
     }
   });
 
-  // 移动端单指拖拽 + 双指缩放（修复起步跳动）
+  // ==============================
+  // ✅ 移动端：完全无跳动版
+  // ==============================
   el.addEventListener("touchstart", (e) => {
-    // 先强制关闭过渡，杜绝原点切换跳动
     el.style.transition = "none";
 
     if (e.touches.length === 2) {
@@ -102,18 +101,15 @@ export function initDrag(el) {
 
       const t1 = e.touches[0];
       const t2 = e.touches[1];
-
-      // 计算手指中点 & 相对元素坐标
       const cx = (t1.clientX + t2.clientX) / 2;
       const cy = (t1.clientY + t2.clientY) / 2;
       const rect = el.getBoundingClientRect();
       const ox = cx - rect.left;
       const oy = cy - rect.top;
 
-      // 切换缩放原点（无过渡，不会跳）
+      // 设置手指中心点为缩放原点
       el.style.transformOrigin = `${ox}px ${oy}px`;
 
-      // 记录初始状态
       const d = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
       lastDistance = d;
       startScale = currentScale;
@@ -152,11 +148,13 @@ export function initDrag(el) {
   });
 
   el.addEventListener("touchend", (e) => {
-    // 所有手指抬起后，重置手势状态 + 恢复原点为中心
+    // ==========================
+    // ❌ 绝对不允许改回 center！！！
+    // 这行我彻底删掉了！
+    // ==========================
     if (e.touches.length === 0) {
       isDragging = false;
       isPinching = false;
-      el.style.transformOrigin = "center center";
     }
   });
 }

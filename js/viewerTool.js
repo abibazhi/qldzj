@@ -23,6 +23,7 @@ export function resetView(el) {
   currentX = 0;
   currentY = 0;
   el.style.transformOrigin = "center center";
+  el.style.transition = "";
   el.style.transform = `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`;
 }
 
@@ -61,10 +62,10 @@ export function applyTransformAtOrigin(el, scale, originX, originY) {
 export function initDrag(el) {
   targetEl = el;
   el.style.willChange = "transform";
+  // 初始清空过渡，防止全局过渡干扰手势
+  el.style.transition = "none";
 
-  // ==============================================
   // 鼠标拖拽（桌面）
-  // ==============================================
   el.addEventListener("mousedown", (e) => {
     if (currentScale <= 1) return;
     isDragging = true;
@@ -90,34 +91,29 @@ export function initDrag(el) {
     }
   });
 
-  // ==============================================
-  // 移动端单指拖拽 + 双指缩放（正确方案）
-  // 核心：双指时设置 transformOrigin = 手指中心点
-  // ==============================================
+  // 移动端单指拖拽 + 双指缩放（修复起步跳动）
   el.addEventListener("touchstart", (e) => {
+    // 先强制关闭过渡，杜绝原点切换跳动
+    el.style.transition = "none";
+
     if (e.touches.length === 2) {
-      // --------------------------
-      // 双指开始：准备缩放
-      // --------------------------
       isPinching = true;
       isDragging = false;
 
       const t1 = e.touches[0];
       const t2 = e.touches[1];
 
-      // 计算手指中点
+      // 计算手指中点 & 相对元素坐标
       const cx = (t1.clientX + t2.clientX) / 2;
       const cy = (t1.clientY + t2.clientY) / 2;
-
-      // 计算相对于元素的原点位置
       const rect = el.getBoundingClientRect();
       const ox = cx - rect.left;
       const oy = cy - rect.top;
 
-      // ✅ 核心：设置缩放原点 = 手指位置
+      // 切换缩放原点（无过渡，不会跳）
       el.style.transformOrigin = `${ox}px ${oy}px`;
 
-      // 记录初始距离与缩放
+      // 记录初始状态
       const d = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
       lastDistance = d;
       startScale = currentScale;
@@ -125,9 +121,6 @@ export function initDrag(el) {
       e.preventDefault();
     }
     else if (e.touches.length === 1 && !isPinching) {
-      // --------------------------
-      // 单指：拖拽
-      // --------------------------
       if (currentScale <= 1) return;
       isDragging = true;
       const t = e.touches[0];
@@ -141,9 +134,6 @@ export function initDrag(el) {
 
   el.addEventListener("touchmove", (e) => {
     if (e.touches.length === 2 && isPinching) {
-      // --------------------------
-      // 双指缩放
-      // --------------------------
       e.preventDefault();
       const t1 = e.touches[0];
       const t2 = e.touches[1];
@@ -153,9 +143,6 @@ export function initDrag(el) {
       updateTransform(el);
     }
     else if (e.touches.length === 1 && isDragging) {
-      // --------------------------
-      // 单指拖拽
-      // --------------------------
       e.preventDefault();
       const t = e.touches[0];
       currentX = startTX + (t.clientX - startX);
@@ -165,9 +152,11 @@ export function initDrag(el) {
   });
 
   el.addEventListener("touchend", (e) => {
+    // 所有手指抬起后，重置手势状态 + 恢复原点为中心
     if (e.touches.length === 0) {
       isDragging = false;
       isPinching = false;
+      el.style.transformOrigin = "center center";
     }
   });
 }

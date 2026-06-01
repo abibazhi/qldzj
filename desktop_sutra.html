@@ -146,23 +146,26 @@ function showTip(x, y, text) {
 }
 function hideTip() { hoverTip.style.opacity = 0; }
 
-// 🔥 初始化
 function initPanzoom() {
   panzoom = Panzoom(img, {
     maxScale: 5,
     minScale: 1,
     step: 0.15,
     cursor: 'grab',
-    pinchAndZoom: true
+    pinchAndZoom: true,
+    events: {
+      mouseWheel: false // 关掉自带滚轮，避免打架
+    },
+    transformOrigin: { x: 0.5, y: 0.5 } // 全局中心
   });
 
-  // ✅ 滚轮改成【始终中心缩放】，不跟鼠标走
+  // 自己接管滚轮：永远中心缩放
   container.addEventListener('wheel', e => {
     e.preventDefault();
     const delta = e.deltaY < 0 ? 1 : -1;
     const step = 0.15;
     const newScale = panzoom.getScale() + delta * step;
-    panzoom.zoom(newScale, { focal: { x: 0.5, y: 0.5 } }); // 固定中心
+    panzoom.zoom(newScale, { focal: { x: 0.5, y: 0.5 } });
   });
 }
 
@@ -194,10 +197,9 @@ async function changeImage(direction) {
   setCurrentPage(newVol, newPage);
 }
 
-// ✅ 放大时完全不显示翻页提示
 container.addEventListener('mousemove', e => {
   const scale = panzoom.getScale();
-  if (scale > 1) return hideTip(); // 放大状态：直接不显示
+  if (scale > 1) return hideTip();
 
   const r = container.getBoundingClientRect();
   const x = e.clientX - r.left;
@@ -222,8 +224,6 @@ container.addEventListener('click', e => {
   if (x < w * edgeThreshold) changeImage(-1);
   else if (x > w * (1 - edgeThreshold)) changeImage(1);
 });
-
-// ❌ 双击放大顶部/底部：全部删掉了
 
 zoomInBtn.onclick = () => panzoom.zoomIn();
 zoomOutBtn.onclick = () => panzoom.zoomOut();

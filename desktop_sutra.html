@@ -4,37 +4,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>乾隆大藏经图片浏览</title>
+
+  <!-- 🔥 统一用稳定的 Panzoom 库 -->
+  <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+
   <style>
     html, body {
       height: 100%;
       margin: 0;
       overflow: hidden;
+      background: #000;
     }
 
     .container {
       width: 100vw;
       height: 100vh;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-color: transparent;
-      padding: 10px;
-      box-shadow: 0 0 0 5px blue;
-      box-sizing: border-box;
-      touch-action: none; /* 👈 加这个 */
-      transition: transform 0.05s linear; /* 👈 改这个，变成极低延迟 */
-      /* touch-action: pan-x pan-y;*/
-      /*transition: transform 0.3s ease-in-out;*/
       position: relative;
-      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* 🔥 图片放在内部，由库控制缩放 */
+    #zoomImage {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
     }
 
     .loading-indicator {
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      background-color: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.7);
       color: white;
       padding: 10px 20px;
       border-radius: 5px;
@@ -43,37 +46,28 @@
 
     .source-badge {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
-      background-color: rgba(0, 0, 0, 0.6);
+      bottom: 20px; right: 20px;
+      background: rgba(0,0,0,0.6);
       color: #0f0;
       padding: 6px 12px;
       border-radius: 4px;
       font-size: 12px;
-      font-family: monospace;
       z-index: 100;
-      pointer-events: none;
     }
 
     .controls {
       position: fixed;
-      bottom: 20px;
-      left: 50%;
+      bottom: 20px; left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      gap: 12px;
+      display: flex; gap: 12px;
       z-index: 999;
     }
     .control-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: none;
+      width: 48px; height: 48px;
+      border-radius: 50%; border: none;
       background: rgba(0,0,0,0.6);
-      color: white;
-      font-size: 20px;
+      color: white; font-size: 20px;
       cursor: pointer;
-      user-select: none;
     }
 
     .hover-tooltip {
@@ -91,14 +85,12 @@
 
     #floatTip {
       position: fixed;
-      top: 30px;
-      left: 50%;
+      top: 30px; left: 50%;
       transform: translateX(-50%);
       background: #c0392b;
       color: #fff;
       padding: 8px 20px;
       border-radius: 4px;
-      font-size: 14px;
       z-index: 10000;
       display: none;
     }
@@ -107,13 +99,11 @@
   <script type="module" src="./js/utils.js"></script>
   <script type="module" src="./js/pageNav.js"></script>
   <script type="module" src="./js/imageLoader.js"></script>
-  <script type="module" src="./js/viewerTool.js"></script>
-
-</script>
 </head>
 <body>
 
-<div id="imageContainer" class="container">
+<div class="container" id="imageContainer">
+  <img id="zoomImage" alt="经文">
   <div id="loadingIndicator" class="loading-indicator">加载中...</div>
   <div id="sourceBadge" class="source-badge">---</div>
 </div>
@@ -130,97 +120,92 @@
 <script type="module">
 import { getBestImageUrl } from './js/imageLoader.js';
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
-import {resetView, stepZoom, initDrag, showTempTip, currentScale, applyTransform, applyTransformAtOrigin } from './js/viewerTool.js';
-
 
 let isLoading = false;
+let panzoom = null;
 const edgeThreshold = 0.05;
 
 const container = document.getElementById('imageContainer');
+const img = document.getElementById('zoomImage');
 const loadingIndicator = document.getElementById('loadingIndicator');
 const sourceBadge = document.getElementById('sourceBadge');
 const zoomInBtn = document.getElementById('zoomInBtn');
 const zoomOutBtn = document.getElementById('zoomOutBtn');
 const resetBtn = document.getElementById('resetBtn');
 const hoverTip = document.getElementById('hoverTip');
+const floatTip = document.getElementById('floatTip');
 
-initDrag(container);
-
+// 提示
+function showTempTip(msg) {
+  floatTip.textContent = msg;
+  floatTip.style.display = 'block';
+  setTimeout(() => floatTip.style.display = 'none', 2000);
+}
 function showTip(x, y, text) {
   hoverTip.style.left = x + 'px';
   hoverTip.style.top = y + 'px';
   hoverTip.textContent = text;
   hoverTip.style.opacity = 1;
 }
-function hideTip() {
-  hoverTip.style.opacity = 0;
+function hideTip() { hoverTip.style.opacity = 0; }
+
+// 🔥 初始化缩放拖拽
+function initPanzoom() {
+  panzoom = Panzoom(img, {
+    maxScale: 5,
+    minScale: 1,
+    step: 0.15,
+    cursor: 'grab',
+    pinchAndZoom: true
+  });
+  container.addEventListener('wheel', panzoom.zoomWithWheel);
 }
 
-function showLoading() {
-  if (isLoading) return;
-  isLoading = true;
-  loadingIndicator.style.display = 'block';
-}
-function hideLoading() {
-  isLoading = false;
-  loadingIndicator.style.display = 'none';
-}
+// 加载
+function showLoading() { isLoading = true; loadingIndicator.style.display = 'block'; }
+function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
 
 async function loadImage(vol, page) {
   showLoading();
   try {
     const best = await getBestImageUrl(vol, page);
     if (best) {
-      container.style.backgroundImage = `url(${best.url})`;
+      img.src = best.url;
       sourceBadge.textContent = best.key;
     } else {
-      container.style.backgroundImage = "none";
-      container.style.backgroundColor = "#222";
-      sourceBadge.textContent = "失败";
+      img.src = '';
+      sourceBadge.textContent = '失败';
     }
   } catch (e) { console.error(e); }
   hideLoading();
+  panzoom.reset();
 }
 
+// 翻页
 async function changeImage(direction) {
-  if (currentScale > 1 || isLoading) return;
-
+  if (isLoading || panzoom.getScale() > 1) return;
   const res = calcNextPage(direction);
-  if (!res.ok) {
-    showTempTip(direction > 0 ? "已经是最后一页" : "已经是第一页");
-    return;
-  }
-
+  if (!res.ok) return showTempTip(direction > 0 ? "最后一页" : "第一页");
   const { newVol, newPage } = res;
   await loadImage(newVol, newPage);
   setCurrentPage(newVol, newPage);
 }
 
+// 边缘提示 + 点击翻页
 container.addEventListener('mousemove', e => {
   const r = container.getBoundingClientRect();
   const x = e.clientX - r.left;
   const y = e.clientY - r.top;
   const w = r.width;
-  const h = r.height;
 
-  const left = x < w * edgeThreshold;
-  const right = x > w * (1 - edgeThreshold);
-  const top = y < h * 0.05;
-  const bottom = y > h * 0.95;
-
-  if (left) {
+  if (x < w * edgeThreshold) {
     showTip(e.clientX, e.clientY - 30, "← 上一页");
-  } else if (right) {
+  } else if (x > w * (1 - edgeThreshold)) {
     showTip(e.clientX, e.clientY - 30, "下一页 →");
-  } else if (top) {
-    showTip(e.clientX, e.clientY + 20, "双击放大顶部");
-  } else if (bottom) {
-    showTip(e.clientX, e.clientY - 50, "双击放大底部");
   } else {
     hideTip();
   }
 });
-
 container.addEventListener('mouseleave', hideTip);
 
 container.addEventListener('click', e => {
@@ -231,52 +216,39 @@ container.addEventListener('click', e => {
   else if (x > w * (1 - edgeThreshold)) changeImage(1);
 });
 
-// 🔥 双击逻辑：干净、标准、无hack
+// 双击：放大顶部/底部
 container.addEventListener('dblclick', e => {
-  if (isLoading) return;
-  if (currentScale > 1) {
-    resetView(container);
+  const scale = panzoom.getScale();
+  if (scale > 1) {
+    panzoom.reset();
     return;
   }
-
   const r = container.getBoundingClientRect();
   const y = e.clientY - r.top;
   const h = r.height;
-  const top = y < h * 0.05;
-  const bottom = y > h * 0.95;
-
-  if (top) {
-    applyTransformAtOrigin(container, 2.4, '50%', '11.8%');
-  } else if (bottom) {
-    applyTransformAtOrigin(container, 2.4, '50%', '80%');
+  if (y < h * 0.05) {
+    panzoom.zoomTo(2.4, 0.5, 0.118);
+  } else if (y > h * 0.95) {
+    panzoom.zoomTo(2.4, 0.5, 0.8);
   }
 });
 
-zoomInBtn.addEventListener('click', () => stepZoom(container, true));
-zoomOutBtn.addEventListener('click', () => stepZoom(container, false));
-resetBtn.addEventListener('click', () => resetView(container));
+// 按钮
+zoomInBtn.onclick = () => panzoom.zoomIn();
+zoomOutBtn.onclick = () => panzoom.zoomOut();
+resetBtn.onclick = () => panzoom.reset();
 
-zoomInBtn.addEventListener('mouseenter', () => {
-  const rect = zoomInBtn.getBoundingClientRect();
-  showTip(rect.x, rect.y - 40, "放大");
-});
-zoomOutBtn.addEventListener('mouseenter', () => {
-  const rect = zoomOutBtn.getBoundingClientRect();
-  showTip(rect.x, rect.y - 40, "缩小");
-});
-resetBtn.addEventListener('mouseenter', () => {
-  const rect = resetBtn.getBoundingClientRect();
-  showTip(rect.x, rect.y - 40, "重置 1:1");
-});
+// 按钮提示
+zoomInBtn.onmouseenter = () => showTip(zoomInBtn.getBoundingClientRect().x, zoomInBtn.getBoundingClientRect().y-40, "放大");
+zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zoomOutBtn.getBoundingClientRect().y-40, "缩小");
+resetBtn.onmouseenter = () => showTip(reset.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
+zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
 
-zoomInBtn.addEventListener('mouseleave', hideTip);
-zoomOutBtn.addEventListener('mouseleave', hideTip);
-resetBtn.addEventListener('mouseleave', hideTip);
-
-window.onload = () => loadImage(currentVol, currentPage);
+window.onload = () => {
+  initPanzoom();
+  loadImage(currentVol, currentPage);
+};
 </script>
-
-
 <script src="js/tongji.baidu.js"></script>
 </body>
 </html>

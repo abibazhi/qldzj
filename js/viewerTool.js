@@ -12,8 +12,6 @@ let startX = 0, startY = 0;
 let startTX = 0, startTY = 0;
 
 let targetEl = null;
-
-// 双指缩放专用
 let isPinching = false;
 let lastDistance = 0;
 let startScale = 1;
@@ -63,7 +61,7 @@ export function initDrag(el) {
   el.style.willChange = "transform";
   el.style.transition = "none";
 
-  // 鼠标拖拽（桌面）
+  // 鼠标拖拽
   el.addEventListener("mousedown", (e) => {
     if (currentScale <= 1) return;
     isDragging = true;
@@ -83,14 +81,15 @@ export function initDrag(el) {
   });
 
   document.addEventListener("mouseup", () => {
-    if (isDragging) {
-      isDragging = false;
-      targetEl.style.cursor = "auto";
-    }
+    if (isDragging) { isDragging = false; targetEl.style.cursor = "auto"; }
   });
 
   // ==============================
-  // ✅ 移动端：完全无跳动版
+  // ✅ 【终极无跳动】移动端双指缩放
+  // 遵循你总结的黄金规则：
+  // 1. touchStart 只设置一次 origin
+  // 2. touchMove 只改 scale，绝不动 origin
+  // 3. 绝不中途切换基准点
   // ==============================
   el.addEventListener("touchstart", (e) => {
     el.style.transition = "none";
@@ -101,19 +100,18 @@ export function initDrag(el) {
 
       const t1 = e.touches[0];
       const t2 = e.touches[1];
-      const cx = (t1.clientX + t2.clientX) / 2;
-      const cy = (t1.clientY + t2.clientY) / 2;
       const rect = el.getBoundingClientRect();
-      const ox = cx - rect.left;
-      const oy = cy - rect.top;
+      const cx = (t1.clientX + t2.clientX) / 2 - rect.left;
+      const cy = (t1.clientY + t2.clientY) / 2 - rect.top;
 
-      // 设置手指中心点为缩放原点
-      el.style.transformOrigin = `${ox}px ${oy}px`;
+      // ✅ 只设置一次！全程不变！
+      el.style.transformOrigin = `${cx}px ${cy}px`;
 
-      const d = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-      lastDistance = d;
+      lastDistance = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
       startScale = currentScale;
 
+      // ✅ 立即同步，消除跳帧
+      updateTransform(el);
       e.preventDefault();
     }
     else if (e.touches.length === 1 && !isPinching) {
@@ -134,8 +132,12 @@ export function initDrag(el) {
       const t1 = e.touches[0];
       const t2 = e.touches[1];
       const d = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      if (lastDistance < 1) return;
+
       const ratio = d / lastDistance;
       currentScale = Math.max(minScale, Math.min(maxScale, startScale * ratio));
+
+      // ✅ 只改缩放！不改原点！不改偏移！
       updateTransform(el);
     }
     else if (e.touches.length === 1 && isDragging) {
@@ -148,10 +150,6 @@ export function initDrag(el) {
   });
 
   el.addEventListener("touchend", (e) => {
-    // ==========================
-    // ❌ 绝对不允许改回 center！！！
-    // 这行我彻底删掉了！
-    // ==========================
     if (e.touches.length === 0) {
       isDragging = false;
       isPinching = false;

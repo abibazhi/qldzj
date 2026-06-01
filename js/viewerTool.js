@@ -12,18 +12,22 @@ let startX = 0, startY = 0;
 let startTX = 0, startTY = 0;
 
 let targetEl = null;
-let pinchStart = null;
+
+// 双指缩放专用
+let isPinching = false;
+let lastDistance = 0;
+let startScale = 1;
 
 export function resetView(el) {
   currentScale = 1;
   currentX = 0;
   currentY = 0;
-  el.style.transformOrigin = "center";
-  el.style.transform = `scale(1) translate(0, 0)`;
+  el.style.transformOrigin = "center center";
+  el.style.transform = `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`;
 }
 
 export function stepZoom(el, isIncrease) {
-  el.style.transformOrigin = "center";
+  el.style.transformOrigin = "center center";
   if (isIncrease) {
     currentScale += scaleStep;
     if (currentScale > maxScale) currentScale = maxScale;
@@ -31,7 +35,7 @@ export function stepZoom(el, isIncrease) {
     currentScale -= scaleStep;
     if (currentScale < minScale) currentScale = minScale;
   }
-  el.style.transform = `scale(${currentScale}) translate(${currentX}px, ${currentY}px)`;
+  updateTransform(el);
 }
 
 function updateTransform(el) {
@@ -42,7 +46,7 @@ export function applyTransform(el, scale) {
   currentScale = Math.max(minScale, Math.min(maxScale, scale));
   currentX = 0;
   currentY = 0;
-  el.style.transformOrigin = "center";
+  el.style.transformOrigin = "center center";
   updateTransform(el);
 }
 
@@ -58,7 +62,9 @@ export function initDrag(el) {
   targetEl = el;
   el.style.willChange = "transform";
 
-  // 鼠标拖拽
+  // ==============================================
+  // 鼠标拖拽（桌面）
+  // ==============================================
   el.addEventListener("mousedown", (e) => {
     if (currentScale <= 1) return;
     isDragging = true;
@@ -80,36 +86,49 @@ export function initDrag(el) {
   document.addEventListener("mouseup", () => {
     if (isDragging) {
       isDragging = false;
-      targetEl.cursor = "auto";
+      targetEl.style.cursor = "auto";
     }
   });
 
-  // ==============================
-  // ✅ 终极正确：双指缩放（捏哪 哪不动）
-  // ==============================
+  // ==============================================
+  // 移动端单指拖拽 + 双指缩放（正确方案）
+  // 核心：双指时设置 transformOrigin = 手指中心点
+  // ==============================================
   el.addEventListener("touchstart", (e) => {
     if (e.touches.length === 2) {
+      // --------------------------
+      // 双指开始：准备缩放
+      // --------------------------
+      isPinching = true;
+      isDragging = false;
+
       const t1 = e.touches[0];
       const t2 = e.touches[1];
-      const cx = (t1.clientX + t2.clientX) * 0.5;
-      const cy = (t1.clientY + t2.clientY) * 0.5;
-      const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
 
-      pinchStart = {
-        centerX: cx,
-        centerY: cy,
-        dist: dist,
-        scale: currentScale,
-        x: currentX,
-        y: currentY
-      };
+      // 计算手指中点
+      const cx = (t1.clientX + t2.clientX) / 2;
+      const cy = (t1.clientY + t2.clientY) / 2;
 
-      console.log("[START]捏合点:", cx, cy);
-      console.log("[START]初始scale:", currentScale);
-      console.log("[START]初始x,y:", currentX, currentY);
+      // 计算相对于元素的原点位置
+      const rect = el.getBoundingClientRect();
+      const ox = cx - rect.left;
+      const oy = cy - rect.top;
+
+      // ✅ 核心：设置缩放原点 = 手指位置
+      el.style.transformOrigin = `${ox}px ${oy}px`;
+
+      // 记录初始距离与缩放
+      const d = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      lastDistance = d;
+      startScale = currentScale;
 
       e.preventDefault();
-    } else if (e.touches.length === 1 && currentScale > 1) {
+    }
+    else if (e.touches.length === 1 && !isPinching) {
+      // --------------------------
+      // 单指：拖拽
+      // --------------------------
+      if (currentScale <= 1) return;
       isDragging = true;
       const t = e.touches[0];
       startX = t.clientX;
@@ -121,38 +140,35 @@ export function initDrag(el) {
   });
 
   el.addEventListener("touchmove", (e) => {
-    if (!pinchStart || e.touches.length !== 2) return;
-    e.preventDefault();
-
-    const t1 = e.touches[0];
-    const t2 = e.touches[1];
-    const currDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-    const scaleRatio = currDist / pinchStart.dist;
-    const newScale = Math.max(minScale, Math.min(maxScale, pinchStart.scale * scaleRatio));
-
-    // ==========================
-    // 🎯 世界标准正确公式
-    // ==========================
-    const calcX = pinchStart.x + (pinchStart.centerX - pinchStart.centerX / scaleRatio);
-    const calcY = pinchStart.y + (pinchStart.centerY - pinchStart.centerY / scaleRatio);
-
-    currentX = calcX;
-    currentY = calcY;
-    currentScale = newScale;
-    updateTransform(el);
-
-    console.log("======================================");
-    console.log("捏合点:", pinchStart.centerX, pinchStart.centerY);
-    console.log("scaleRatio:", scaleRatio);
-    console.log("newScale:", newScale);
-    console.log("currentX:", currentX);
-    console.log("currentY:", currentY);
+    if (e.touches.length === 2 && isPinching) {
+      // --------------------------
+      // 双指缩放
+      // --------------------------
+      e.preventDefault();
+      const t1 = e.touches[0];
+      const t2 = e.touches[1];
+      const d = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      const ratio = d / lastDistance;
+      currentScale = Math.max(minScale, Math.min(maxScale, startScale * ratio));
+      updateTransform(el);
+    }
+    else if (e.touches.length === 1 && isDragging) {
+      // --------------------------
+      // 单指拖拽
+      // --------------------------
+      e.preventDefault();
+      const t = e.touches[0];
+      currentX = startTX + (t.clientX - startX);
+      currentY = startTY + (t.clientY - startY);
+      updateTransform(el);
+    }
   });
 
-  el.addEventListener("touchend", () => {
-    pinchStart = null;
-    isDragging = false;
-    console.log("[END] 捏合结束");
+  el.addEventListener("touchend", (e) => {
+    if (e.touches.length === 0) {
+      isDragging = false;
+      isPinching = false;
+    }
   });
 }
 

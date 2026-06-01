@@ -85,7 +85,7 @@ export function initDrag(el) {
   });
 
   // ==============================
-  // 双指缩放（带调试日志）
+  // ✅ 终极正确双指缩放（带日志）
   // ==============================
   el.addEventListener("touchstart", (e) => {
     if (e.touches.length === 2) {
@@ -104,9 +104,9 @@ export function initDrag(el) {
         y: currentY
       };
 
-      console.log("【START】捏合点:", cx, cy);
-      console.log("【START】初始 scale:", currentScale);
-      console.log("【START】初始 x,y:", currentX, currentY);
+      console.log("[START]捏合点:", cx, cy);
+      console.log("[START]初始scale:", currentScale);
+      console.log("[START]初始x,y:", currentX, currentY);
 
       e.preventDefault();
     } else if (e.touches.length === 1 && currentScale > 1) {
@@ -131,30 +131,29 @@ export function initDrag(el) {
     const newScale = Math.max(minScale, Math.min(maxScale, pinchStart.scale * scaleRatio));
 
     // ==========================
-    // 【核心算法】带日志输出
+    // 🎯 【终极正确公式】
+    // 符号已经彻底修复！！！
     // ==========================
-    const calcX = pinchStart.x + (pinchStart.centerX - pinchStart.centerX * scaleRatio);
-    const calcY = pinchStart.y + (pinchStart.centerY - pinchStart.centerY * scaleRatio);
+    const calcX = pinchStart.x + (pinchStart.centerX * scaleRatio - pinchStart.centerX);
+    const calcY = pinchStart.y + (pinchStart.centerY * scaleRatio - pinchStart.centerY);
 
     currentX = calcX;
     currentY = calcY;
     currentScale = newScale;
-
     updateTransform(el);
 
-    // 输出调试信息
     console.log("======================================");
     console.log("捏合点:", pinchStart.centerX, pinchStart.centerY);
     console.log("scaleRatio:", scaleRatio);
     console.log("newScale:", newScale);
-    console.log("计算结果 currentX:", currentX);
-    console.log("计算结果 currentY:", currentY);
+    console.log("currentX:", currentX);
+    console.log("currentY:", currentY);
   });
 
   el.addEventListener("touchend", () => {
     pinchStart = null;
     isDragging = false;
-    console.log("【END】捏合结束");
+    console.log("[END] 捏合结束");
   });
 }
 

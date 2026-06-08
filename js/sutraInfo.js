@@ -8,7 +8,15 @@
 export async function fetchSutraInfo(sutraNum) {
     if (!sutraNum) return null;
     
-    // 先尝试加载 idx 文件（多卷经）
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasIdx = urlParams.has('idx');
+    
+    // 没有 idx 参数 = 单卷经（直接从 index.html 跳转过来）
+    if (!hasIdx) {
+        return fetchSutraInfoFromIndex(sutraNum);
+    }
+    
+    // 有 idx 参数 = 多卷经，尝试加载 idx 文件
     try {
         const response = await fetch(`/public/sutra${sutraNum}.idx`);
         if (response.ok) {
@@ -16,10 +24,10 @@ export async function fetchSutraInfo(sutraNum) {
             return parseIdxHtml(htmlText);
         }
     } catch (e) {
-        console.log(`sutra${sutraNum}.idx 不存在，尝试从 index.html 获取`);
+        console.log(`sutra${sutraNum}.idx 加载失败，尝试从 index.html 获取`);
     }
     
-    // 降级：从 index.html 获取经名（单卷经）
+    // 降级：从 index.html 获取
     return fetchSutraInfoFromIndex(sutraNum);
 }
 
@@ -46,7 +54,7 @@ function parseIdxHtml(htmlText) {
         if (endMatch) end = endMatch[1];
     }
     
-    // 提取所有卷（包括序）
+    // 提取所有卷
     const rolls = [];
     const entries = doc.querySelectorAll('.entry a[href*="sutra.html"]');
     
@@ -67,17 +75,12 @@ function parseIdxHtml(htmlText) {
     return { title, start, end, rolls };
 }
 
-// 缓存 index.html 内容
-let indexHtmlCache = null;
-
 /**
- * 获取 index.html 内容（带缓存）
+ * 获取 index.html 内容（依赖浏览器 HTTP 缓存）
  */
 async function getIndexHtml() {
-    if (indexHtmlCache) return indexHtmlCache;
     const response = await fetch('/index.html');
-    indexHtmlCache = await response.text();
-    return indexHtmlCache;
+    return await response.text();
 }
 
 /**
@@ -103,7 +106,6 @@ async function fetchSutraInfoFromIndex(sutraNum) {
             const link = cells[1].querySelector('a');
             if (link) {
                 const title = link.textContent.trim();
-                // 提取 start 和 end
                 const href = link.getAttribute('href');
                 const startMatch = href.match(/start=(\d+)/);
                 const endMatch = href.match(/end=(\d+)/);
@@ -112,7 +114,7 @@ async function fetchSutraInfoFromIndex(sutraNum) {
                     title: title,
                     start: startMatch ? startMatch[1] : '',
                     end: endMatch ? endMatch[1] : '',
-                    rolls: []  // 单卷经没有卷列表
+                    rolls: []
                 };
             }
         }
@@ -124,7 +126,7 @@ async function fetchSutraInfoFromIndex(sutraNum) {
 }
 
 /**
- * 根据 idx 获取卷名（单卷经返回空字符串）
+ * 根据 idx 获取卷名
  * @param {Array} rolls - 卷列表
  * @param {string} idx - 当前 idx
  * @returns {string}

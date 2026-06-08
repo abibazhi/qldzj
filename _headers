@@ -1,3 +1,7 @@
 # 匹配 public 目录下的 .idx 文件
 /public/*.idx
   Cache-Control: public, max-age=3600, must-revalidate
+
+# 根目录下的 index.html（60秒缓存）
+/index.html
+  Cache-Control: public, max-age=60, must-revalidate

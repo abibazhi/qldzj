@@ -194,7 +194,7 @@ async function updateRollAfterPageChange1() {
 }
 
 // 翻页后更新卷名（修改版）
-async function updateRollAfterPageChange(newVol, newPage) {
+async function updateRollAfterPageChange1(newVol, newPage) {
     if (!currentSutraInfo) return;
     
     // 根据新的册页构造 idx
@@ -210,6 +210,34 @@ async function updateRollAfterPageChange(newVol, newPage) {
         }
     }
 }
+
+// 翻页后更新卷名
+async function updateRollAfterPageChange(newVol, newPage) {
+    if (!currentSutraInfo || !currentSutraInfo.rolls || currentSutraInfo.rolls.length === 0) return;
+    
+    // 构造当前页码的数值（用于比较）
+    const pagePadded = String(newPage).padStart(3, '0');
+    const volPadded = String(newVol).padStart(3, '0');
+    const currentPageNum = parseInt(volPadded + pagePadded, 10);
+    
+    // 卷列表按 idx 升序排列，找到最后一个起始页 小于等于 当前页码的卷
+    let currentRoll = null;
+    for (const roll of currentSutraInfo.rolls) {
+        const rollStartNum = parseInt(roll.idx, 10);
+        if (rollStartNum <= currentPageNum) {
+            currentRoll = roll;
+        } else {
+            break;
+        }
+    }
+    
+    if (currentRoll) {
+        rollTitleElem.textContent = currentRoll.title;
+    } else {
+        rollTitleElem.textContent = '';
+    }
+}
+
 
 
 async function loadImage(vol, page) {

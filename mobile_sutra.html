@@ -27,24 +27,20 @@
     }
 
 
-/* 当 src 属性不存在或为空字符串时，隐藏图片 */
-img:not([src]), 
-img[src=""] {
-  display: none;
-}
-
-
 #imageView {
   width: 120% !important;
   height: auto !important;
-  display: none !important;     /* 完全隐藏，不占空间 */
+  display: block;
   margin: 0 auto;
   border: 1px solid red;
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
 }
 
-#imageView[src] {
-  display: block !important;    /* 有 src 时显示为块级元素 */
+#imageView.loaded {
+  opacity: 1;
 }
+
 
 
     /* vConsole 强制置顶 */
@@ -197,7 +193,7 @@ async function updateRollAfterPageChange() {
     }
 }
 
-async function loadImage(vol, page) {
+async function loadImage1(vol, page) {
   showLoading();
   try {
     const best = await getBestImageUrl(vol, page);
@@ -208,6 +204,39 @@ async function loadImage(vol, page) {
   } catch (e) { showTempTip("加载异常"); }
   hideLoading();
 }
+
+async function loadImage(vol, page) {
+  showLoading();
+  try {
+    const best = await getBestImageUrl(vol, page);
+    if (best) {
+      // 先移除 loaded 类（变透明）
+      imageView.classList.remove('loaded');
+      
+      // 设置新图片
+      imageView.src = best.url;
+      
+      // 图片加载完成后添加 loaded 类（淡入）
+      imageView.onload = () => {
+        imageView.classList.add('loaded');
+      };
+      
+      // 图片加载失败的处理
+      imageView.onerror = () => {
+        imageView.classList.remove('loaded');
+        showTempTip("加载失败");
+      };
+      
+      sourceBadge.textContent = best.key;
+    } else {
+      showTempTip("加载失败");
+    }
+  } catch (e) { 
+    showTempTip("加载异常"); 
+  }
+  hideLoading();
+}
+
 
 async function changeImage(direction) {
   if (isLoading) return;

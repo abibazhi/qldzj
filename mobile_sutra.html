@@ -26,6 +26,14 @@
       padding-top: 200px !important;   /* 给顶部信息栏腾出空间 */
     }
 
+
+/* 当 src 属性不存在或为空字符串时，隐藏图片 */
+img:not([src]), 
+img[src=""] {
+  display: none;
+}
+
+
 #imageView {
   width: 120% !important;
   height: auto !important;

@@ -126,7 +126,7 @@ img {
 /* ------------------------------ */
 /* 右上角图片来源标识 */
 /* ------------------------------ */
-.source-badge {
+.source-badge1 {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -139,4 +139,20 @@ img {
   font-family: monospace;
   z-index: 20;
   pointer-events: none; /* 不影响点击 */
+}
+
+.source-badge {
+  position: absolute;
+  bottom: 20px;      /* 改为底部 */
+  right: 20px;
+  top: auto;         /* 清除 top 值 */
+  
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: monospace;
+  z-index: 20;
+  pointer-events: none;
 }

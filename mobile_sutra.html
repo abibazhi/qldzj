@@ -11,6 +11,7 @@
   <script type="module" src="./js/utils.js"></script>
   <script type="module" src="./js/pageNav.js"></script>
   <script type="module" src="./js/imageLoader.js"></script>
+  <script type="module" src="./js/sutraInfo.js"></script>
   <script src="js/tongji.baidu.js"></script>
 
   <!-- 调试控制台 vConsole -->
@@ -22,7 +23,7 @@
      -------------------------- */
     .image-wrapper {
       display: block !important;
-      padding-top: 150px !important;   /* 往上移：调小数字 */
+      padding-top: 90px !important;   /* 给顶部信息栏腾出空间 */
     }
     #imageView {
       width: 120% !important;         /* 初始宽度：调大更满 */
@@ -35,11 +36,44 @@
     #vconsole {
       z-index: 9999999 !important;
     }
+
+    /* 顶部信息栏 - 悬浮固定，点击穿透 */
+    .top-info-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px 16px;
+      z-index: 999;
+      text-align: center;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+    }
+
+    .sutra-title {
+      font-size: 15px;
+      font-weight: normal;
+      color: #fff;
+      letter-spacing: 1px;
+    }
+
+    .roll-title {
+      font-size: 12px;
+      color: #ccc;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
+  <!-- 顶部信息栏 -->
+  <div class="top-info-bar">
+    <div id="sutraTitle" class="sutra-title">乾隆大藏经</div>
+    <div id="rollTitle" class="roll-title"></div>
+  </div>
+
   <div class="image-wrapper" id="imageWrapper">
     <img id="imageView" src="" alt="经文图片">
   </div>
@@ -61,10 +95,12 @@
 <script type="module">
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
 import { getBestImageUrl } from './js/imageLoader.js';
+import { fetchSutraInfo, getRollTitle } from './js/sutraInfo.js';
 
 let isLoading = false;
 let startX = 0;
 let panzoom = null;
+let currentSutraInfo = null;
 
 const imageWrapper = document.getElementById('imageWrapper');
 const imageView = document.getElementById('imageView');
@@ -72,6 +108,8 @@ const loadingIndicator = document.getElementById('loadingIndicator');
 const pageInfo = document.getElementById('pageInfo');
 const sourceBadge = document.getElementById('sourceBadge');
 const floatTip = document.getElementById('floatTip');
+const sutraTitleElem = document.getElementById('sutraTitle');
+const rollTitleElem = document.getElementById('rollTitle');
 
 // 调试工具
 setTimeout(() => new VConsole(), 800);
@@ -98,6 +136,43 @@ function showLoading() { isLoading = true; loadingIndicator.style.display = 'blo
 function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
 function updatePageInfo() { pageInfo.textContent = `第 ${currentVol} 册 第 ${currentPage} 页`; }
 
+// 更新顶部信息
+function updateTopInfo(title, rollName) {
+    if (title) {
+        sutraTitleElem.textContent = `乾隆大藏经 · ${title}`;
+    }
+    if (rollName !== undefined) {
+        rollTitleElem.textContent = rollName;
+    }
+}
+
+// 加载经卷信息
+async function loadSutraInfo() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sutraNum = urlParams.get('sutra');
+    const currentIdx = urlParams.get('idx');
+    
+    if (!sutraNum) return;
+    
+    const info = await fetchSutraInfo(sutraNum);
+    if (!info) return;
+    
+    currentSutraInfo = info;
+    const rollName = getRollTitle(info.rolls, currentIdx);
+    updateTopInfo(info.title, rollName);
+}
+
+// 翻页后更新卷名
+async function updateRollAfterPageChange() {
+    if (!currentSutraInfo) return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentIdx = urlParams.get('idx');
+    if (currentIdx) {
+        const rollName = getRollTitle(currentSutraInfo.rolls, currentIdx);
+        rollTitleElem.textContent = rollName;
+    }
+}
+
 async function loadImage(vol, page) {
   showLoading();
   try {
@@ -118,8 +193,8 @@ async function changeImage(direction) {
   await loadImage(newVol, newPage);
   setCurrentPage(newVol, newPage);
   updatePageInfo();
-  // 翻页自动恢复 1:1
   panzoom.reset();
+  await updateRollAfterPageChange();
 }
 
 // 按钮
@@ -132,7 +207,6 @@ document.getElementById('resetBtn').onclick = () => panzoom.reset();
 // 只有 1:1 才能翻页，放大时绝不翻页
 // --------------------------
 imageWrapper.addEventListener('touchstart', e => {
-  // 🔥 只有缩放 == 1 时，才记录滑动起点
   if (panzoom.getScale() === 1) {
     startX = e.touches[0].clientX;
   }
@@ -140,7 +214,6 @@ imageWrapper.addEventListener('touchstart', e => {
 
 imageWrapper.addEventListener('touchend', e => {
   const scale = panzoom.getScale();
-  // 🔥 不是 1:1，直接不处理
   if (scale !== 1) return;
 
   const dx = e.changedTouches[0].clientX - startX;
@@ -153,6 +226,7 @@ window.onload = async () => {
   initPanzoom();
   updatePageInfo();
   await loadImage(currentVol, currentPage);
+  await loadSutraInfo();
 };
 </script>
 </body>

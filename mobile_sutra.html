@@ -25,18 +25,26 @@
       display: block !important;
       padding-top: 200px !important;   /* 给顶部信息栏腾出空间 */
     }
-    #imageView {
-      width: 140% !important;         /* 初始宽度：调大更满 */
-      height: auto !important;
-      display: block;
-      margin: 0 auto;
-      /*border: 1px solid red;*/          /* 加红框，方便看位置 */
-    }
+
+#imageView {
+  width: 120% !important;
+  height: auto !important;
+  display: block;
+  margin: 0 auto;
+  /*border: 1px solid red;*/           /* 调试用，确认位置后可删除或改为其他颜色 */
+  visibility: hidden;               /* 初始隐藏 */
+}
+
+#imageView[src] {
+  visibility: visible;              /* 有 src 时显示 */
+}
+
+
 
     /* vConsole 强制置顶 */
-    #vconsole {
-      z-index: 9999999 !important;
-    }
+    /*#vconsole {*/
+    /*  z-index: 9999999 !important;*/
+    /*}*/
 
 /* 顶部信息栏 - 完全透明 */
 .top-info-bar {

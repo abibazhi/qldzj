@@ -29,16 +29,14 @@
 #imageView {
   width: 120% !important;
   height: auto !important;
-  display: block;
+  display: none !important;     /* 完全隐藏，不占空间 */
   margin: 0 auto;
-  /*border: 1px solid red;*/           /* 调试用，确认位置后可删除或改为其他颜色 */
-  visibility: hidden;               /* 初始隐藏 */
+  border: 1px solid red;
 }
 
 #imageView[src] {
-  visibility: visible;              /* 有 src 时显示 */
+  display: block !important;    /* 有 src 时显示为块级元素 */
 }
-
 
 
     /* vConsole 强制置顶 */

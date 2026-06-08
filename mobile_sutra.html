@@ -183,7 +183,7 @@ async function loadSutraInfo() {
 }
 
 // 翻页后更新卷名
-async function updateRollAfterPageChange() {
+async function updateRollAfterPageChange1() {
     if (!currentSutraInfo) return;
     const urlParams = new URLSearchParams(window.location.search);
     const currentIdx = urlParams.get('idx');
@@ -193,17 +193,24 @@ async function updateRollAfterPageChange() {
     }
 }
 
-async function loadImage1(vol, page) {
-  showLoading();
-  try {
-    const best = await getBestImageUrl(vol, page);
-    if (best) {
-      imageView.src = best.url;
-      sourceBadge.textContent = best.key;
-    } else showTempTip("加载失败");
-  } catch (e) { showTempTip("加载异常"); }
-  hideLoading();
+// 翻页后更新卷名（修改版）
+async function updateRollAfterPageChange(newVol, newPage) {
+    if (!currentSutraInfo) return;
+    
+    // 根据新的册页构造 idx
+    const newIdx = newVol + newPage.padStart(3, '0');
+    
+    // 从已有的卷列表中查找
+    if (currentSutraInfo.rolls && currentSutraInfo.rolls.length > 0) {
+        const currentRoll = currentSutraInfo.rolls.find(roll => roll.idx === newIdx);
+        if (currentRoll) {
+            rollTitleElem.textContent = currentRoll.title;
+        } else {
+            rollTitleElem.textContent = '';
+        }
+    }
 }
+
 
 async function loadImage(vol, page) {
   showLoading();
@@ -247,7 +254,10 @@ async function changeImage(direction) {
   setCurrentPage(newVol, newPage);
   updatePageInfo();
   panzoom.reset();
-  await updateRollAfterPageChange();
+
+  // 传入新的册和页
+  await updateRollAfterPageChange(newVol, newPage);
+
 }
 
 // 按钮

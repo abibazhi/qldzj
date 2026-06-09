@@ -9,17 +9,17 @@ export let mappingData = null;
 let lastWorkingSource = null;
 
 // ==============================
-// 加载卷 mapping.js
+// 加载册 mapping.js
 // ==============================
 export async function loadMapping(vol) {
   const targetVol = String(vol).padStart(3, '0');
 
   if (currentVol === targetVol && mappingData) {
-    log(`✅ 卷 ${targetVol} 已缓存`);
+    log(`✅ 册 ${targetVol} 已缓存`);
     return true;
   }
 
-  log(`🔄 加载新卷 ${targetVol}`);
+  log(`🔄 加载新册 ${targetVol}`);
   currentVol = targetVol;
   mappingData = null;
 
@@ -177,9 +177,9 @@ export async function testImage(url) {
 
 export async function getBestImageUrl(vol, page) {
   console.log("\n========================================");
-  console.log("【翻页】开始加载 → 卷:", vol, "页:", page);
+  console.log("【翻页】开始加载 → 册:", vol, "页:", page);
 
-  // 1. 加载当前卷的 mapping（只加载一次）
+  // 1. 加载当前册的 mapping（只加载一次）
   await loadMapping(vol);
 
   // 2. 生成当前页的所有图源列表（R2 / ImgBB / GitHub）

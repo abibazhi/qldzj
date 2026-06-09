@@ -247,7 +247,18 @@ async function loadImage(vol, page) {
 async function changeImage(direction) {
   if (isLoading) return;
   const res = calcNextPage(direction);
-  if (!res.ok) return showTempTip(direction > 0 ? "已经是最后一页" : "已经是第一页");
+
+  //if (!res.ok) return showTempTip(direction > 0 ? "已经是最后一页" : "已经是第一页");
+  if (!res.ok) {
+    // 已经是边界，显示提示并重置位置
+    showTempTip(direction > 0 ? "已经是最后一页" : "已经是第一页");
+    
+    // 重置缩放和位置到初始状态
+    panzoom.reset();  // 回到 1:1 和居中位置
+    
+    return;
+  }  
+  
   const { newVol, newPage } = res;
   await loadImage(newVol, newPage);
   setCurrentPage(newVol, newPage);

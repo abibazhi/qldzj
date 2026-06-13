@@ -18,7 +18,7 @@ export async function fetchSutraInfo(sutraNum) {
 
     // 有 idx 参数 = 多卷经，尝试加载 idx 文件
     try {
-        const response = await fetch(`/public/sutra${sutraNum}.idx`);
+        const response = await fetch(`./public/sutra${sutraNum}.idx`);
         if (response.ok) {
             const htmlText = await response.text();
             return parseIdxHtml(htmlText);
@@ -38,7 +38,7 @@ export async function fetchSutraInfo(sutraNum) {
  */
 async function fetchSutraInfoFromOneVolJson(sutraNum) {
     try {
-        const response = await fetch('/oneVolSutra.json');
+        const response = await fetch('./oneVolSutra.json');
         if (!response.ok) {
             console.error('加载 oneVolSutra.json 失败');
             return null;
@@ -146,7 +146,7 @@ function parseIdxHtml(htmlText) {
  * 获取 index.html 内容（依赖浏览器 HTTP 缓存）
  */
 async function getIndexHtml() {
-    const response = await fetch('/index.html');
+    const response = await fetch('./index.html');
     return await response.text();
 }
 

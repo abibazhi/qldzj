@@ -18,10 +18,17 @@
   <!-- <script src="https://cdn.bootcdn.net/ajax/libs/vConsole/3.15.0/vConsole.min.js"></script> -->
 
   <style>
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 确保 body 不会出现滚动条 */
+}
+
     /* --------------------------
      🔥 图片大小 & 位置 【你自己改这里】
      -------------------------- */
-/* 
+/*
    .image-wrapper {
       display: block !important;
       padding-top: 200px !important;   // 给顶部信息栏腾出空间 
@@ -39,19 +46,20 @@
 }
 */
 
+/* 在 mobile_sutra.html 中 */
 .image-wrapper {
-  display: block !important;
-  /* padding-top: 200px !important; */
+  /* 不要改成 block，保留 viewerControl.css 中的 flex 居中 */
+  /* 用 padding-top 给标题栏留空间是可以的，但不要加 !important */
+  padding-top: 80px; 
 }
-/* 然后给 img 加上 transform */
+
 #imageView {
-  width: 120% !important;
-  height: auto !important;
-  display: block;
-  margin: 0 auto;
-  transform: translateY(200px); /* 把图片向下推 200px */
-  /* 注意：如果使用 transform，可能需要调整 Panzoom 的 origin */
+  /* 删除 width: 120% !important; */
+  /* 让 viewerControl.css 中的 max-width: 100%; 生效即可 */
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
 }
+
 
 
 #imageView.loaded {

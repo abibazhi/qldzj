@@ -31,7 +31,7 @@
 
 /* 图片本身：自适应屏幕，不触发事件 */
 img {
-  max-width: 100%;
+  max-width: 90%;
   max-height: 100%;
   object-fit: contain; /* 保持比例，不拉伸 */
   pointer-events: none; /* 不拦截触摸事件 */
@@ -94,7 +94,7 @@ img {
 /* ------------------------------ */
 .controls {
   position: absolute;
-  bottom: 40px; /* 距离底部高度（比页码高一点） */
+  bottom: 60px; /* 距离底部高度（比页码高一点） */
   left: 50%;
   transform: translateX(-50%); /* 水平居中 */
 

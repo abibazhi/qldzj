@@ -21,12 +21,14 @@
     /* --------------------------
      🔥 图片大小 & 位置 【你自己改这里】
      -------------------------- */
-    .image-wrapper {
+/* 
+   .image-wrapper {
       display: block !important;
       padding-top: 200px !important;   // 给顶部信息栏腾出空间 
     }
+*/
 
-
+/*
 #imageView {
   width: 100% !important;
   height: auto !important;
@@ -35,7 +37,21 @@
   opacity: 0;
   transition: opacity 0.3s ease-in;
 }
+*/
 
+.image-wrapper {
+  display: block !important;
+  /* padding-top: 200px !important; */
+}
+/* 然后给 img 加上 transform */
+#imageView {
+  width: 120% !important;
+  height: auto !important;
+  display: block;
+  margin: 0 auto;
+  transform: translateY(200px); /* 把图片向下推 200px */
+  /* 注意：如果使用 transform，可能需要调整 Panzoom 的 origin */
+}
 
 
 #imageView.loaded {

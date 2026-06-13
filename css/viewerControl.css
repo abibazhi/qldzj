@@ -18,7 +18,7 @@
 /* 图片包裹层：放缩、拖拽的目标元素 */
 .image-wrapper {
   position: relative;
-  width: 120%;
+  width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
@@ -31,7 +31,7 @@
 
 /* 图片本身：自适应屏幕，不触发事件 */
 img {
-  max-width: 95%;
+  max-width: 120%;
   max-height: 100%;
   object-fit: contain; /* 保持比例，不拉伸 */
   pointer-events: none; /* 不拦截触摸事件 */

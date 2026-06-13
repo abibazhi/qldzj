@@ -2,20 +2,20 @@
 
 /**
  * 根据 sutra 编号获取卷信息
- * @param {string} sutraNum - 经号，如 '86'
- * @returns {Promise<{title: string, rolls: Array, start: string, end: string}>}
+ * @param {string} sutraNum - 经号，如 '424'
+ * @returns {Promise<{title: string, rolls: Array, start: string, end: string, rollName: string}>}
  */
 export async function fetchSutraInfo(sutraNum) {
     if (!sutraNum) return null;
-    
+
     const urlParams = new URLSearchParams(window.location.search);
     const hasIdx = urlParams.has('idx');
-    
+
     // 没有 idx 参数 = 单卷经（直接从 index.html 跳转过来）
     if (!hasIdx) {
-        return fetchSutraInfoFromIndex(sutraNum);
+        return fetchSutraInfoFromOneVolJson(sutraNum);
     }
-    
+
     // 有 idx 参数 = 多卷经，尝试加载 idx 文件
     try {
         const response = await fetch(`/public/sutra${sutraNum}.idx`);
@@ -26,24 +26,91 @@ export async function fetchSutraInfo(sutraNum) {
     } catch (e) {
         console.log(`sutra${sutraNum}.idx 加载失败，尝试从 index.html 获取`);
     }
-    
+
     // 降级：从 index.html 获取
     return fetchSutraInfoFromIndex(sutraNum);
 }
 
 /**
+ * 从 oneVolSutra.json 获取单卷经的卷名
+ * @param {string} sutraNum
+ * @returns {Promise<object>}
+ */
+async function fetchSutraInfoFromOneVolJson(sutraNum) {
+    try {
+        const response = await fetch('/oneVolSutra.json');
+        if (!response.ok) {
+            console.error('加载 oneVolSutra.json 失败');
+            return null;
+        }
+        
+        const data = await response.json();
+        const sutraIndex = parseInt(sutraNum, 10);
+        
+        // 获取卷名（data 是数组，下标就是经号）
+        const rollName = data[sutraIndex] || '';
+        
+        // 从 index.html 获取经题
+        const title = await fetchSutraTitleFromIndex(sutraNum);
+        
+        return {
+            title: title || `经 ${sutraNum}`,
+            rollName: rollName,  // 单卷经的卷名
+            start: '',
+            end: '',
+            rolls: []
+        };
+    } catch (e) {
+        console.error('从 oneVolSutra.json 获取卷名失败:', e);
+        return null;
+    }
+}
+
+/**
+ * 从 index.html 获取经题
+ * @param {string} sutraNum
+ * @returns {Promise<string>}
+ */
+async function fetchSutraTitleFromIndex(sutraNum) {
+    try {
+        const htmlText = await getIndexHtml();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlText, 'text/html');
+
+        const rows = doc.querySelectorAll('table tr');
+        for (const row of rows) {
+            const cells = row.querySelectorAll('td');
+            if (cells.length < 2) continue;
+
+            const numCell = cells[0].textContent.trim();
+            if (numCell !== sutraNum) continue;
+
+            const link = cells[1].querySelector('a');
+            if (link) {
+                let title = link.textContent.trim();
+                title = title.replace(/一卷$/, '');
+                return title;
+            }
+        }
+    } catch (e) {
+        console.error('从 index.html 获取经题失败:', e);
+    }
+    return null;
+}
+
+/**
  * 解析 idx.html 内容
- * @param {string} htmlText 
+ * @param {string} htmlText
  * @returns {object}
  */
 function parseIdxHtml(htmlText) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlText, 'text/html');
-    
+
     // 经名
     const titleLink = doc.querySelector('h1 a');
     const title = titleLink ? titleLink.textContent.trim() : '';
-    
+
     // 封面起止页
     let start = '', end = '';
     if (titleLink) {
@@ -53,15 +120,15 @@ function parseIdxHtml(htmlText) {
         if (startMatch) start = startMatch[1];
         if (endMatch) end = endMatch[1];
     }
-    
+
     // 提取所有卷
     const rolls = [];
     const entries = doc.querySelectorAll('.entry a[href*="sutra.html"]');
-    
+
     entries.forEach(link => {
         const titleText = link.textContent.trim();
         if (titleText === '封面') return;
-        
+
         const href = link.getAttribute('href');
         const idxMatch = href.match(/idx=(\d+)/);
         if (idxMatch) {
@@ -71,7 +138,7 @@ function parseIdxHtml(htmlText) {
             });
         }
     });
-    
+
     return { title, start, end, rolls };
 }
 
@@ -84,36 +151,33 @@ async function getIndexHtml() {
 }
 
 /**
- * 从 index.html 获取单卷经的经名
- * @param {string} sutraNum 
+ * 从 index.html 获取单卷经的经名（保留用于降级）
+ * @param {string} sutraNum
  * @returns {Promise<object>}
  */
-
 async function fetchSutraInfoFromIndex(sutraNum) {
     try {
         const htmlText = await getIndexHtml();
         const parser = new DOMParser();
         const doc = parser.parseFromString(htmlText, 'text/html');
-        
-        // 查找对应经号的链接
+
         const rows = doc.querySelectorAll('table tr');
         for (const row of rows) {
             const cells = row.querySelectorAll('td');
             if (cells.length < 2) continue;
-            
+
             const numCell = cells[0].textContent.trim();
             if (numCell !== sutraNum) continue;
-            
+
             const link = cells[1].querySelector('a');
             if (link) {
                 let title = link.textContent.trim();
-                // 删除末尾的“一卷”
                 title = title.replace(/一卷$/, '');
-                
+
                 const href = link.getAttribute('href');
                 const startMatch = href.match(/start=(\d+)/);
                 const endMatch = href.match(/end=(\d+)/);
-                
+
                 return {
                     title: title,
                     start: startMatch ? startMatch[1] : '',
@@ -125,13 +189,9 @@ async function fetchSutraInfoFromIndex(sutraNum) {
     } catch (e) {
         console.error('从 index.html 获取经名失败:', e);
     }
-    
+
     return null;
 }
-
-
-
-
 
 /**
  * 根据 idx 获取卷名

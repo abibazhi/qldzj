@@ -167,7 +167,7 @@ function updateTopInfo(title, rollName) {
 }
 
 // 加载经卷信息
-async function loadSutraInfo() {
+async function loadSutraInfo1() {
     const urlParams = new URLSearchParams(window.location.search);
     const sutraNum = urlParams.get('sutra');
     const currentIdx = urlParams.get('idx');
@@ -181,6 +181,31 @@ async function loadSutraInfo() {
     const rollName = getRollTitle(info.rolls, currentIdx);
     updateTopInfo(info.title, rollName);
 }
+
+// 加载经卷信息
+async function loadSutraInfo() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const sutraNum = urlParams.get('sutra');
+    const currentIdx = urlParams.get('idx');
+
+    if (!sutraNum) return;
+
+    const info = await fetchSutraInfo(sutraNum);
+    if (!info) return;
+
+    currentSutraInfo = info;
+    
+    // 处理单卷经的情况（没有 idx 参数）
+    if (!currentIdx && info.rollName) {
+        // 单卷经：显示卷名
+        updateTopInfo(info.title, info.rollName);
+    } else {
+        // 多卷经：根据 idx 获取卷名
+        const rollName = getRollTitle(info.rolls, currentIdx);
+        updateTopInfo(info.title, rollName);
+    }
+}
+
 
 // 翻页后更新卷名
 async function updateRollAfterPageChange(newVol, newPage) {

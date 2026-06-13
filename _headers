@@ -5,3 +5,7 @@
 # 根目录下的 index.html（60秒缓存）
 /index.html
   Cache-Control: public, max-age=60, must-revalidate
+
+/oneVolSutra.json
+  Cache-Control: public, max-age=3600, must-revalidate
+

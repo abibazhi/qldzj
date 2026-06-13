@@ -94,7 +94,7 @@ img {
 /* ------------------------------ */
 .controls {
   position: absolute;
-  bottom: 60px; /* 距离底部高度（比页码高一点） */
+  bottom: 40px; /* 距离底部高度（比页码高一点） */
   left: 50%;
   transform: translateX(-50%); /* 水平居中 */
 

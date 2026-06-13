@@ -163,7 +163,16 @@ function initPanzoom() {
     minScale: 1,
     step: 0.15,
     cursor: 'grab',
-    pinchAndZoom: true
+    pinchAndZoom: true,
+
+    // 关键修改：关闭 contain，让图片可以自由移动，不受父容器 padding 的限制
+    contain: false, 
+    
+    // 或者尝试 'outside' 模式，看哪种效果更好
+    // contain: 'outside', 
+    
+    // 确保 Panzoom 不要去计算那些干扰样式
+    exclude: ['.top-info-bar'] // 排除顶部的标题栏，防止误触
   });
   imageWrapper.addEventListener('wheel', panzoom.zoomWithWheel);
 }

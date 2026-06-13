@@ -18,7 +18,7 @@
 /* 图片包裹层：放缩、拖拽的目标元素 */
 .image-wrapper {
   position: relative;
-  width: 100%;
+  width: 120%;
   height: 100%;
   display: flex;
   justify-content: center;

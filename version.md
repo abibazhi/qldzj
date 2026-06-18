@@ -169,6 +169,12 @@
 0. 技术上和分卷的经一样处理。
 
 
+## release1.4.0（2026.6.18）勘误表和suspect
+0. 勘误表中所有目录相关内容过了一遍
+0. 所有sutraxxx.idx.html和index.html中class带suspect的全部清除，并把suspect内容单独保存
+
+
+
 ---
 
 ## 更新日志汇总

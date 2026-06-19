@@ -12,7 +12,7 @@ let lastWorkingSource = null;
 // ==============================
 // 加载册 mapping.js
 // ==============================
-export async function loadMapping(vol) {
+export async function loadMapping1(vol) {
   const volStr = String(vol);
   
   // 🔥 判断是否是特殊目录
@@ -62,6 +62,61 @@ export async function loadMapping(vol) {
     return false;
   }
 }
+
+// ==============================
+// 加载册 mapping.js
+// ==============================
+export async function loadMapping(vol) {
+  const volStr = String(vol);
+  const isSpecial = (volStr === 'erratum');
+  const targetVol = isSpecial ? volStr : volStr.padStart(3, '0');
+
+  if (currentVol === targetVol && mappingData) {
+    log(`✅ ${targetVol} 已缓存`);
+    return true;
+  }
+
+  log(`🔄 加载新册 ${targetVol}`);
+  currentVol = targetVol;
+  mappingData = null;
+
+  try {
+    const env = getCurrentEnv();
+    let url;
+
+    // 🔥 关键改动：根据环境决定从哪里加载 mapping.js
+    if (env === "cloudflare") {
+      // Cloudflare 环境：从 R2 加载
+      url = `${R2_BASE}/${targetVol}/mapping.js`;
+    } else {
+      // GitHub Pages 或本地环境：从当前站点加载
+      // 注意：这里用的是相对路径，会从当前域名加载
+      url = `/${targetVol}/mapping.js`;
+    }
+
+    if (ALWAYS_RELOAD_MAPPING) {
+      url += "?t=" + Date.now();
+    }
+    log("📥 加载: " + url);
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+
+    const match = text.match(/const\s+mappingData\s*=\s*(\[[\s\S]*?\]);/);
+    if (!match) throw new Error("解析失败");
+
+    mappingData = JSON.parse(match[1]);
+    log(`✅ 解析成功，共 ${mappingData.length} 条`);
+    return true;
+  } catch (e) {
+    log("❌ mapping 加载失败: " + e.message);
+    mappingData = null;
+    currentVol = null;
+    return false;
+  }
+}
+
 
 // ==============================
 // 生成图片优先级（支持 erratum）

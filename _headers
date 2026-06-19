@@ -9,3 +9,5 @@
 /oneVolSutra.json
   Cache-Control: public, max-age=3600, must-revalidate
 
+/*.js
+  Content-Type: application/javascript; charset=utf-8

@@ -1,3 +1,4 @@
+// imageLoader.js
 import { ALWAYS_RELOAD_MAPPING, IMG_TIMEOUT, R2_BASE, GITHUB_BASE } from './config.js';
 import { log, getCurrentEnv } from './utils.js';
 
@@ -12,10 +13,16 @@ let lastWorkingSource = null;
 // 加载册 mapping.js
 // ==============================
 export async function loadMapping(vol) {
-  const targetVol = String(vol).padStart(3, '0');
+  const volStr = String(vol);
+  
+  // 🔥 判断是否是特殊目录
+  const isSpecial = (volStr === 'erratum');
+  
+  // 特殊目录直接用 volStr，数字册补零到3位
+  const targetVol = isSpecial ? volStr : volStr.padStart(3, '0');
 
   if (currentVol === targetVol && mappingData) {
-    log(`✅ 册 ${targetVol} 已缓存`);
+    log(`✅ ${targetVol} 已缓存`);
     return true;
   }
 
@@ -28,9 +35,9 @@ export async function loadMapping(vol) {
     let url;
 
     if (env === "cloudflare") {
-      url = `${R2_BASE}/${currentVol}/mapping.js`;
+      url = `${R2_BASE}/${targetVol}/mapping.js`;
     } else {
-      url = `/${currentVol}/mapping.js`;
+      url = `/${targetVol}/mapping.js`;
     }
 
     if (ALWAYS_RELOAD_MAPPING) {
@@ -57,29 +64,51 @@ export async function loadMapping(vol) {
 }
 
 // ==============================
-// 生成图片优先级
+// 生成图片优先级（支持 erratum）
 // ==============================
 export function buildSources(vol, page) {
-  const vol3 = String(vol).padStart(3, '0');
+  const volStr = String(vol);
   const pageNum = parseInt(page, 10);
   const env = getCurrentEnv();
 
-  const githubRel = `/${vol3}/${pageNum}.png`;
-  const githubAbs = `${GITHUB_BASE}/${vol3}/${pageNum}.png`;
+  // 🔥 判断是否是特殊目录
+  const isSpecial = (volStr === 'erratum');
+  
+  // 构建路径：数字册用 001/ 格式，erratum 用 erratum/ 格式
+  let path;
+  if (isSpecial) {
+    path = `erratum/${pageNum}.png`;
+  } else {
+    const vol3 = volStr.padStart(3, '0');
+    path = `${vol3}/${pageNum}.png`;
+  }
+
+  const githubRel = `/${path}`;
+  const githubAbs = `${GITHUB_BASE}/${path}`;
 
   const base = {
-    r2: { key: "R2", url: `${R2_BASE}/${vol3}/${pageNum}.png` },
+    r2: { key: "R2", url: `${R2_BASE}/${path}` },
     githubRel: { key: "GitHub", url: githubRel },
     githubAbs: { key: "GitHub", url: githubAbs },
     imgbb: null
   };
 
+  // 🔥 ImgBB 支持数字册和 erratum
   if (mappingData && Array.isArray(mappingData)) {
     const idx = pageNum - 1;
-    if (idx >= 0 && mappingData[idx]) {
+    if (idx >= 0 && idx < mappingData.length && mappingData[idx]) {
+      let imgbbUrl;
+      if (isSpecial) {
+        // erratum 格式：https://i.ibb.co/{id}/erratum-{page}-png.png
+        imgbbUrl = `https://i.ibb.co/${mappingData[idx]}/erratum-${pageNum}-png.png`;
+      } else {
+        // 数字册格式：https://i.ibb.co/{id}/{vol3}-{page}-png.png
+        const vol3 = volStr.padStart(3, '0');
+        imgbbUrl = `https://i.ibb.co/${mappingData[idx]}/${vol3}-${pageNum}-png.png`;
+      }
       base.imgbb = {
         key: "ImgBB",
-        url: `https://i.ibb.co/${mappingData[idx]}/${vol3}-${pageNum}-png.png`
+        url: imgbbUrl
       };
     }
   }
@@ -171,10 +200,10 @@ export async function testImage(url) {
     img.src = url;
   });
 }
+
 // ==============================
 // 🔥 生产核心：智能获取最优图片
 // ==============================
-
 export async function getBestImageUrl(vol, page) {
   console.log("\n========================================");
   console.log("【翻页】开始加载 → 册:", vol, "页:", page);
@@ -234,5 +263,3 @@ export async function getBestImageUrl(vol, page) {
   console.log("【错误】所有源都加载失败");
   return null;
 }
-
-

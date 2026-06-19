@@ -12,60 +12,6 @@ let lastWorkingSource = null;
 // ==============================
 // 加载册 mapping.js
 // ==============================
-export async function loadMapping1(vol) {
-  const volStr = String(vol);
-  
-  // 🔥 判断是否是特殊目录
-  const isSpecial = (volStr === 'erratum');
-  
-  // 特殊目录直接用 volStr，数字册补零到3位
-  const targetVol = isSpecial ? volStr : volStr.padStart(3, '0');
-
-  if (currentVol === targetVol && mappingData) {
-    log(`✅ ${targetVol} 已缓存`);
-    return true;
-  }
-
-  log(`🔄 加载新册 ${targetVol}`);
-  currentVol = targetVol;
-  mappingData = null;
-
-  try {
-    const env = getCurrentEnv();
-    let url;
-
-    if (env === "cloudflare") {
-      url = `${R2_BASE}/${targetVol}/mapping.js`;
-    } else {
-      url = `/${targetVol}/mapping.js`;
-    }
-
-    if (ALWAYS_RELOAD_MAPPING) {
-      url += "?t=" + Date.now();
-    }
-    log("📥 加载: " + url);
-
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
-
-    const match = text.match(/const\s+mappingData\s*=\s*(\[[\s\S]*?\]);/);
-    if (!match) throw new Error("解析失败");
-
-    mappingData = JSON.parse(match[1]);
-    log(`✅ 解析成功，共 ${mappingData.length} 条`);
-    return true;
-  } catch (e) {
-    log("❌ mapping 加载失败: " + e.message);
-    mappingData = null;
-    currentVol = null;
-    return false;
-  }
-}
-
-// ==============================
-// 加载册 mapping.js
-// ==============================
 export async function loadMapping(vol) {
   const volStr = String(vol);
   const isSpecial = (volStr === 'erratum');
@@ -171,9 +117,9 @@ export function buildSources(vol, page) {
   const list = [];
 
   if (env === "cloudflare") {
-    list.push(base.imgbb, base.r2, base.githubAbs);
+    list.push(base.r2, base.imgbb, base.githubAbs);
   } else {
-    list.push(base.imgbb, base.githubRel, base.r2);
+    list.push(base.githubRel, base.imgbb, base.r2);
   }
 
   return list.filter(Boolean);

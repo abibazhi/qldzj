@@ -118,7 +118,7 @@ export function buildSources(vol, page) {
   if (env === "cloudflare") {
     list.push(base.imgbb, base.r2, base.githubAbs);
   } else {
-    list.push(base.githubRel, base.imgbb, base.r2);
+    list.push(base.imgbb, base.githubRel, base.r2);
   }
 
   return list.filter(Boolean);

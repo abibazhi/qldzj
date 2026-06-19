@@ -174,6 +174,12 @@
 0. 所有sutraxxx.idx.html和index.html中class带suspect的全部清除，并把suspect内容单独保存
 
 
+## release1.4.1（2026.6.19）勘误表和suspect
+0. 勘误表图片可以浏览了
+0. erratum1~erratum62，和之前的数字目录一样。本来想用000目录的，被小幻否定了。
+0. erratum目录中的图片本来就在imgbb中有，但需要提取62个url，并生成mapping.js
+0. erratum/mapping.js上传到R2后，报跨域错误。其实过几个小时自己就好了。
+
 
 ---
 

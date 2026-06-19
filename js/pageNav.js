@@ -42,7 +42,7 @@ function getVolumePageCount(volumeNum) {
   const volStr = String(volumeNum);
   
   // 🔥 erratum 固定 20 页
-  if (volStr === 'erratum') return 20;
+  if (volStr === 'erratum') return 62;
   
   const num = parseInt(volStr, 10);
   if (num < 1 || num >= pageCount.length) return 999;

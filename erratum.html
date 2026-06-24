@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>古籍勘误表 · 双组并置</title>
+  <style>
+    /* --- 全局与基础样式 --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f6f3ef;
+      font-family: 'Segoe UI', '华文细黑', 'Microsoft YaHei', system-ui, sans-serif;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 1600px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      padding: 1.8rem 1.2rem 2.5rem;
+      transition: 0.2s;
+    }
+
+    /* --- 全局标题 --- */
+    .global-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #e8ddd2;
+      padding-bottom: 0.8rem;
+    }
+
+    .global-header h1 {
+      font-size: 2rem;
+      font-weight: 500;
+      letter-spacing: 4px;
+      color: #3b2e24;
+      border-left: 6px solid #b7a48b;
+      padding-left: 18px;
+    }
+
+    .global-header .badge-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .global-header .badge-group span {
+      background: #ede7e0;
+      padding: 0.2rem 1.2rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      color: #4d3f33;
+    }
+
+    /* --- 每个勘误组 (图片+表格) --- */
+    .err-group {
+      margin-bottom: 3.5rem;
+      border: 1px solid #e3dad1;
+      border-radius: 24px;
+      padding: 1.5rem 1.5rem 1rem;
+      background: #fcfaf8;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    }
+
+    .err-group:last-child {
+      margin-bottom: 0.5rem;
+    }
+
+    .group-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #3b2e24;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px dashed #d5c9bc;
+    }
+
+    .group-title .num {
+      background: #d9cdc0;
+      color: #2f261e;
+      border-radius: 40px;
+      padding: 0.1rem 0.9rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* --- 左右两栏 Flex 布局 (复用之前的中间值) --- */
+    .row-duo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.4rem;
+      align-items: stretch;
+    }
+
+    /* 左栏：图片 */
+    .col-image {
+      flex: 4 1 400px;
+      min-width: 280px;
+      max-width: 630px;
+      display: flex;
+      flex-direction: column;
+      /*justify-content: flex-start;*/
+    }
+
+/* --- 修改：图片本身，填充容器高度并保持比例 --- */
+.col-image img {
+  width: 100%;
+  height: 100%;            /* 关键：填充父容器高度 */
+  max-height: 100%;        /* 限制最大高度，防止溢出 */
+  object-fit: contain;     /* 关键：确保图片完整可见，不变形 */
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e3dad1;
+  background: #f9f6f2;
+  display: block;
+}
+
+    .image-caption {
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: #7b6b5b;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    /* 右栏：表格 (文字已调大) */
+    .col-table {
+      flex: 1.7 1 360px;
+      min-width: 290px;
+      overflow-x: auto;
+    }
+
+    .table-wrapper {
+      border-radius: 18px;
+      border: 1px solid #e3dad1;
+      background: #ffffff;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      min-width: 420px;
+    }
+
+    th {
+      background: #e8dfd6;
+      color: #2f261e;
+      font-weight: 600;
+      padding: 10px 6px;
+      text-align: center;
+      border-bottom: 2px solid #cbbeb2;
+      letter-spacing: 0.8px;
+      font-size: 0.84rem;
+    }
+
+    td {
+      padding: 9px 6px;
+      border-bottom: 1px solid #e8ddd2;
+      vertical-align: middle;
+      background-color: #fffdfb;
+      line-height: 1.4;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* 列宽比例 */
+    th:nth-child(1), td:nth-child(1) { width: 8%; text-align: center; }
+    th:nth-child(2), td:nth-child(2) { width: 9%; text-align: center; }
+    th:nth-child(3), td:nth-child(3) { width: 7%; text-align: center; }
+    th:nth-child(4), td:nth-child(4) { width: 31%; text-align: left; }
+    th:nth-child(5), td:nth-child(5) { width: 27%; text-align: left; }
+    th:nth-child(6), td:nth-child(6) { width: 18%; text-align: left; }
+
+    td:nth-child(4), td:nth-child(5), td:nth-child(6) {
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    td:nth-child(6) {
+      color: #5f4f3f;
+      font-size: 0.82rem;
+      background-color: #f9f5f0;
+    }
+
+    /* 底部 */
+    .silk-border {
+      border-top: 2px solid #dccfc2;
+      margin-top: 1.5rem;
+      padding-top: 0.5rem;
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* --- 响应式：小屏幕时图片在上，表格在下 --- */
+    @media (max-width: 860px) {
+
+.row-duo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.4rem;
+  align-items: stretch;   /* 这个必须存在，才能使两栏等高 */
+}
+
+      .col-image {
+        max-width: 100%;
+        flex: 1 1 auto;
+      }
+      .col-table {
+        min-width: 0;
+        flex: 1 1 auto;
+      }
+      table {
+        font-size: 0.82rem;
+        min-width: 380px;
+      }
+      body { padding: 0.8rem; }
+      .container { padding: 0.8rem; }
+      .global-header h1 { font-size: 1.5rem; }
+      .err-group { padding: 1rem; }
+    }
+
+    @media (max-width: 500px) {
+      table {
+        font-size: 0.74rem;
+        min-width: 300px;
+      }
+      td, th { padding: 6px 4px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- 全局标题 -->
+  <div class="global-header">
+    <h1>📜 勘误表 · 册页校雠</h1>
+    <div class="badge-group">
+      <span>📌 共 29 条</span>
+      <span>🖌 据原稿逐条核对</span>
+      <span>⚘ 小幻 · 校雠精舍</span>
+    </div>
+  </div>
+
+  <!-- ========== 第一组：图片1 + 表格1 (原14条) ========== -->
+  <div class="err-group">
+    <div class="group-title">
+      <span>📖 第一组</span>
+      <span class="num">原稿第 361 页 · 共 14 条</span>
+    </div>
+    <div class="row-duo">
+      <!-- 左栏：图片1 -->
+      <div class="col-image">
+        <img 
+          src="https://img.daxumi.top/erratum/1.png" 
+          alt="勘误表来源影像一"
+          title="原图片尺寸 1696x2362"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+        >
+        <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+          ⚠️ 图片无法加载，可查看下方表格内容。
+        </div>
+      </div>
+
+      <!-- 右栏：表格1 (原14条) -->
+      <div class="col-table">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>二</td><td>四六〇</td><td>下</td><td>第二行第一字「力」</td><td>乃</td><td></td></tr>
+              <tr><td>二</td><td>四八二</td><td>上</td><td>遺漏十五行字</td><td>四八一頁下四八二頁上之間補十五行</td><td>見三七四</td></tr>
+              <tr><td>二</td><td>四九一</td><td>下</td><td>一至十五行內文錯誤</td><td>見三七五</td><td>見三七五</td></tr>
+              <tr><td>二</td><td>五〇三</td><td>下</td><td>最後一行底下缺小字</td><td>盤山華嚴道人裝</td><td></td></tr>
+              <tr><td>三</td><td>二七三</td><td>上</td><td>第一行第一字缺</td><td>何</td><td></td></tr>
+              <tr><td>六</td><td>六四六</td><td>上</td><td>多第一行</td><td>脫門清淨無二無二分無別無斷故</td><td></td></tr>
+              <tr><td>十三</td><td>三八二</td><td>下</td><td>音釋少最後一行</td><td>重擔謂大法重擔也</td><td></td></tr>
+              <tr><td>十三</td><td>四二九</td><td>上</td><td>音釋後缺一段字</td><td>見三七六上</td><td>見三七六上</td></tr>
+              <tr><td>十六</td><td>目錄</td><td></td><td>標題一·一〇少頁碼</td><td>四四五頁</td><td></td></tr>
+              <tr><td>十七</td><td>二四二</td><td></td><td>第六行第一字缺</td><td>此</td><td></td></tr>
+              <tr><td>二〇</td><td>目錄</td><td></td><td>標題二·二五「門」</td><td>閦</td><td></td></tr>
+              <tr><td>二〇</td><td>目錄</td><td></td><td>標題二·三一「越問經」</td><td>越問菩薩經</td><td></td></tr>
+              <tr><td>二〇</td><td>目錄</td><td></td><td>標題二·五三「佛」</td><td>佛說</td><td></td></tr>
+              <tr><td>二〇</td><td>五三〇</td><td>下</td><td>第六行第一字「右」</td><td>若</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 第二组：图片2 + 表格2 (新16条) ========== -->
+  <div class="err-group">
+    <div class="group-title">
+      <span>📖 第二组</span>
+      <span class="num">原稿第 362 页 · 共 16 条</span>
+    </div>
+    <div class="row-duo">
+      <!-- 左栏：图片2 -->
+      <div class="col-image">
+        <img 
+          src="https://img.daxumi.top/erratum/2.png" 
+          alt="勘误表来源影像二"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+        >
+        <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+          ⚠️ 图片无法加载，可查看下方表格内容。
+        </div>
+      </div>
+
+      <!-- 右栏：表格2 (新15条) -->
+      <div class="col-table">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>二〇</td><td>五三〇</td><td>下</td><td>缺第十一行</td><td>入法界體性經</td><td></td></tr>
+              <tr><td>二一</td><td>一九九</td><td>上</td><td>第十五行第一字「昧」</td><td>珠</td><td></td></tr>
+              <tr><td>二三</td><td>目錄</td><td></td><td>標題三·七五大哀經一〇卷（一至一〇）</td><td>八卷（一至八）</td><td></td></tr>
+              <tr><td>二四</td><td>目錄</td><td></td><td>標題四·八三（一至一〇）</td><td>（一至四〇）</td><td></td></tr>
+              <tr><td>二五</td><td>五三六</td><td>下</td><td>音釋第六至十五行缺</td><td></td><td>見三七六下</td></tr>
+              <tr><td>二七</td><td>目錄</td><td></td><td>標題四·八五（一至七）</td><td>（一至四〇）</td><td></td></tr>
+              <tr><td>二八</td><td>目錄</td><td></td><td>標題四·八八「缺譯者」</td><td>西晉三藏法師竺法護譯</td><td></td></tr>
+              <tr><td>二八</td><td>目錄</td><td></td><td>標題四·九八「沙經」</td><td>「兜沙經」</td><td></td></tr>
+              <tr><td>二九</td><td>五三〇</td><td>下</td><td>第十一行第二字「蚤」</td><td>蚉</td><td></td></tr>
+              <tr><td>三〇</td><td>一〇二</td><td>上</td><td>第一行第一字「一」</td><td>身</td><td></td></tr>
+              <tr><td>三〇</td><td>四三八</td><td>上</td><td>缺最後一行</td><td>大般涅槃經卷第二十三</td><td></td></tr>
+              <tr><td>三三</td><td>目錄</td><td></td><td>標題六·一三四（七至一〇）</td><td>（七至一〇）</td><td></td></tr>
+              <tr><td></td><td></td><td></td><td>卷六（木六）（木六—木十）</td><td>（木七—木十）</td><td></td></tr>
+              <tr><td>三三</td><td>目錄</td><td></td><td>標題六·一三五「一八卷之卷一」</td><td>八卷自卷一至卷八</td><td></td></tr>
+              <tr><td>三三</td><td>目錄</td><td></td><td>標題六·一四二「缺譯者」</td><td>姚秦三藏法師鳩摩羅什譯</td><td></td></tr>
+              <tr><td>三四</td><td>目錄</td><td></td><td>標題六·一五五（一至十二）</td><td>（一至六）</td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- ========== 第三组：图片3 + 表格3 (新16条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第三组</span>
+    <span class="num">原稿第 363 页· 共 16 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片3 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/3.png" 
+        alt="勘误表来源影像三"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格3 (新16条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>三四</td><td>二八</td><td></td><td>第一至十五行內文多出應刪除</td><td>二九頁以後往前移一欄</td><td>見三七七</td></tr>
+            <tr><td>三六</td><td>十三</td><td>上</td><td>缺第十一至十五行</td><td>見三七八上</td><td>見三七八上</td></tr>
+            <tr><td>三六</td><td>三一一</td><td>下</td><td>第十一行</td><td>變五應轉者者相見轉變六者物轉變七者</td><td></td></tr>
+            <tr><td>三七</td><td>目錄</td><td></td><td>標題六·一八七「隨」</td><td>隋</td><td></td></tr>
+            <tr><td>三七</td><td>三九六</td><td>下</td><td>三九六下及三九七上順序錯誤</td><td>三九六下與三九七上應調換</td><td>見三七八下<br>見三七九上</td></tr>
+            <tr><td>三七</td><td>四〇五</td><td>下</td><td>四〇五下及四〇六上順序錯誤</td><td>四〇五下與四〇六上應調換</td><td>見三七九下<br>見三八〇上</td></tr>
+            <tr><td>三七</td><td>四〇七</td><td>上</td><td>第一至十五行內文顛倒</td><td>見三八〇下 三八一上</td><td>見三八〇下<br>見三八一上</td></tr>
+            <tr><td>三七</td><td>四九四</td><td>下</td><td>四九四下及四九五上順序錯誤</td><td>四九四下與四九五上應調換</td><td>見三八一下<br>見三八二上</td></tr>
+            <tr><td>三八</td><td>六</td><td>下</td><td>第一至十行順序錯誤</td><td>第一至五行與六至十行應調換</td><td>見三八二下</td></tr>
+            <tr><td>三八</td><td>一八二</td><td>下</td><td>一八二下及一八三上順序錯誤</td><td>一八二下與一八三上應調換</td><td>見三八三</td></tr>
+            <tr><td>三八</td><td>二四七</td><td>上</td><td>第一行第一字「具」</td><td>其</td><td></td></tr>
+            <tr><td>三八</td><td>二九五</td><td>下</td><td>缺最後一行</td><td>佛說觀彌勒菩薩上生兜率陀天經</td><td></td></tr>
+            <tr><td>三九</td><td>目錄</td><td></td><td>標題六·三〇四「少卷數」</td><td>二卷</td><td></td></tr>
+            <tr><td>四〇</td><td>目錄</td><td></td><td>標題六·三二九（能九）</td><td>（能八）</td><td></td></tr>
+            <tr><td>四〇</td><td>一三一</td><td>下</td><td>第一至十五行內文重覆</td><td></td><td>見三八四</td></tr>
+            <tr><td>四〇</td><td>五二九</td><td>下</td><td>有三段內文</td><td>應空白</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 第四组：图片4 + 表格4 (新16条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第四组</span>
+    <span class="num">原稿第 364 页 · 共 16 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片4 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/4.png" 
+        alt="勘误表来源影像四"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格4 (新16条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>四〇</td><td>五三三</td><td>下</td><td>第一至十五行內文遺漏</td><td>見三八五上</td><td>見三八五上</td></tr>
+            <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四〇七「六一三頁」</td><td>六一六頁</td><td></td></tr>
+            <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四一〇「六五三頁」</td><td>六六〇頁</td><td></td></tr>
+            <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四一三「六八一頁」</td><td>六八五頁</td><td></td></tr>
+            <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四一四「六八一頁」</td><td>六八八頁</td><td></td></tr>
+            <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四一五「六八一頁」</td><td>六九〇頁</td><td></td></tr>
+            <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四一六「六八一頁」</td><td>六九六頁</td><td></td></tr>
+            <tr><td>四三</td><td>六七五</td><td>上下</td><td>六七五頁及六七六頁順序錯誤</td><td>六七五頁與六七六頁應調換</td><td>見三八五下<br>至三八七上</td></tr>
+            <tr><td>四四</td><td>二一九</td><td></td><td>第十二行第一字「住」</td><td>往</td><td></td></tr>
+            <tr><td>四四</td><td>五三〇</td><td>上</td><td>第十二行第一字「有」</td><td>友</td><td></td></tr>
+            <tr><td>四五</td><td>一四六</td><td>上</td><td>第十一至十五行內文錯誤</td><td>見三八七下</td><td>見三八七下</td></tr>
+            <tr><td>四五</td><td>四七〇</td><td>下</td><td>第六至十五行重覆</td><td>重覆應刪除</td><td></td></tr>
+            <tr><td>四五</td><td>五七三</td><td>下</td><td>第六行第一字「生」</td><td>病</td><td></td></tr>
+            <tr><td>四六</td><td>二二八</td><td>上</td><td>第一行第一字</td><td>人</td><td></td></tr>
+            <tr><td>四七</td><td>五七一</td><td>下</td><td>缺最後一行</td><td>佛說大普賢陀羅尼經</td><td></td></tr>
+            <tr><td>四七</td><td>目錄</td><td></td><td>標題七・四四七「二八五頁」</td><td>二九八頁</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ========== 第五组：图片5 + 表格5 (新16条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第五组</span>
+    <span class="num">原稿第 365 页· 共 16 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片5 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/5.png" 
+        alt="勘误表来源影像五"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格5 (新16条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>四七</td><td>目錄</td><td></td><td>標題七・四九五「六三五頁」</td><td>六四八頁</td><td></td></tr>
+            <tr><td>四八</td><td>七二六</td><td>下</td><td>七二六下一、二段及七二七上第三段七二七下一、二段</td><td>內文有重覆應刪除</td><td>見三八八</td></tr>
+            <tr><td>五一</td><td>目錄</td><td></td><td>標題八・五三九「（二五至五〇）」</td><td>（二六至五〇）</td><td></td></tr>
+            <tr><td>五二</td><td>一三一</td><td>上</td><td>第一至五行內文多出</td><td>內文多出應刪除</td><td>見三八九上</td></tr>
+            <tr><td>五四</td><td>五六</td><td>下</td><td>第一至十五行順序錯誤</td><td>五六下與五七下應調換</td><td>見三八九下<br>見三九〇上</td></tr>
+            <tr><td>五五</td><td>目錄</td><td></td><td>標題八・六〇一「猒」</td><td>厭</td><td></td></tr>
+            <tr><td>五五</td><td>五四九</td><td>下</td><td>第六至十五行順序錯誤</td><td>第六至十行與十一至十五行調換</td><td>見三九〇下</td></tr>
+            <tr><td>五六</td><td>九四</td><td>下</td><td>第十一行第一字</td><td>報</td><td></td></tr>
+            <tr><td>五七</td><td>一五六</td><td>下</td><td>第十五行第一字</td><td>初</td><td></td></tr>
+            <tr><td>六二</td><td>四一</td><td>下</td><td>缺第十一至十五行</td><td>見三九一上</td><td>見三九一上</td></tr>
+            <tr><td>六二</td><td>490</td><td>上</td><td>第一至十五行內文錯誤</td><td>見三九一下</td><td>見三九一下</td></tr>
+            <tr><td></td><td>490</td><td>下</td><td>第一至十行內文錯誤</td><td>見三九二上</td><td>見三九二上</td></tr>
+            <tr><td>六三</td><td>目錄</td><td></td><td>標題一〇・九九九「（一至五）」</td><td>（六至十）</td><td></td></tr>
+            <tr><td>六三</td><td>目錄</td><td></td><td>標題一〇・一〇一二「缺卷數」</td><td>（一至十九）</td><td></td></tr>
+            <tr><td>六三</td><td>六五</td><td>下</td><td>第一行第一字</td><td>壞</td><td></td></tr>
+            <tr><td>六三</td><td>七二七</td><td>下</td><td>第一行第一字</td><td>唵</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== 第六组：图片6 + 表格6 (新16条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第六组</span>
+    <span class="num">原稿 6 · 16 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片6 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/6.png" 
+        alt="勘误表来源影像六"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格6 (新16条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>六三</td><td>七二七</td><td>下</td><td>第十五行第一、二字</td><td>曳引</td><td></td></tr>
+            <tr><td>六四</td><td></td><td>目錄</td><td>標題一〇・一〇二二「（一至五）」</td><td>「（一至七）」</td><td></td></tr>
+            <tr><td>六四</td><td></td><td>目錄</td><td>標題一〇・一〇二四「（淵一 — 淵三）」</td><td>（淵一 — 淵四）</td><td></td></tr>
+            <tr><td>六四</td><td>六六一</td><td>上</td><td>第六至十五行內文錯誤</td><td>—</td><td>見三九二下</td></tr>
+            <tr><td>六五</td><td>五九四</td><td>上</td><td>缺最後一行</td><td>佛說如來不思議祕密大乘經卷第十七</td><td></td></tr>
+            <tr><td>六八</td><td>七七</td><td>上</td><td>第三、四行第一字</td><td>比法</td><td></td></tr>
+            <tr><td>六九</td><td></td><td>目錄</td><td>標題一一・一一一一「（一至）」</td><td>（一至五）</td><td></td></tr>
+            <tr><td>70</td><td>一二二</td><td>下</td><td>缺第一行</td><td>比丘聞其中有少欲知足行頭陀樂學戒知</td><td></td></tr>
+            <tr><td>七一</td><td>一九六</td><td>下</td><td>第十五行第一字</td><td>人</td><td></td></tr>
+            <tr><td>七四</td><td>560</td><td>上</td><td>第十一行第一字「是」</td><td>足</td><td></td></tr>
+            <tr><td>七五</td><td>二二七</td><td>上</td><td>音釋第四行缺字</td><td>培也也</td><td>見三九三上</td></tr>
+            <tr><td>七五</td><td>560</td><td>下</td><td>缺音釋最後一段</td><td>名</td><td>見三九三上</td></tr>
+            <tr><td>七八</td><td>一四五</td><td>下</td><td>第一行第一字「石」</td><td>經論</td><td>—</td></tr>
+            <tr><td>七八</td><td>160</td><td>上</td><td>第十三行十四行第一字</td><td>—</td><td>—</td></tr>
+            <tr><td>七九</td><td>七四九</td><td>下</td><td>第一行第一字</td><td>初</td><td>—</td></tr>
+            <tr><td>八二</td><td>二二八</td><td>上</td><td>第一至十行順序錯誤</td><td>第一至五行與六至十行應調換</td><td>見三九三下</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== 第七组：图片7 + 表格7 (新16条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第七组</span>
+    <span class="num">原稿 7 · 16 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片7 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/7.png" 
+        alt="勘误表来源影像七"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格7 (新16条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>八三</td><td>二</td><td>下</td><td>千字文「友」與「枝」</td><td>八二冊千字文「友」與八三冊「枝」應對調</td><td></td></tr>
+            <tr><td>八四</td><td>一〇九</td><td>上</td><td>第七、八行第一字</td><td>得治</td><td></td></tr>
+            <tr><td>八六</td><td></td><td>目錄</td><td>標題一二・一一八八「（節三 — 節十）」</td><td>（節三 — 節九）</td><td></td></tr>
+            <tr><td>八七</td><td></td><td>目錄</td><td>標題一二・一二〇三「少千字文」</td><td>（沛一 — 沛四）</td><td></td></tr>
+            <tr><td>八七</td><td></td><td>目錄</td><td>標題一二・一一九一「少千字文」</td><td>（廉六 — 廉十）</td><td></td></tr>
+            <tr><td>八七</td><td></td><td>目錄</td><td>標題一二・一一九二「少千字文」</td><td>（退一 — 退七）</td><td></td></tr>
+            <tr><td>八八</td><td></td><td>目錄</td><td>標題一二・一二二五「少譯者」</td><td>無著菩薩造唐三藏法師義淨譯</td><td></td></tr>
+            <tr><td>八八</td><td></td><td>目錄</td><td>標題一二・一二二五「少頁碼」</td><td>「一」</td><td></td></tr>
+            <tr><td>八八</td><td>一九</td><td>上</td><td>第八行第一字</td><td>曠</td><td></td></tr>
+            <tr><td>九〇</td><td>五八〇</td><td>上</td><td>第一行第一字「予」</td><td>子</td><td></td></tr>
+            <tr><td>九〇</td><td>—</td><td>目錄</td><td>標題一二・一二五六「（一〇一至一〇六）」</td><td>（一〇一至一六〇）</td><td></td></tr>
+            <tr><td>九一</td><td>—</td><td>下</td><td>第十至十五行內文錯誤</td><td>見三九四上</td><td>見三九四上</td></tr>
+            <tr><td>九一</td><td>一九</td><td>下</td><td>第十至十五行內文錯誤</td><td>見三九四下</td><td>見三九四下</td></tr>
+            <tr><td>九二</td><td>二八四</td><td>上</td><td>第十五行第一、二字</td><td>兩耳</td><td></td></tr>
+            <tr><td>一〇一</td><td></td><td>目錄</td><td>標題一二・一二七二「（一至九）」</td><td>（一至十二）</td><td></td></tr>
+            <tr><td>一〇一</td><td>一四六</td><td>下</td><td>第一至十行內文錯誤</td><td>第一至五行與六至十行應調換</td><td>見三九五上</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== 第八组：图片8 + 表格8 (新16条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第八组</span>
+    <span class="num">原稿 8 · 16 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片8 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/8.png" 
+        alt="勘误表来源影像八"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格8 (新16条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>一〇二</td><td></td><td>目錄</td><td>標題一二・一二七二「（一〇二至一八）」</td><td>（一三至一八）</td><td></td></tr>
+            <tr><td>102</td><td>三三四</td><td>下</td><td>第十五行第一字</td><td>了</td><td>見三九五下</td></tr>
+            <tr><td>103</td><td>三二五</td><td>上</td><td>第一至五行內文錯誤</td><td>見三九六</td><td>見三九六</td></tr>
+            <tr><td>103</td><td>三二四</td><td>下</td><td>全</td><td>見三九七</td><td>見三九七</td></tr>
+            <tr><td>103</td><td>三二三</td><td>下</td><td>全</td><td>見三九八</td><td>見三九八</td></tr>
+            <tr><td>103</td><td>三四四</td><td>上下</td><td>全</td><td>見三九九至四〇一</td><td>見三九九至四〇一</td></tr>
+            <tr><td>106</td><td>六九四</td><td>上</td><td>六九四至六九六頁內文錯誤</td><td>見三九九至四〇一</td><td>見三九九至四〇一</td></tr>
+            <tr><td>107</td><td>三六</td><td>下</td><td>第十三行第一字「所」</td><td>入</td><td>—</td></tr>
+            <tr><td>107</td><td>八三</td><td>上</td><td>第四行第一字「又」</td><td>叉</td><td>—</td></tr>
+            <tr><td>108</td><td>三五四</td><td>下</td><td>缺第一至五行</td><td>見四〇二上</td><td>見四〇二上</td></tr>
+            <tr><td>108</td><td>五九九</td><td>上</td><td>第六行第一字</td><td>十</td><td>—</td></tr>
+            <tr><td>一二三</td><td>六六七</td><td>下</td><td>第一行第一、二字</td><td>平行</td><td>—</td></tr>
+            <tr><td>一二九</td><td>六九七</td><td>上</td><td>第十一行第一字</td><td>乘</td><td>—</td></tr>
+            <tr><td>120</td><td>五四四</td><td>下</td><td>第一行第一字</td><td>祐</td><td>—</td></tr>
+            <tr><td>120</td><td>七九一</td><td>下</td><td>缺第六行</td><td>妙本靈迹皆非淺短能知但戀慕玄風無所</td><td>—</td></tr>
+            <tr><td>二二四</td><td>五五三</td><td>上</td><td>第十一至十五行內文錯誤</td><td>見四〇二下</td><td>見四〇二下</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== 第九组：图片9 + 表格9 (新16条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第九组</span>
+    <span class="num">原稿 9 · 16 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片9 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/9.png" 
+        alt="勘误表来源影像九"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格9 (新16条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>一二四</td><td>七六五</td><td>下</td><td>七六五下第十一至十五行、七六六下全順序錯誤</td><td>七六五下第三段、七六六上第一段與七六六上第二三段調換</td><td>見四〇三</td></tr>
+            <tr><td>一二五</td><td>二二五</td><td>下</td><td>第十一行至十五行錯誤</td><td>見四〇四上</td><td>見四〇四上</td></tr>
+            <tr><td>一二五</td><td>二二六</td><td>上</td><td>第一至十五行內文錯誤</td><td>見四〇四下</td><td>見四〇四下</td></tr>
+            <tr><td>一二六</td><td>二四九</td><td>上</td><td>第六行至十五行順序錯誤</td><td>二四九上六至十五行、二四九下一至十行調換</td><td>見四〇五</td></tr>
+            <tr><td>一二八</td><td>401</td><td>下</td><td>缺第十五行</td><td>郭切，僕力主切蔽也，俗也</td><td>—</td></tr>
+            <tr><td>一二八</td><td>六九九</td><td>上</td><td>第一行第一字「大」</td><td>無</td><td>—</td></tr>
+            <tr><td>一二九</td><td>三二九</td><td>下</td><td>第三行第一字</td><td>第</td><td>—</td></tr>
+            <tr><td>一二九</td><td>三七九</td><td>上</td><td>字重疊</td><td>應刪除</td><td>—</td></tr>
+            <tr><td>一二九</td><td>407</td><td>上</td><td>第二行第一字</td><td>三</td><td>—</td></tr>
+            <tr><td>一二九</td><td>五五九</td><td>上</td><td>第八、十、十二行第一字</td><td>大、大、大</td><td>—</td></tr>
+            <tr><td>一二九</td><td>六二七</td><td>下</td><td>缺第十五行</td><td>差摩婆帝受記經一卷</td><td>—</td></tr>
+            <tr><td>一二九</td><td>七五九</td><td>上</td><td>第一至五行、六至十五行內文錯誤</td><td>見四〇六上</td><td>見四〇六上</td></tr>
+            <tr><td>130</td><td>三四</td><td>上</td><td>第一、二、三行字重疊</td><td>應刪除</td><td>—</td></tr>
+            <tr><td>一三一</td><td>208</td><td>下</td><td>第十至十五行內文錯誤</td><td>見四〇六下</td><td>見四〇六下</td></tr>
+            <tr><td>一三一</td><td>五三七</td><td>下</td><td>第一至十行內文多</td><td>應刪除</td><td>—</td></tr>
+            <tr><td>一三二</td><td>六五七</td><td>下</td><td>缺第十五行</td><td>攝理盡又無事理相離之過，故事隨理而</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== 第十组：图片10 + 表格10 (新16条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第十组</span>
+    <span class="num">原稿 10 · 16 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片10 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/10.png" 
+        alt="勘误表来源影像十"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格10 (新16条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>一三三</td><td>一九七</td><td>下</td><td>缺第十一行</td><td>文封故言念念然與劫皆有相即相入等</td><td>見四〇七上</td></tr>
+            <tr><td>一三三</td><td>407</td><td>上</td><td>缺一、二、三行，多一三、一四、一五行</td><td>見四〇七下</td><td>見四〇七下</td></tr>
+            <tr><td>一三三</td><td>七一</td><td>上</td><td>第六至十五行內文錯誤</td><td>見四〇八上</td><td>見四〇八上</td></tr>
+            <tr><td>一三三</td><td>七四三</td><td>下</td><td>第六至十五行內文錯誤</td><td>見四〇八下</td><td>見四〇八下</td></tr>
+            <tr><td>一三三</td><td>七七九</td><td>上</td><td>第一至十五行內文錯誤</td><td>見四〇八下</td><td>見四〇八下</td></tr>
+            <tr><td>一三四</td><td>十五</td><td>上</td><td>最後一行多出</td><td>應刪除</td><td>—</td></tr>
+            <tr><td>一三四</td><td>七三九</td><td>下</td><td>第一至十五行內文錯誤</td><td>見四〇九上</td><td>見四〇九上</td></tr>
+            <tr><td>一三四</td><td>740</td><td>上</td><td>第一至十行內文錯誤</td><td>見四〇九下</td><td>見四〇九下</td></tr>
+            <tr><td>一三六</td><td></td><td>目錄</td><td>標題一五・一五五七「（四八之 2 至七三）」</td><td>（四八之1至七三）</td><td></td></tr>
+            <tr><td>一三六</td><td>五五七</td><td>上</td><td>第十一至十五行內文錯誤</td><td>見四一〇上</td><td>見四一〇上</td></tr>
+            <tr><td>一三七</td><td>七八二</td><td>下</td><td>第十至十五行順序錯誤</td><td>第六至十行與十一至十五行調換</td><td>見四一〇下</td></tr>
+            <tr><td>一三八</td><td>五一</td><td>下</td><td>第十至十五行順序錯誤</td><td>第六至十行與十一至十五行調換</td><td>見四一一上</td></tr>
+            <tr><td>一三八</td><td>五二</td><td>上</td><td>第六至十五行內文錯誤</td><td>見四一一下</td><td>見四一一下</td></tr>
+            <tr><td>一三八</td><td>一六一</td><td>上</td><td>第十一至十五行錯誤</td><td>見四一二上</td><td>見四一二上</td></tr>
+            <tr><td>一三八</td><td>二二八</td><td>上</td><td>第二行第一字</td><td>為</td><td>見四一二下</td></tr>
+            <tr><td>一三八</td><td>408</td><td>上</td><td>第六至十五行順序錯誤</td><td>四〇八上二、三段與四〇八下二、三段調換</td><td>見四一二下</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========== 第十一组：图片11 + 表格11 (新16条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第十一组</span>
+    <span class="num">原稿 11 · 16 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片11 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/11.png" 
+        alt="勘误表来源影像十一"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格11 (新16条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>一三八</td><td>四一九</td><td>上</td><td>第一行第一字「一」</td><td>若</td><td>見四一三</td></tr>
+            <tr><td>一三九</td><td>650</td><td>下</td><td>第一至十五行順序錯誤</td><td>六五〇頁下與六五一上調換</td><td>見四一四</td></tr>
+            <tr><td>140</td><td>四一七</td><td>上</td><td>第六行以後缺十行</td><td>見四二四下、四二五上</td><td>—</td></tr>
+            <tr><td>140</td><td>五七三</td><td>下</td><td>缺第十一行</td><td>物為能轉心，為所轉，以心逐境遷</td><td>—</td></tr>
+            <tr><td>一四一</td><td>四四二</td><td>下</td><td>第十二行第七字「田」</td><td>間</td><td>—</td></tr>
+            <tr><td>一四三</td><td>302</td><td>上</td><td>第六至十行第一字</td><td>如或似諦緣</td><td>—</td></tr>
+            <tr><td>一四三</td><td>二三二</td><td>下</td><td>缺第十一行</td><td>空界月</td><td>—</td></tr>
+            <tr><td>一四四</td><td>七九八</td><td>上</td><td>第三至十二行內文錯誤</td><td>見四一五上</td><td>見四一五上</td></tr>
+            <tr><td>一四五</td><td>七五一</td><td>上</td><td>第十一至十五行內文錯誤</td><td>見四一五下</td><td>見四一五下</td></tr>
+            <tr><td>一四五</td><td>七五八</td><td>上</td><td>第六至十五行內文錯誤</td><td>見四一六上</td><td>見四一六上</td></tr>
+            <tr><td>一四六</td><td>五六五</td><td>下</td><td>第六行第一字</td><td>門</td><td>—</td></tr>
+            <tr><td>一四七</td><td></td><td>目錄</td><td>標題一五・一六〇九「（一至十九）」</td><td>（一至二十）</td><td></td></tr>
+            <tr><td>一四七</td><td>八六一</td><td>下</td><td>第六至十五行內文錯誤</td><td>見四一六下</td><td>見四一六下</td></tr>
+            <tr><td>一四八</td><td>二一三</td><td>下</td><td>第四、五、六、七行第一字</td><td>若頂如華</td><td>—</td></tr>
+            <tr><td>一四八</td><td>七五三</td><td>上</td><td>第一至十五行內文錯誤</td><td>見四一七上</td><td>見四一七上</td></tr>
+            <tr><td>一四八</td><td>八一四</td><td>下</td><td>第一至五行內文錯誤</td><td>見四一七下</td><td>見四一七下</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 第十二组：图片12 + 表格12 (新15条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第十二组</span>
+    <span class="num">原稿 12 · 15 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片12 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/12.png" 
+        alt="勘误表来源影像十二"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格12 (新15条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>一四九</td><td>190</td><td>下</td><td>缺最後一行</td><td>佛祖歷代通載卷第七</td><td>—</td></tr>
+            <tr><td>一四九</td><td>一七九</td><td>上</td><td>缺最後一行</td><td>佛祖歷代通載卷第十</td><td>—</td></tr>
+            <tr><td>一四九</td><td>五九四</td><td>上</td><td>缺第十一行</td><td>佛祖歷代通載卷第三十</td><td>見四一八上</td></tr>
+            <tr><td>一四九</td><td>七五六</td><td>上</td><td>第六至十五行第四字</td><td>應反字</td><td>—</td></tr>
+            <tr><td>一五〇</td><td></td><td>目錄</td><td>標題一五・一六一五五卷（一至五）</td><td>六卷（一至六）</td><td></td></tr>
+            <tr><td>一五〇</td><td></td><td>目錄</td><td>標題一五・一六一六「至元法寶勘同總錄」</td><td>大元至元法寶勘同總錄</td><td>見四一八下</td></tr>
+            <tr><td>一五一</td><td>四五八</td><td>上</td><td>第六至十行前三字</td><td>風</td><td>—</td></tr>
+            <tr><td>一五一</td><td>四五八</td><td>上</td><td>第十五行第二字「水」</td><td>念</td><td>—</td></tr>
+            <tr><td>一五一</td><td>五四二</td><td>上</td><td>第三行第一字</td><td>應刪除</td><td>—</td></tr>
+            <tr><td>一五一</td><td>六六七</td><td>上</td><td>第十一、十二行第一字重疊</td><td>六</td><td>—</td></tr>
+            <tr><td>一五一</td><td>六五七</td><td>下</td><td>第十五行第一字「八」</td><td>白</td><td>—</td></tr>
+            <tr><td>一五一</td><td>820</td><td>上</td><td>第九行第一字重疊</td><td>應刪除</td><td>—</td></tr>
+            <tr><td>一五三</td><td>二二</td><td>上</td><td>第十三行第一字</td><td>婭</td><td>—</td></tr>
+            <tr><td>一五三</td><td>二九</td><td>下</td><td>第六至十五行內文錯誤</td><td>見四一九上</td><td>見四一九上</td></tr>
+            <tr><td>一五三</td><td>30</td><td>上下</td><td>第一至十五行內文錯誤</td><td>見四一九下、四二〇上</td><td>見四一九下、四二〇上</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ========== 第十三组：图片13 + 表格13 (新17条) ========== -->
+<div class="err-group">
+  <div class="group-title">
+    <span>📖 第十三组</span>
+    <span class="num">原稿 13 · 17 条</span>
+  </div>
+  <div class="row-duo">
+    <!-- 左栏：图片13 -->
+    <div class="col-image">
+      <img 
+        src="https://img.daxumi.top/erratum/13.png" 
+        alt="勘误表来源影像十三"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+      >
+      <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
+        ⚠️ 图片无法加载，可查看下方表格内容。
+      </div>
+    </div>
+
+    <!-- 右栏：表格13 (新17条) -->
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>一五四</td><td>一七四</td><td>上</td><td>第五至九行</td><td>見四二〇下</td><td>見四二〇下</td></tr>
+            <tr><td>一五四</td><td>四三一</td><td>下</td><td>第八行第一字</td><td>口</td><td>—</td></tr>
+            <tr><td>一五四</td><td>五九五</td><td>下</td><td>第二行第一字</td><td>燕</td><td>—</td></tr>
+            <tr><td>一五六</td><td>四</td><td>上</td><td>第十二、十三行第一、二字</td><td>心正，心我</td><td>—</td></tr>
+            <tr><td>一五六</td><td>二七</td><td>下</td><td>第一至十五行內文錯誤</td><td>見四二一上</td><td>見四二一上</td></tr>
+            <tr><td>一五六</td><td>二八</td><td>上</td><td>第一至十五行內文錯誤</td><td>見四二一下</td><td>見四二一下</td></tr>
+            <tr><td>一五七</td><td>308</td><td>上</td><td>第十五行第一字</td><td>曰</td><td>—</td></tr>
+            <tr><td>一五九</td><td>一九三</td><td>下</td><td>第十五行第一字</td><td>有</td><td>—</td></tr>
+            <tr><td>一五九</td><td>四一二</td><td>上</td><td>第一行第一字「見」</td><td>充</td><td>—</td></tr>
+            <tr><td>一五九</td><td>七一二</td><td>上</td><td>第六至十五行內文錯誤</td><td>見四二二上</td><td>見四二二上</td></tr>
+            <tr><td>一六〇</td><td>—</td><td>目錄</td><td>標題一五・一六四六「（一至四）」</td><td>（五至二十）</td><td></td></tr>
+            <tr><td>一六〇</td><td>一六二</td><td>上</td><td>缺第十五行</td><td>大德僧聽眾僧所因諍事令僧闘諍而不和</td><td>—</td></tr>
+            <tr><td>一六一</td><td>三一二</td><td>下</td><td>缺第十行</td><td>言若合云凡是所作見彼無常如瓶等者</td><td>—</td></tr>
+            <tr><td>一六一</td><td>四二三</td><td>下</td><td>第三行第一字</td><td>近</td><td>—</td></tr>
+            <tr><td>一六一</td><td>五二一</td><td>上</td><td>缺第五行多第十行</td><td>第十行應刪除</td><td>見四二二下</td></tr>
+            <tr><td>一六三</td><td>403</td><td>上</td><td>缺第一行</td><td>頭角成龍去蚯蚓依舊鑽泥沙一喝</td><td>—</td></tr>
+            <tr><td>一六四</td><td>四六四</td><td>上</td><td>缺第六行</td><td>三了妄六虛生空老有義無癡作即是慧別有自性對無明如</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  <!-- 底部信息 -->
+  <div class="silk-border">
+    <div style="display: flex; gap: 1.8rem; flex-wrap: wrap; align-items: center;">
+      <span style="background: #e6dbd0; padding: 0.1rem 1.2rem; border-radius: 50px; font-size: 0.8rem; color: #3f3227;">📋 第一组 14 条 + 第二组 15 条 = 共计 29 条</span>
+      <span style="color: #897a6a; font-size: 0.85rem; letter-spacing: 1px;">🪷 据原稿逐条核对 · 2026</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

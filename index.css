@@ -161,3 +161,22 @@ a.suspect::after {
     color: #999;
 }
 
+.footer-icon-simple {
+    display: inline-flex;
+    align-items: center;
+    color: #555;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.footer-icon-simple:hover {
+    color: #24292f;
+    background-color: #f0f4f8;
+}
+
+.footer-icon-simple:hover svg {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+

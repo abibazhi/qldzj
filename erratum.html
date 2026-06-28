@@ -239,9 +239,30 @@
     th:nth-child(1), td:nth-child(1) { width: 8%; text-align: center; }
     th:nth-child(2), td:nth-child(2) { width: 9%; text-align: center; }
     th:nth-child(3), td:nth-child(3) { width: 7%; text-align: center; }
-    th:nth-child(4), td:nth-child(4) { width: 31%; text-align: left; }
-    th:nth-child(5), td:nth-child(5) { width: 27%; text-align: left; }
-    th:nth-child(6), td:nth-child(6) { width: 18%; text-align: left; }
+    th:nth-child(4), td:nth-child(4) { width: 34%; text-align: left; }
+    th:nth-child(5), td:nth-child(5) { width: 30%; text-align: left; }
+    th:nth-child(6), td:nth-child(6) { width: 12%; text-align: left; }
+
+/* 第二个表格的样式，用 .table-correction 限定作用域 */
+.table-correction th:nth-child(1), 
+.table-correction td:nth-child(1) { width: 8%; text-align: center; }  /* 册数 */
+
+.table-correction th:nth-child(2), 
+.table-correction td:nth-child(2) { width: 9%; text-align: center; }  /* 页码 */
+
+.table-correction th:nth-child(3), 
+.table-correction td:nth-child(3) { width: 7%; text-align: center; }   /* 栏 */
+
+.table-correction th:nth-child(4), 
+.table-correction td:nth-child(4) { width: 24%; text-align: left; }    /* 原文 */
+
+.table-correction th:nth-child(5), 
+.table-correction td:nth-child(5) { width: 24%; text-align: left; }    /* 更正 */
+
+.table-correction th:nth-child(6), 
+.table-correction td:nth-child(6) { width: 28%; text-align: left; }    /* 备注 */
+
+
 
     td:nth-child(4), td:nth-child(5), td:nth-child(6) {
       white-space: normal;
@@ -329,6 +350,59 @@
 }
 
   </style>
+
+<style>
+/* 提示条样式 */
+.tip-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 30px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    pointer-events: none;
+}
+.tip-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+.tip-toast.warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+.tip-toast.info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+.tip-toast.success {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+</style>
+
+<script>
+function showTip(message, type) {
+    // 移除已有提示
+    var oldTip = document.querySelector('.tip-toast');
+    if (oldTip) oldTip.remove();
+    
+    // 创建新提示
+    var tip = document.createElement('div');
+    tip.className = 'tip-toast ' + (type || 'info') + ' show';
+    tip.textContent = message;
+    document.body.appendChild(tip);
+    
+    // 3秒后自动消失
+    setTimeout(function() {
+        tip.classList.remove('show');
+        setTimeout(function() { tip.remove(); }, 400);
+    }, 3000);
+}
+</script>
 </head>
 
 
@@ -1139,89 +1213,90 @@
     </div>
   </div>
 
-      <div class="col-table">                                                                                                   <div class="table-wrapper">                                                                                               <table>                                                                                                                   <thead>                                                                                                                   <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>                                 </thead>                                                                                                                <tbody>  
+      <div class="col-table">
+        <div class="table-wrapper">
+          <table class="table-correction">
+            <thead>                                                                                                                   <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>                                 </thead>                                                                                                                <tbody>  
               <tr><td></td><td><a href="#group-1">第一组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>十六</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/016/C2.png">標題一·一〇少頁碼</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=016445&end=016486&idx=016445&sutra=10">四四五頁</a></td><td>已修改。请看首页地址栏。</td></tr>
-              <tr><td>二〇</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/020/C1.png">標題二·二五「門」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra25">閦</a></td><td>已修改。见第25部。</td></tr>
-              <tr><td>二〇</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/020/C1.png">標題二·三一「越問經」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra31">越問菩薩經</a></td><td>已修改。见第31部。</td></tr>
-              <tr><td>二〇</td><td>目錄</td><td></td><td><a href="#" onclick="alert('缺图片'); return false;">標題二·五三「佛」</a>
-</td><td><a href="https://qldzj.daxumi.top/index.html#sutra53">佛說</a></td><td>已修改。见第53部。</td></tr>
+              <tr><td>十六</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/016/C2.png">標題一·一〇少頁碼</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=016445&end=016486&idx=016445&sutra=10">四四五頁</a></td><td>已修改。请看浏览器地址栏，start=016445。</td></tr>
+              <tr><td>二〇</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/020/C1.png">標題二·二五「門」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra25">閦</a></td><td>已修改。</td></tr>
+              <tr><td>二〇</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/020/C1.png">標題二·三一「越問經」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra31">越問菩薩經</a></td><td>已修改。</td></tr>
+              <tr><td>二〇</td><td>目錄</td><td></td><td><a href="#" onclick="showTip('影印版第20册缺第三张目录图片', 'warning'); return false;" style="cursor:pointer; color:blue; text-decoration:underline;">
+    標題二·五三「佛」
+</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra53">佛說</a></td><td>已修改。影印版第20册缺第三张目录图片。</td></tr>
 
 
               <tr><td></td><td><a href="#group-2">第二组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>二三</td><td>目錄</td><td></td><td>標題三·七五大哀經一〇卷（一至一〇）</td><td>八卷（一至八）</td><td></td></tr>
-              <tr><td>二四</td><td>目錄</td><td></td><td>標題四·八三（一至一〇）</td><td>（一至四〇）</td><td></td></tr>
-              <tr><td>二七</td><td>目錄</td><td></td><td>標題四·八五（一至七）</td><td>（一至四〇）</td><td></td></tr>
-              <tr><td>二八</td><td>目錄</td><td></td><td>標題四·八八「缺譯者」</td><td>西晉三藏法師竺法護譯</td><td></td></tr>
-              <tr><td>二八</td><td>目錄</td><td></td><td>標題四·九八「沙經」</td><td>「兜沙經」</td><td></td></tr>
-              <tr><td>三三</td><td>目錄</td><td></td><td>標題六·一三四（七至一〇）</td><td>（七至一〇）</td><td></td></tr>
-              <tr><td></td><td></td><td></td><td>卷六（木六）（木六—木十）</td><td>（木七—木十）</td><td></td></tr>
-              <tr><td>三三</td><td>目錄</td><td></td><td>標題六·一三五「一八卷之卷一」</td><td>八卷自卷一至卷八</td><td></td></tr>
-              <tr><td>三三</td><td>目錄</td><td></td><td>標題六·一四二「缺譯者」</td><td>姚秦三藏法師鳩摩羅什譯</td><td></td></tr>
-              <tr><td>三四</td><td>目錄</td><td></td><td>標題六·一五五（一至十二）</td><td>（一至六）</td><td></td></tr>
-
+              <tr><td>二三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/023/C2.png">標題三·七五大哀經一〇卷（一至一〇）</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra75">八卷（一至八）</a></td><td>未修改。（一至八），此信息未整理。</td></tr>
+              <tr><td>二四</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/024/C1.png">標題四·八三（一至一〇）</a></td><td><a href="https://qldzj.daxumi.top/public/sutra83.idx">（一至四〇）</a></td><td>未修改。（一至四〇），此信息未整理。</td></tr>
+              <tr><td>二七</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/027/C1.png">標題四·八五（一至七）</a></td><td><a href="https://qldzj.daxumi.top/public/sutra85.idx">（一至四〇）</a></td><td>未修改。（一至四〇），此信息未整理。</td></tr>
+              <tr><td>二八</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/028/C1.png">標題四·八八「缺譯者」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra88">西晉三藏法師竺法護譯</a></td><td>已修改。</td></tr>
+              <tr><td>二八</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/028/C2.png">標題四·九八「沙經」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra98">「兜沙經」</a></td><td>已修改。</td></tr>
+              <tr><td>三三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/033/C1.png">標題六·一三四（七至一〇）</a></td><td><a href="https://qldzj.daxumi.top/public/sutra134.idx">（七至一〇）</a></td><td>已修改。应该是“（六至一〇）”</td></tr>
+              <tr><td></td><td></td><td></td><td><a href="https://img.daxumi.top/033/C1.png">卷六（木六）（木六—木十）</a></td><td><a href="https://qldzj.daxumi.top/public/sutra134.idx">（木七—木十）</a></td><td>已修改。同上一条。</td></tr>
+              <tr><td>三三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/033/C1.png">標題六·一三五「一八卷之卷一」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra135">八卷自卷一至卷八</a></td><td>已修改。</td></tr>
+              <tr><td>三三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/033/C2.png">標題六·一四二「缺譯者」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra142">姚秦三藏法師鳩摩羅什譯</a></td><td>已修改。</td></tr>
+              <tr><td>三四</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/034/C3.png">標題六·一五五（一至十二）</a></td><td><a href="https://qldzj.daxumi.top/public/sutra155.idx">（一至六）</a></td><td>未修改。（一至六），此信息未整理。</td></tr>
 
               <tr><td></td><td><a href="#group-3">第三组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>三七</td><td>目錄</td><td></td><td>標題六·一八七「隨」</td><td>隋</td><td></td></tr>
-              <tr><td>三九</td><td>目錄</td><td></td><td>標題六·三〇四「少卷數」</td><td>二卷</td><td></td></tr>
-              <tr><td>四〇</td><td>目錄</td><td></td><td>標題六·三二九（能九）</td><td>（能八）</td><td></td></tr>
+              <tr><td>三七</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/037/C2.png">標題六·一八七「隨」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra187">隋</a></td><td>不用改。都是“隋”。封面是“高齐”。</td></tr>
+              <tr><td>三九</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/039/C8.png">標題六·三〇四「少卷數」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra304">二卷</a></td><td>已修改。</td></tr>
+              <tr><td>四〇</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/040/C4.png">標題六·三二九（能九）</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=040779&end=040784&idx=040780&sutra=329">（能八）</a></td><td>不处理。“能九”在四〇册有6页，在四一册有14页。把“能九”都放到四一册更好。不处理更好，因为不影响索引，“能九”也能起到核对作用。</td></tr>
 
 
               <tr><td></td><td><a href="#group-4">第四组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四〇七「六一三頁」</td><td>六一六頁</td><td></td></tr>
-              <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四一〇「六五三頁」</td><td>六六〇頁</td><td></td></tr>
-              <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四一三「六八一頁」</td><td>六八五頁</td><td></td></tr>
-              <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四一四「六八一頁」</td><td>六八八頁</td><td></td></tr>
-              <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四一五「六八一頁」</td><td>六九〇頁</td><td></td></tr>
-              <tr><td>四三</td><td>目錄</td><td></td><td>標題七・四一六「六八一頁」</td><td>六九六頁</td><td></td></tr>
-              <tr><td>四七</td><td>目錄</td><td></td><td>標題七・四四七「二八五頁」</td><td>二九八頁</td><td></td></tr>
+              <tr><td>四三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/043/C3.png">標題七・四〇七「六一三頁」</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=043617&end=043622&sutra=407">六一六頁</a></td><td>已修改。实际是617页。613是共享封面。</td></tr>
+              <tr><td>四三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/043/C3.png">標題七・四一〇「六五三頁」</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=043661&end=043668&sutra=410">六六〇頁</a></td><td>已修改。实际是661页。653是共享封面。</td></tr>
+              <tr><td>四三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/043/C3.png">標題七・四一三「六八一頁」</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=043686&end=043688&sutra=413">六八五頁</a></td><td>已修改。实际是686页。681是共享封面。</td></tr>
+              <tr><td>四三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/043/C3.png">標題七・四一四「六八一頁」</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=043689&end=043690&sutra=414">六八八頁</a></td><td>已修改。实际是689页。681是共享封面。</td></tr>
+              <tr><td>四三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/043/C3.png">標題七・四一五「六八一頁」</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=043691&end=043696&sutra=415">六九〇頁</a></td><td>已修改。实际是691页。681是共享封面。</td></tr>
+              <tr><td>四三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/043/C4.png">標題七・四一六「六八一頁」</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=043697&end=043700&sutra=416">六九六頁</a></td><td>已修改。实际是697页。681是共享封面。</td></tr>
+              <tr><td>四七</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/047/C2.png">標題七・四四七「二八五頁」</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=047299&end=047302&sutra=447">二九八頁</a></td><td>已修改。实际是299页。285是共享封面。</td></tr>
 
 
               <tr><td></td><td><a href="#group-5">第五组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>四七</td><td>目錄</td><td></td><td>標題七・四九五「六三五頁」</td><td>六四八頁</td><td></td></tr>
-              <tr><td>五一</td><td>目錄</td><td></td><td>標題八・五三九「（二五至五〇）」</td><td>（二六至五〇）</td><td></td></tr>
-              <tr><td>五五</td><td>目錄</td><td></td><td>標題八・六〇一「猒」</td><td>厭</td><td></td></tr>
-              <tr><td>六三</td><td>目錄</td><td></td><td>標題一〇・九九九「（一至五）」</td><td>（六至十）</td><td></td></tr>
-              <tr><td>六三</td><td>目錄</td><td></td><td>標題一〇・一〇一二「缺卷數」</td><td>（一至十九）</td><td></td></tr>
-
+              <tr><td>四七</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/047/C7.png">標題七・四九五「六三五頁」</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=047649&end=047650&sutra=495">六四八頁</a></td><td>已修改。实际是649页。635是共享封面。</td></tr>
+              <tr><td>五一</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/051/C1.png">標題八・五三九「（二五至五〇）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra539.idx">（二六至五〇）</a></td><td>未修改。（二六至五〇），此信息未整理。</td></tr>
+              <tr><td>五五</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/055/C1.png">標題八・六〇一「猒」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra601">厭</a></td><td>已修改。</td></tr>
+              <tr><td>六三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/063/C1.png">標題一〇・九九九「（一至五）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra999.idx">（六至十）</a></td><td>未修改。（六至十），此信息未整理。</td></tr>
+              <tr><td>六三</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/063/C4.png">標題一〇・一〇一二「缺卷數」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1012.idx">（一至十九）</a></td><td>未修改。（一至十九），此信息未整理。</td></tr>
 
               <tr><td></td><td><a href="#group-6">第六组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>六四</td><td>目錄</td><td></td><td>標題一〇・一〇二二「（一至五）」</td><td>「（一至七）」</td><td></td></tr>
-              <tr><td>六四</td><td>目錄</td><td></td><td>標題一〇・一〇二四「（淵一 — 淵三）」</td><td>（淵一 — 淵四）</td><td></td></tr>
-              <tr><td>六九</td><td>目錄</td><td></td><td>標題一一・一一一一「（一至）」</td><td>（一至五）</td><td></td></tr>
-
+              <tr><td>六四</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/064/C3.png">標題一〇・一〇二二「（一至五）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1022.idx">「（一至七）」</a></td><td>未修改。（一至七），此信息未整理。</td></tr>
+              <tr><td>六四</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/064/C4.png">標題一〇・一〇二四「（淵一 — 淵三）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1024.idx">（淵一 — 淵四）</a></td><td>未修改。（淵一 — 淵四），此信息未整理。</td></tr>
+              <tr><td>六九</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/069/C1.png">標題一一・一一一一「（一至）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1111.idx">（一至五）</a></td><td>未修改。（一至五），此信息未整理。</td></tr>
 
               <tr><td></td><td><a href="#group-7">第七组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>八六</td><td>目錄</td><td></td><td>標題一二・一一八八「（節三 — 節十）」</td><td>（節三 — 節九）</td><td></td></tr>
-              <tr><td>八七</td><td>目錄</td><td></td><td>標題一二・一二〇三「少千字文」</td><td>（沛一 — 沛四）</td><td></td></tr>
-              <tr><td>八七</td><td>目錄</td><td></td><td>標題一二・一一九一「少千字文」</td><td>（廉六 — 廉十）</td><td></td></tr>
-              <tr><td>八七</td><td>目錄</td><td></td><td>標題一二・一一九二「少千字文」</td><td>（退一 — 退七）</td><td></td></tr>
-              <tr><td>八八</td><td>目錄</td><td></td><td>標題一二・一二二五「少譯者」</td><td>無著菩薩造唐三藏法師義淨譯</td><td></td></tr>
-              <tr><td>八八</td><td>目錄</td><td></td><td>標題一二・一二二五「少頁碼」</td><td>「一」</td><td></td></tr>
-              <tr><td>九一</td><td>目錄</td><td></td><td>標題一二・一二五六「（一〇一至一〇六）」</td><td>（一〇一至一六〇）</td><td></td></tr>
-              <tr><td>一〇一</td><td>目錄</td><td></td><td>標題一二・一二七二「（一至九）」</td><td>（一至十二）</td><td></td></tr>
+              <tr><td>八六</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/086/C1.png">標題一二・一一八八「（節三 — 節十）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1188.idx">（節三 — 節九）</a></td><td>未修改。（節三 — 節九），此信息未整理。</td></tr>
+              <tr><td>八七</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/087/C3.png">標題一二・一二〇三「少千字文」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1203.idx">（沛一 — 沛四）</a></td><td>未修改。（沛一 — 沛四），此信息未整理。</td></tr>
+              <tr><td>八七</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/087/C1.png">標題一二・一一九一「少千字文」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1191.idx">（廉六 — 廉十）</a></td><td>未修改。（廉六 — 廉十），此信息未整理。</td></tr>
+              <tr><td>八七</td><td>目錄</td><td></td><td>標<a href="https://img.daxumi.top/087/C1.png">題一二・一一九二「少千字文」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1192.idx">（退一 — 退七）</a></td><td>未修改。（退一 — 退七），此信息未整理。</td></tr>
+              <tr><td>八八</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/088/C1.png">標題一二・一二二五「少譯者」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra1225">無著菩薩造唐三藏法師義淨譯</td><td>已修改。</td></tr>
+              <tr><td>八八</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/088/C1.png">標題一二・一二二五「少頁碼」</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=088001&end=088004&sutra=1225">「一」</a></td><td>已修改。请看浏览器地址栏，start=088001。</td></tr>
+              <tr><td>九一</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/091/C1.png">標題一二・一二五六「（一〇一至一〇六）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1256.idx">（一〇一至一六〇）</a></td><td>未修改。（一〇一至一六〇），此信息未整理。</td></tr>
+              <tr><td>一〇一</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/101/C2.png">標題一二・一二七二「（一至九）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1272.idx">（一至十二）</a></td><td>未修改。（一至十二）指千字文编号共12卷，此信息未整理。</td></tr>
+
               <tr><td></td><td><a href="#group-8">第八组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-
-            <tr><td>一〇二</td><td>目錄</td><td></td><td>標題一二・一二七二「（一〇至一八）」</td><td>（一三至一八）</td><td></td></tr>
-
+            <tr><td>一〇二</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/102/C1.png">標題一二・一二七二「（一〇至一八）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1272.idx">（一三至一八）</a></td><td>未修改。（一三至一八）指千字文编号共6卷，此信息未整理。</td></tr>
 
               <tr><td></td><td><a href="#group-9">第九组对照表</a></td><td></td><td></td><td></td><td></td></tr>
+
               <tr><td></td><td><a href="#group-10">第十组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-
-            <tr><td>一三六</td><td>目錄</td><td></td><td>標題一五・一五五七「（四八之 2 至七三）」</td><td>（四八之1至七三）</td><td></td></tr>
-
+            <tr><td>一三六</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/136/C1.png">標題一五・一五五七「（四八之 2 至七三）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1557.idx">（四八之1至七三）</a></td><td>未修改。（四八之1至七三），此信息未整理。</td></tr>
 
               <tr><td></td><td><a href="#group-11">第十一组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>一四七</td><td>目錄</td><td></td><td>標題一五・一六〇九「（一至十九）」</td><td>（一至二十）</td><td></td></tr>
+              <tr><td>一四七</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/147/C2.png">標題一五・一六〇九「（一至十九）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1609.idx">（一至二十）</a></td><td>未修改。（一至二十）包括科文和序，经文19卷。此信息未整理。</td></tr>
 
               <tr><td></td><td><a href="#group-12">第十二组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-            <tr><td>一五〇</td><td>目錄</td><td></td><td>標題一五・一六一五五卷（一至五）</td><td>六卷（一至六）</td><td></td></tr>
-            <tr><td>一五〇</td><td>目錄</td><td></td><td>標題一五・一六一六「至元法寶勘同總錄」</td><td>大元至元法寶勘同總錄</td><td></td></tr>
+            <tr><td>一五〇</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/150/C1.png">標題一五・一六一五五卷（一至五）</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra1615">六卷（一至六）</a></td><td>已修改。</td></tr>
+            <tr><td>一五〇</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/150/C1.png">標題一五・一六一六「至元法寶勘同總錄」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra1616">大元至元法寶勘同總錄</a></td><td>未修改。本来就是对的。</td></tr>
 
               <tr><td></td><td><a href="#group-13">第十三组对照表</a></td><td></td><td></td><td></td><td></td></tr>
-              <tr><td>一六〇</td><td>目錄</td><td></td><td>標題一五・一六四六「（一至四）」</td><td>（五至二十）</td><td></td></tr>
+              <tr><td>一六〇</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/160/C1.png">標題一五・一六四六「（一至四）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1646.idx">（五至二十）</a></td><td>未修改。
+（五至二十），此信息未整理。</td></tr>
 
-            </tbody>                                                                                                              </table>                                                                                                              </div>                                                                                                                </div> 
+
+  </tbody></table></div></div> 
 
   <!-- 底部信息 -->                                                                                                       <div class="silk-border">                                                                                                 <div style="display: flex; gap: 1.8rem; flex-wrap: wrap; align-items: center;">                                           <span style="color: #897a6a; font-size: 0.85rem; l 1px;">🪷 小幻 · 2026年6月27日 🪷</span>                 </div>                                                                                                                </div>   
 

@@ -107,3 +107,57 @@ a.suspect::after {
   }
 }
 
+
+
+/* ===== 底部信息栏 ===== */
+.footer-info {
+    margin-top: 30px;
+    padding: 20px 0 10px 0;
+    border-top: 2px solid #e8e8e8;
+    text-align: center;
+    font-size: 0.95em;
+    color: #555;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px 4px;
+}
+
+.footer-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.footer-label {
+    color: #888;
+    font-weight: 500;
+}
+
+.footer-divider {
+    color: #ccc;
+    margin: 0 6px;
+    user-select: none;
+}
+
+.footer-info a {
+    color: #0066cc;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-info a:hover {
+    color: #003d99;
+    text-decoration: underline;
+}
+
+.footer-note {
+    margin-top: 10px;
+    font-size: 0.85em;
+    color: #999;
+}
+

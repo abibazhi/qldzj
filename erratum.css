@@ -375,3 +375,17 @@
     background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
 }
 
+
+
+    /* 为每个大区加一点视觉区分 (可选) */
+    .section-block .global-header h1 {
+      border-left-color: #b7a48b;
+    }
+    /* 目录核对 用不同颜色点缀 */
+    #section-dir .global-header h1 {
+      border-left-color: #a08b7a;
+    }
+    #section-add .global-header h1 {
+      border-left-color: #c0a98b;
+    }
+

@@ -33,7 +33,19 @@ function showTip(message, type) {
 
 <body>
 <div class="container">
+    <!-- ========= 顶部导航目录 ========= -->
+    <div class="jump-nav" role="navigation" aria-label="页面内快速跳转">
+      <span class="label">📑 跳转至：</span>
+      <a href="#section-pic">📜 图文对照</a>
+      <a href="#section-dir">📜 目录核对</a>
+      <a href="#section-add">📜 目录错误增补</a>
+      <span class="total-badge">共 3 部分</span>
+    </div>
+
+
+
   <!-- 全局标题 -->
+<div id="section-pic" class="section-block">
   <div class="global-header">
     <h1>📜 勘误表 · 图文对照</h1>
     <div class="badge-group">
@@ -824,10 +836,13 @@ function showTip(message, type) {
     </div>
   </div>
 
+</div>
 
 <br><br><br><br><br><br>
 
 
+<!-- 第二部分：目录核对 -->
+<div id="section-dir" class="section-block">
   <div class="global-header">
     <h1>📜 勘误表 · 目录核对</h1>
     <div class="badge-group">
@@ -921,8 +936,20 @@ function showTip(message, type) {
 
   </tbody></table></div></div> 
 
+  <!-- 底部信息 -->
+  <div class="silk-border">
+    <div style="display: flex; gap: 1.8rem; flex-wrap: wrap; align-items: center;">
+      <span style="color: #897a6a; font-size: 0.85rem; l 1px;">🪷 小幻 · 2026年6月29日 🪷</span>
+    </div>
+  </div>
+
+</div>
 
 <br><br><br><br><br><br>
+
+
+<!-- 第三部分：目录错误增补 -->
+<div id="section-add" class="section-block">
 <div class="global-header">
   <h1>📜 勘误表 · 目录错误增补</h1>
   <div class="badge-group">
@@ -1066,7 +1093,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/014/C1.png">卷五六〇（奈十）</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1.idx">卷六〇〇（奈十）</a></td>
-                <td></td>
+                <td>卷数错误</td>
         </tr>
         <tr>
                 <td>16</td>
@@ -1074,7 +1101,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/016/C1.png">序 姚秦长安 释僧叡撰.....一</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra6.idx">序 姚秦长安 释僧叡撰.....2</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>16</td>
@@ -1082,7 +1109,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/016/C1.png">卷一（鳞一）.............二</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra6.idx">卷一（鳞一）.............4</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>16</td>
@@ -1098,7 +1125,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/016/C2.png">一.一五...............五九二</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra15.idx">一.一五................591</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1106,7 +1133,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷五一（官一）........一八五</a></a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷五一（官一）.........184</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1114,7 +1141,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷五二（官二）........二〇〇</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷五二（官二）.........199</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1122,7 +1149,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷五三（官三）........二一八</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷五三（官三）.........217</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1130,7 +1157,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷五四（官四）........二三六</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷五四（官四）.........235</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1138,7 +1165,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷五五（官五）........二五四</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷五五（官五）.........253</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1146,7 +1173,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷五六（官六）........二六七</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷五六（官六）.........266</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1154,7 +1181,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷五七（官七）........二八一</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷五七（官七）.........280</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1162,7 +1189,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷五八（官八）........二九八</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷五八（官八）.........297</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1170,7 +1197,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷五九（官九）........三一一</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷五九（官九）.........310</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1178,7 +1205,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷六〇（官十）........三二六</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷六〇（官十）.........325</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1186,7 +1213,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷六一（人一）........三三九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷六一（人一）.........338</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1194,7 +1221,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷六二（人二）........三五三</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷六二（人二）.........352</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1202,7 +1229,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷六三（人三）........三七〇</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷六三（人三）.........369</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1210,7 +1237,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷六四（人四）........三八六</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷六四（人四）.........385</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1218,7 +1245,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷六五（人五）........三九七</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷六五（人五）.........396</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1226,7 +1253,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷六六（人六）........四〇九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷六六（人六）.........408</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1234,7 +1261,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷六七（人七）........四二二</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷六七（人七）.........421</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1242,7 +1269,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷六八（人八）........四三九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷六八（人八）.........438</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1250,7 +1277,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷六九（人九）........四五二</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷六九（人九）.........451</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1258,7 +1285,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷七〇（人十）........四六五</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷七〇（人十）.........464</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1266,7 +1293,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷七一（皇一）........四八六</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷七一（皇一）.........485</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1274,7 +1301,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷七二（皇二）........五一二</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷七二（皇二）.........511</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1282,7 +1309,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷七三（皇三）........五二五</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷七三（皇三）.........524</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1290,7 +1317,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C1.png">卷七四（皇四）........五三九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷七四（皇四）.........538</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1298,7 +1325,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷七五（皇五）........五五三</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷七五（皇五）.........552</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1306,7 +1333,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷七六（皇六）........五六六</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷七六（皇六）.........565</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1314,7 +1341,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷七七（皇七）........五八四</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷七七（皇七）.........583</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1322,7 +1349,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷七八（皇八）........六〇八</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷七八（皇八）.........607</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1330,7 +1357,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷七九（皇九）........六二六</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷七九（皇九）.........625</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1338,7 +1365,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷八〇（皇十）........六四七</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷八〇（皇十）.........645</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1346,7 +1373,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷八一（始一）........六六九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷八一（始一）.........667</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1354,7 +1381,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷八二（始二）........六八八</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷八二（始二）.........686</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1362,7 +1389,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷八三（始三）........七一二</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷八三（始三）.........710</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1370,7 +1397,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷八四（始四）........七二〇</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷八四（始四）.........718</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1378,7 +1405,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷八五（始五）........七二九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷八五（始五）.........727</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1386,7 +1413,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷八六（始六）........七四六</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷八六（始六）.........744</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1394,7 +1421,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷八七（始七）........七五九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷八七（始七）.........757</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1402,7 +1429,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷八八（始八）........七七一</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷八八（始八）.........769</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1410,7 +1437,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷八九（始九）........七八八</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷八九（始九）.........786</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>18</td>
@@ -1418,7 +1445,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/018/C2.png">卷九〇（始十）........八〇七</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra20.idx">卷九〇（始十）.........805</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>19</td>
@@ -1426,7 +1453,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/019/C2.png">卷上（乃七）.........五七六</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra23.idx">卷上（乃七）...........574</a></td>
-                <td><br></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>19</td>
@@ -1434,7 +1461,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/019/C2.png">卷上（乃九）.........六二八</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra24.idx">卷上（乃九）.........626</a></td>
-                <td><br></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>25</td>
@@ -1458,7 +1485,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/026/C1.png">卷四一（育一）.....一</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra84.idx">卷四一（育一）.....224</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>27</td>
@@ -1466,7 +1493,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/027/C1.png">标题四.八五这行最后缺页码</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra85.idx">九一</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>36</td>
@@ -1474,7 +1501,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/036/C2.png">卷八（岂八）.........六九五</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra175.idx">卷八（岂八）...........696</a></td>
-                <td><br></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>47</td>
@@ -1490,7 +1517,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷一二（暎六）........五五九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1038.idx">卷一二（暎六）........557</a></a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1498,7 +1525,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷一三（暎七）........五六六</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1038.idx">卷一三（暎七）........564</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1506,7 +1533,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷一四（暎七）........五七三</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1038.idx">卷一四（暎七）........571</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1514,7 +1541,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷一五（暎八）........五七七</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1038.idx">卷一五（暎八）........575</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1522,7 +1549,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷一六（暎八）........五八四</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1038.idx">卷一六（暎八）........582</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1530,7 +1557,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷一七（暎九）........五九二</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1038.idx">卷一七（暎九）........590</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1538,7 +1565,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷一八（暎九）........五九七</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1038.idx">卷一八（暎九）........595</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1546,7 +1573,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷一九（暎十）........六〇四</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1038.idx">卷一九（暎十）........602</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1554,7 +1581,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷二〇（暎十）........六一一</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1038.idx">卷二〇（暎十）........609</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1562,7 +1589,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">一〇.一〇三九.......六二一</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">一〇.一〇三九.......619</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1570,7 +1597,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">序（容一）..........六二二</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">序（容一）..........620</td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1578,7 +1605,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷一（容一）........六二五</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷一（容一）........623</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1586,7 +1613,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷二（容二）........六四二</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷二（容二）........640</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1594,7 +1621,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷三（容三）........六五三</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷三（容三）........651</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1602,7 +1629,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷四（容四）........六六五</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷四（容四）........663</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1610,7 +1637,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷五（容五）........六八六</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷五（容五）........684</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1618,7 +1645,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷六（容六）........七〇五</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷六（容六）........703</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1626,14 +1653,15 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷七（容七）........七一九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷七（容七）........717</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
                 <td>目录</td>
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷八（容八）........七三六</a></td>
-                <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷八（容八）........734</a><td></td>
+                <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷八（容八）........734</a>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1641,7 +1669,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷九（容九）........七四九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷九（容九）........747</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>65</td>
@@ -1649,7 +1677,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/065/C4.png">卷一〇（容十）......七六五</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1039.idx">卷一〇（容十）......763</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>66</td>
@@ -1657,7 +1685,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/066/C6.png">大明太宗文皇帝御大悲观世音菩萨赞（言七）</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1071.idx">大明太宗文皇帝御製大悲观世音菩萨赞（言七）</a></a></td>
-                <td></td>
+                <td>少"製"字</td>
         </tr>
         <tr>
                 <td>77</td>
@@ -1665,7 +1693,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/077/C2.png">卷一（婦八）........三三三</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1140.idx">卷一（婦八）........313</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>82</td>
@@ -1697,7 +1725,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/102/C1.png">标题一二.一二七三....一二二</a></td>
                 <td><a href="https://qldzj.daxumi.top/desktop_sutra?start=102121&end=102154&idx=102121&sutra=1273">标题一二.一二七三....121</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>110</td>
@@ -1705,7 +1733,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/110/C5.png">卷一（鍾八）........三三〇</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1428.idx">卷一（鍾八）........332</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
         <tr>
                 <td>130</td>
@@ -1713,7 +1741,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/130/C1.png">卷二（乂一）</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1545.idx">卷一（乂一）</a></td>
-                <td></td>
+                <td>卷数错误</td>
         </tr>
         <tr>
                 <td>140</td>
@@ -1729,7 +1757,7 @@ function showTip(message, type) {
                 <td></td>
                 <td><a href="https://img.daxumi.top/141/C1.png">旁出略传（百八）....二八九</a></td>
                 <td><a href="https://qldzj.daxumi.top/public/sutra1588.idx">旁出略传（百八）....290</a></td>
-                <td></td>
+                <td>页码错误</td>
         </tr>
 </table>
   </tbody></table></div></div> 
@@ -1739,11 +1767,15 @@ function showTip(message, type) {
   <!-- 底部信息 -->
   <div class="silk-border">
     <div style="display: flex; gap: 1.8rem; flex-wrap: wrap; align-items: center;">
-      <span style="color: #897a6a; font-size: 0.85rem; l 1px;">🪷 小幻 · 2026年6月29日 🪷</span>
+      <span style="color: #897a6a; font-size: 0.85rem; l 1px;">🪷 小幻 · 2026年7月2日 🪷</span>
     </div>
   </div>
+</div>
+
+
 
 </div>
+
 
 
 </body>

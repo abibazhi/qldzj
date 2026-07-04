@@ -1860,6 +1860,18 @@ function showTip(message, type) {
 
 <script src="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.js"></script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    new SimpleLightbox('.lightbox', {
+      /* 可选配置 */
+      captionsData: 'title',      // 从 data-title 读取标题
+      captionDelay: 250,
+      scaleImageToRatio: true,
+      disableRightClick: false,   // 允许右键保存
+    });
+  });
+</script>
+
 </div>
 </body>
 </html>

@@ -1,4 +1,9 @@
 
+
+    /*  transform: scale(0.85); */这个可以整体放大缩小页面
+
+
+
     /* --- 全局与基础样式 --- */
     * {
       margin: 0;
@@ -23,7 +28,7 @@
       box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
       padding: 1.8rem 1.2rem 2.5rem;
       transition: 0.2s;
-      transform: scale(0.8);
+      transform: scale(0.8); /**/
       transform-origin: top center;
     }
 
@@ -197,7 +202,7 @@
       border-radius: 18px;
       border: 1px solid #e3dad1;
       background: #ffffff;
-      height: 100%;
+      height: auto;
       display: flex;
       flex-direction: column;
     }
@@ -415,18 +420,8 @@ h1 {
     border-bottom: 1px solid #ddd; /* 可选：增加下边框以区分 */
     background-color: #fafafa; /* 轻微不同的背景颜色用于区分 */
 }
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
-th, td {
-    border: 1px solid #999;
-    padding: 10px;
-    text-align: left;
-}
-th {
-    background-color: #f2f2f2;
-}
+
+
 a {
     color: #0066cc;
     text-decoration: none;
@@ -434,6 +429,7 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
 
 
 

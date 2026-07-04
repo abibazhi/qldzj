@@ -5,31 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="erratum.css"> <!-- 阻塞渲染，但页面出来就是完整的 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.css">
-
-
   <title>乾隆大藏经 · 勘误表</title>
-<script>
-function showTip(message, type) {
-    // 移除已有提示
-    var oldTip = document.querySelector('.tip-toast');
-    if (oldTip) oldTip.remove();
-    
-    // 创建新提示
-    var tip = document.createElement('div');
-    tip.className = 'tip-toast ' + (type || 'info') + ' show';
-    tip.textContent = message;
-    document.body.appendChild(tip);
-    
-    // 3秒后自动消失
-    setTimeout(function() {
-        tip.classList.remove('show');
-        setTimeout(function() { tip.remove(); }, 400);
-    }, 3000);
-}
-</script>
 </head>
-
-
 
 
 <body>
@@ -43,8 +20,6 @@ function showTip(message, type) {
       <a href="#section-char">📜 单字错误核对</a>
       <span class="total-badge">共 3 部分</span>
     </div>
-
-
 
   <!-- 全局标题 -->
 <div id="section-pic" class="section-block">
@@ -517,12 +492,13 @@ function showTip(message, type) {
   <div class="row-duo">
     <div class="col-image">
       <a href="https://img.daxumi.top/erratum/8.png" class="lightbox" data-lightbox="erratum" data-title="影像八">
-      <img
-        src="https://img.daxumi.top/erratum/8.png"
-        alt="勘误表来源影像八"
-        title="点击放大查看原图 (1696x2362)"
-        onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-      >
+        <img
+          src="https://img.daxumi.top/erratum/8.png"
+          alt="勘误表来源影像八"
+          title="点击放大查看原图 (1696x2362)"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+        >
+      </a>
       <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
         ⚠️ 图片无法加载，可查看下方表格内容。
       </div>
@@ -703,12 +679,13 @@ function showTip(message, type) {
     <div class="row-duo">
       <div class="col-image">
         <a href="https://img.daxumi.top/erratum/11.png" class="lightbox" data-lightbox="erratum" data-title="影像十一">
-        <img
-          src="https://img.daxumi.top/erratum/11.png"
-          alt="勘误表来源影像十一"
-          title="点击放大查看原图 (1696x2362)"
-          onerror="this.style.display='none'; this.netElementSibling.style.display='block';"
-        >
+          <img
+            src="https://img.daxumi.top/erratum/11.png"
+            alt="勘误表来源影像十一"
+            title="点击放大查看原图 (1696x2362)"
+            onerror="this.style.display='none'; this.netElementSibling.style.display='block';"
+          >
+        </a>
         <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
           ⚠️ 图片无法加载，可查看下方表格内容。
         </div>
@@ -860,7 +837,7 @@ function showTip(message, type) {
           <tr><td>一六一</td><td>四三二</td><td>上</td><td>缺第五行多第十行</td><td>第十行應刪除</td><td>見四二二下</td></tr>
               <tr><td>一六一</td><td>五二一</td><td>上</td><td>缺第五行</td><td>頭角成龍去蚯蚓依舊鑽泥沙喝一喝</td><td></td></tr>
               <tr><td>一六三</td><td>四〇三</td><td>上</td><td>缺第一行</td><td>三了妄六虛生空老</td><td></td></tr>
-              <tr><td>一六四</td><td>四六四</td><td>上</td><td>有義無癡作即是慧別有自性正對無明如</td><td></td></tr>
+              <tr><td>一六四</td><td>四六四</td><td>上</td><td>有義無癡作即是慧別有自性正對無明如</td><td></td><td></td></tr>
             </tbody>
           </table>
         </div>
@@ -1889,6 +1866,25 @@ function showTip(message, type) {
   </div>
 
 </div>
+<script>
+function showTip(message, type) {
+    // 移除已有提示
+    var oldTip = document.querySelector('.tip-toast');
+    if (oldTip) oldTip.remove();
+    
+    // 创建新提示
+    var tip = document.createElement('div');
+    tip.className = 'tip-toast ' + (type || 'info') + ' show';
+    tip.textContent = message;
+    document.body.appendChild(tip);
+    
+    // 3秒后自动消失
+    setTimeout(function() {
+        tip.classList.remove('show');
+        setTimeout(function() { tip.remove(); }, 400);
+    }, 3000);
+}
+</script>
 
 
 <script src="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.js"></script>

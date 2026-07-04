@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="erratum.css"> <!-- 阻塞渲染，但页面出来就是完整的 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.css">
 
 
   <title>乾隆大藏经 · 勘误表</title>
@@ -90,12 +91,15 @@ function showTip(message, type) {
   </div>    
     <div class="row-duo">
       <div class="col-image">
-        <img
-          src="https://img.daxumi.top/erratum/1.png"
-          alt="勘误表来源影像一"
-          title="原图片尺寸 1696x2362"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-        >
+
+  <a href="https://img.daxumi.top/erratum/1.png" class="lightbox" data-lightbox="erratum" data-title="勘误表来源影像一">
+    <img
+      src="https://img.daxumi.top/erratum/1.png"
+      alt="勘误表来源影像一"
+      title="点击放大查看原图 (1696x2362)"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+    >
+  </a>
         <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">
           ⚠️ 图片无法加载，可查看下方表格内容。
         </div>
@@ -125,6 +129,7 @@ function showTip(message, type) {
           </table>
         </div>
       </div>
+
     </div>
   </div>
 
@@ -235,7 +240,7 @@ function showTip(message, type) {
               <tr><td>三八</td><td>二九五</td><td>下</td><td>缺最後一行</td><td>佛說觀彌勒菩薩上生兜率陀天經</td><td></td></tr>
               <tr><td>三九</td><td>目錄</td><td></td><td>標題六·三〇四「少卷數」</td><td>二卷</td><td></td></tr>
               <tr><td>四〇</td><td>目錄</td><td></td><td>標題六·三二九（能九）</td><td>（能八）</td><td></td></tr>
-              <tr><td>四〇</td><td>一三一</td><td>下</td><td>第一至十五行內文重覆</td><td></td><td>見三八四</td></tr>
+              <tr><td>四〇</td><td>一三一</td><td>下</td><td>第一至十五行內文重覆</td><td>見三八四</td><td>見三八四</td></tr>
               <tr><td>四〇</td><td>五二九</td><td>下</td><td>有三段內文</td><td>應空白</td><td></td></tr>
             </tbody>
           </table>
@@ -847,7 +852,7 @@ function showTip(message, type) {
   <div class="global-header">
     <h1>📜 勘误表 · 目录核对</h1>
     <div class="badge-group">
-      <span>📌 共 45 条</span>
+      <span>📌 共 47 条</span>
       <span>🖌  按勘误表逐条修改确认所有目录</span>
     </div>
   </div>
@@ -906,10 +911,11 @@ function showTip(message, type) {
               <tr><td>六九</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/069/C1.png">標題一一・一一一一「（一至）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1111.idx">（一至五）</a></td><td>未修改。（一至五），此信息未整理。</td></tr>
 
               <tr><td></td><td><a href="#group-7">第七组对照表</a></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>八三</td><td>二</td><td>下</td><td>千字文<a href="https://img.daxumi.top/082/C2.png">「友」</a>與<a href="https://img.daxumi.top/083/C1.png">「枝」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1165.idx">八二冊千字文「友」與八三冊「枝」應對調</a></td><td>不修改。因为正文和索引都这样。</td></tr>
               <tr><td>八六</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/086/C1.png">標題一二・一一八八「（節三 — 節十）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1188.idx">（節三 — 節九）</a></td><td>未修改。（節三 — 節九），此信息未整理。</td></tr>
               <tr><td>八七</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/087/C3.png">標題一二・一二〇三「少千字文」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1203.idx">（沛一 — 沛四）</a></td><td>未修改。（沛一 — 沛四），此信息未整理。</td></tr>
               <tr><td>八七</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/087/C1.png">標題一二・一一九一「少千字文」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1191.idx">（廉六 — 廉十）</a></td><td>未修改。（廉六 — 廉十），此信息未整理。</td></tr>
-              <tr><td>八七</td><td>目錄</td><td></td><td>標<a href="https://img.daxumi.top/087/C1.png">題一二・一一九二「少千字文」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1192.idx">（退一 — 退七）</a></td><td>未修改。（退一 — 退七），此信息未整理。</td></tr>
+              <tr><td>八七</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/087/C1.png">標題一二・一一九二「少千字文」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1192.idx">（退一 — 退七）</a></td><td>未修改。（退一 — 退七），此信息未整理。</td></tr>
               <tr><td>八八</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/088/C1.png">標題一二・一二二五「少譯者」</a></td><td><a href="https://qldzj.daxumi.top/index.html#sutra1225">無著菩薩造唐三藏法師義淨譯</td><td>已修改。</td></tr>
               <tr><td>八八</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/088/C1.png">標題一二・一二二五「少頁碼」</a></td><td><a href="https://qldzj.daxumi.top/desktop_sutra?start=088001&end=088004&sutra=1225">「一」</a></td><td>已修改。请看浏览器地址栏，start=088001。</td></tr>
               <tr><td>九一</td><td>目錄</td><td></td><td><a href="https://img.daxumi.top/091/C1.png">標題一二・一二五六「（一〇一至一〇六）」</a></td><td><a href="https://qldzj.daxumi.top/public/sutra1256.idx">（一〇一至一六〇）</a></td><td>未修改。（一〇一至一六〇），此信息未整理。</td></tr>
@@ -951,7 +957,7 @@ function showTip(message, type) {
 <div class="global-header">
   <h1>📜 勘误表 · 目录错误增补</h1>
   <div class="badge-group">
-    <span>📌 共 102 条</span>
+    <span>📌 共 99 条</span>
     <span>🖌 勘误表中没有的目录错误</span>
   </div>
 </div>   
@@ -1772,14 +1778,14 @@ function showTip(message, type) {
 
 
 <br><br><br><br><br><br>
-<!-- 第二部分：目录核对 -->
+<!-- 第四部分：勘误表单字或多字错误核对 -->
 <div id="section-char" class="section-block">
 
   <div class="global-header">
-    <h1>📜 勘误表 · 单字核对</h1>
+    <h1>📜 勘误表 · 单字或多字错误核对</h1>
     <div class="badge-group">
-      <span>📌 共 45 条</span>
-      <span>🖌  按勘误表逐条修改确认所有目录</span>
+      <span>📌 共 ?? 条</span>
+      <span>🖌  按勘误表逐条修改确认所有单个字或若干字的错误</span>
     </div>
   </div>
 
@@ -1788,12 +1794,52 @@ function showTip(message, type) {
       <table class="table-correction">
         <thead>                                                                                                                   <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>                                 </thead>                                                                                                                <tbody>  
               <tr><td></td><td><a href="#group-1">第一组对照表</a></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>二</td><td>四六〇</td><td>下</td><td>第二行第一字「力」</td><td>乃</td><td></td></tr>
+              <tr><td>三</td><td>二七三</td><td>上</td><td>第一行第一字缺</td><td>何</td><td></td></tr>
+              <tr><td>十七</td><td>二四二</td><td></td><td>第六行第一字缺</td><td>此</td><td></td></tr>
+              <tr><td>二〇</td><td>五三〇</td><td>下</td><td>第六行第一字「右」</td><td>若</td><td></td></tr>
               <tr><td></td><td><a href="#group-2">第二组对照表</a></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>二一</td><td>一九九</td><td>上</td><td>第十五行第一字「昧」</td><td>珠</td><td></td></tr>
+              <tr><td>二九</td><td>五三〇</td><td>下</td><td>第十一行第二字「蚤」</td><td>蚉</td><td></td></tr>
+              <tr><td>三〇</td><td>一〇二</td><td>上</td><td>第一行第一字「一」</td><td>身</td><td></td></tr>
               <tr><td></td><td><a href="#group-3">第三组对照表</a></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>三八</td><td>二四七</td><td>上</td><td>第一行第一字「具」</td><td>其</td><td></td></tr>
               <tr><td></td><td><a href="#group-4">第四组对照表</a></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>四四</td><td>二一九</td><td></td><td>第十二行第一字「住」</td><td>往</td><td></td></tr>
+              <tr><td>四四</td><td>五三〇</td><td>上</td><td>第十二行第一字「有」</td><td>友</td><td></td></tr>
+              <tr><td>四五</td><td>五七三</td><td>下</td><td>第六行第一字「生」</td><td>病</td><td></td></tr>
+              <tr><td>四六</td><td>二二八</td><td>上</td><td>第一行第一字</td><td>人</td><td></td></tr>
               <tr><td></td><td><a href="#group-5">第五组对照表</a></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>五六</td><td>九四</td><td>下</td><td>第十一行第一字</td><td>報</td><td></td></tr>
+              <tr><td>五七</td><td>一五六</td><td>下</td><td>第十五行第一字</td><td>初</td><td></td></tr>
+              <tr><td>六三</td><td>六五</td><td>下</td><td>第一行第一字</td><td>壞</td><td></td></tr>
+              <tr><td>六三</td><td>七二七</td><td>下</td><td>第一行第一字</td><td>唵</td><td></td></tr>
               <tr><td></td><td><a href="#group-6">第六组对照表</a></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>六三</td><td>七二七</td><td>下</td><td>第十五行第一、二字</td><td>曳引</td><td></td></tr>
+              <tr><td>六八</td><td>七七</td><td>上</td><td>第三四行第一字</td><td>比法</td><td></td></tr>
+              <tr><td>七一</td><td>一九六</td><td>下</td><td>第十五行第一字</td><td>人</td><td></td></tr>
+              <tr><td>七四</td><td>五六〇</td><td>上</td><td>第十一行第一字「是」</td><td>足</td><td></td></tr>
+              <tr><td>七五</td><td>二二七</td><td>上</td><td>音釋第四行缺字</td><td>培也也</td><td></td></tr>
+              <tr><td>七八</td><td>一四五</td><td>下</td><td>第一行第一字「石」</td><td>名</td><td></td></tr>
+              <tr><td>七八</td><td>一六〇</td><td>上</td><td>第十三行十四行第一字</td><td>經論</td><td></td></tr>
+              <tr><td>七九</td><td>七四九</td><td>下</td><td>第一行第一字</td><td>初</td><td></td></tr>
               <tr><td></td><td><a href="#group-7">第七组对照表</a></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>八三</td><td>二</td><td>下</td><td>千字文「友」與「枝」</td><td>八二冊千字文「友」與八三冊「枝」應對調</td><td></td></tr>
+              <tr><td>八四</td><td>一〇九</td><td>上</td><td>第七、八行第一字</td><td>得治</td><td></td></tr>
+              <tr><td>八六</td><td>目錄</td><td></td><td>標題一二・一一八八「（節三 — 節十）」</td><td>（節三 — 節九）</td><td></td></tr>
+              <tr><td>八七</td><td>目錄</td><td></td><td>標題一二・一二〇三「少千字文」</td><td>（沛一 — 沛四）</td><td></td></tr>
+              <tr><td>八七</td><td>目錄</td><td></td><td>標題一二・一一九一「少千字文」</td><td>（廉六 — 廉十）</td><td></td></tr>
+              <tr><td>八七</td><td>目錄</td><td></td><td>標題一二・一一九二「少千字文」</td><td>（退一 — 退七）</td><td></td></tr>
+              <tr><td>八八</td><td>目錄</td><td></td><td>標題一二・一二二五「少譯者」</td><td>無著菩薩造唐三藏法師義淨譯</td><td></td></tr>
+              <tr><td>八八</td><td>目錄</td><td></td><td>標題一二・一二二五「少頁碼」</td><td>「一」</td><td></td></tr>
+              <tr><td>九〇</td><td>一九</td><td>上</td><td>第八行第一字</td><td>曠</td><td></td></tr>
+              <tr><td>九〇</td><td>五八〇</td><td>上</td><td>第一行第一字「予」</td><td>子</td><td></td></tr>
+              <tr><td>九一</td><td>目錄</td><td></td><td>標題一二・一二五六「（一〇一至一〇六）」</td><td>（一〇一至一六〇）</td><td></td></tr>
+              <tr><td>九一</td><td>四</td><td>下</td><td>第十至十五行內文錯誤</td><td>見三九四上</td><td>見三九四上</td></tr>
+              <tr><td>九一</td><td>九</td><td>下</td><td>第十至十五行內文錯誤</td><td>見三九四下</td><td>見三九四下</td></tr>
+              <tr><td>九二</td><td>二八四</td><td>上</td><td>第十五行第一、二字</td><td>兩耳</td><td></td></tr>
+              <tr><td>一〇一</td><td>目錄</td><td></td><td>標題一二・一二七二「（一至九）」</td><td>（一至十二）</td><td></td></tr>
+              <tr><td>一〇一</td><td>一四六</td><td>下</td><td>第一至十行內文錯誤</td><td>第一至五行與六至十行應對調</td><td>見三九五上</td></tr>
               <tr><td></td><td><a href="#group-8">第八组对照表</a></td><td></td><td></td><td></td><td></td></tr>
               <tr><td></td><td><a href="#group-9">第九组对照表</a></td><td></td><td></td><td></td><td></td></tr>
               <tr><td></td><td><a href="#group-10">第十组对照表</a></td><td></td><td></td><td></td><td></td></tr>
@@ -1812,6 +1858,7 @@ function showTip(message, type) {
 </div>
 
 
+<script src="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.js"></script>
 
 </div>
 </body>

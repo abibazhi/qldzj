@@ -38,7 +38,7 @@ export async function fetchSutraInfo(sutraNum) {
  */
 async function fetchSutraInfoFromOneVolJson(sutraNum) {
     try {
-        const response = await fetch('./oneVolSutra.json');
+        const response = await fetch('./data/oneVolSutra.json');
         if (!response.ok) {
             console.error('加载 oneVolSutra.json 失败');
             return null;

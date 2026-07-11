@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>乾隆大藏经目录</title>
+    <link href="index.css" rel="stylesheet">
+
+    <!-- ⭐ 数据文件 -->
+    <script src="data/sutra_links.js"></script>
+
+    <script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?7784bc9ab299071f3a78b249954402c8";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+</head>
+<body>
+    <h1>乾隆大藏经目录</h1>
+    <!-- 快速跳转链接 -->
+    <div class="special-anchor">
+        快速跳转:
+        <a href="#anchor_0">大乘般若部</a> |
+        <a href="#anchor_20">大乘宝积部</a> |
+        <a href="#anchor_57">大乘大集部</a> |
+        <a href="#anchor_83">大乘华严部</a> |
+        <a href="#anchor_109">大乘经涅槃部</a> |
+        <a href="#anchor_122">大乘经五大部</a> |
+        <a href="#anchor_372">大乘经单译经</a> |
+        <a href="#anchor_538">小乘经阿含部</a> |
+        <a href="#anchor_675">小乘经单译经</a> |
+        <a href="#anchor_777">宋元入藏诸大小乘经</a> |
+        <a href="#anchor_1077">大乘律</a> |
+        <a href="#anchor_1102">小乘律</a> |
+        <a href="#anchor_1161">大乘论</a> |
+        <a href="#anchor_1254">小乘论</a> |
+        <a href="#anchor_1291">宋元续入藏</a> |
+        <a href="#anchor_1314">西土圣贤撰集</a> |
+        <a href="#anchor_1461">此土著述</a>
+    </div>
+
+    <div class="container">
+        <table border="1" class="dataframe" id="sutraTable">
+        </table>
+    </div>
+
+    <!-- 底部信息栏 -->
+    <div class="footer-info">
+        <div class="footer-links">
+            <a href="https://github.com/abibazhi/qldzj" target="_blank" class="footer-icon-simple" title="项目地址">
+                <svg viewBox="0 0 16 16" width="28" height="28" fill="currentColor">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                </svg>
+            </a>
+            <span class="footer-divider">|</span>
+            <a href="public/sutra.html?start=erratum1&end=erratum62&sutra=" class="footer-icon-simple" title="勘误表">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+            </a>
+            <span class="footer-divider">|</span>
+            <a href="erratum/erratum.html" class="footer-icon-simple" title="勘误表核对">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+            </a>
+        </div>
+        <div class="footer-note">
+            本目录仅供学习参考，如有错误欢迎提交 Issue 或 PR 指正
+        </div>
+    </div>
+
+    <!-- ⭐ 生成表格的 JavaScript -->
+    <script>
+    (function() {
+        'use strict';
+
+        // 检查数据是否加载
+        if (typeof sutraLinks === 'undefined' || typeof categoryMap === 'undefined') {
+            console.error('❌ 数据未加载，请检查 data/sutra_links.js 是否存在');
+            return;
+        }
+
+        /**
+         * 将 "册-页" 格式转为6位数字 (册3位+页3位)
+         */
+        function padStartEnd(display) {
+            var parts = display.split('-');
+            var volume = parseInt(parts[0], 10);
+            var page = parseInt(parts[1], 10);
+            return String(volume).padStart(3, '0') + String(page).padStart(3, '0');
+        }
+
+        /**
+         * 生成单行 HTML
+         */
+        function buildRow(sutra, start, end, title, translator, multiVolume) {
+            var href;
+            if (multiVolume === 1) {
+                href = 'public/sutra' + sutra + '.idx.html';
+            } else {
+                var startPadded = padStartEnd(start);
+                var endPadded = padStartEnd(end);
+                href = 'public/sutra.html?start=' + startPadded + '&end=' + endPadded + '&sutra=' + sutra;
+            }
+
+            // 译者：分号转 <br>
+            var translatorHtml = translator.replace(/；/g, '<br>');
+
+            return '<tr>\n' +
+                '            <td>' + sutra + '</td>\n' +
+                '            <td><a href="' + href + '">' + title + '</a></td>\n' +
+                '            <td>' + translatorHtml + '</td>\n' +
+                '        </tr>';
+        }
+
+        /**
+         * 构建分类标题行
+         */
+        function buildCategoryRow(sutra, categoryName) {
+            return '<tr id="anchor_' + sutra + '">\n' +
+                '            <td></td>\n' +
+                '            <td colspan="2"><strong>' + categoryName + '</strong></td>\n' +
+                '        </tr>';
+        }
+
+        // ============================================================
+        // 主逻辑：生成表格
+        // ============================================================
+
+        var table = document.getElementById('sutraTable');
+        if (!table) {
+            console.error('❌ 找不到表格元素 #sutraTable');
+            return;
+        }
+
+        var htmlRows = [];
+        var insertedCategories = {};
+
+        for (var i = 0; i < sutraLinks.length; i++) {
+            var row = sutraLinks[i];
+            var sutra = row[0];
+            var start = row[1];
+            var end = row[2];
+            var title = row[3];
+            var translator = row[4];
+            var multiVolume = row[5];
+
+            // 检查是否应该插入分类标题
+            if (categoryMap[sutra] !== undefined && !insertedCategories[sutra]) {
+                htmlRows.push(buildCategoryRow(sutra, categoryMap[sutra]));
+                insertedCategories[sutra] = true;
+            }
+
+            // 生成数据行
+            htmlRows.push(buildRow(sutra, start, end, title, translator, multiVolume));
+        }
+
+        // 填入表格
+        table.innerHTML = htmlRows.join('\n');
+
+        console.log('✅ 表格生成完成，共 ' + sutraLinks.length + ' 行');
+
+        // ============================================================
+        // 给每部经加上 id，以便跳转
+        // ============================================================
+        var rows = document.querySelectorAll('table tr');
+        rows.forEach(function(row) {
+            var firstTd = row.querySelector('td:first-child');
+            if (firstTd) {
+                var text = firstTd.textContent.trim();
+                if (/^\d+$/.test(text)) {
+                    firstTd.id = 'sutra' + text;
+                }
+            }
+        });
+
+    })();
+    </script>
+
+</body>
+</html>

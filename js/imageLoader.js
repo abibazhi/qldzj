@@ -137,39 +137,8 @@ function createImage(url) {
 }
 
 // ==============================
-// 测试单张图片
-// ==============================
-export async function testImage1(url) {
-  return new Promise(resolve => {
-    const img = createImage(url);
-    const start = Date.now();
-    let done = false;
-
-    const timer = setTimeout(() => {
-      done = true;
-      log(`❌ ${url} | 超时`);
-      resolve(false);
-    }, IMG_TIMEOUT);
-
-    img.onload = () => {
-      if (done) return;
-      clearTimeout(timer);
-      log(`✅ ${url} | 成功`);
-      resolve(true);
-    };
-
-    img.onerror = () => {
-      if (done) return;
-      clearTimeout(timer);
-      log(`❌ ${url} | 失败`);
-      resolve(false);
-    };
-
-    img.src = url;
-  });
-}
-
 // 测试图片是否能加载：成功返回true，失败返回false
+// ==============================
 export async function testImage(url) {
   return new Promise(resolve => {
     const img = createImage(url);

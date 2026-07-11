@@ -5,9 +5,6 @@
     <title>乾隆大藏经目录</title>
     <link href="index.css" rel="stylesheet">
 
-    <!-- ⭐ 数据文件 -->
-    <script src="data/sutra_links.js"></script>
-
     <script>
     var _hmt = _hmt || [];
     (function() {
@@ -73,112 +70,105 @@
         </div>
     </div>
 
-    <!-- ⭐ 生成表格的 JavaScript -->
-    <script>
-    (function() {
-        'use strict';
+    <!-- ⭐ 所有逻辑都在这个 type="module" 脚本中 -->
+    <script type="module">
+    import { sutraLinks, categoryMap } from './data/sutra_links.js';
 
-        // 检查数据是否加载
-        if (typeof sutraLinks === 'undefined' || typeof categoryMap === 'undefined') {
-            console.error('❌ 数据未加载，请检查 data/sutra_links.js 是否存在');
-            return;
+    'use strict';
+
+    /**
+     * 将 "册-页" 格式转为6位数字 (册3位+页3位)
+     */
+    function padStartEnd(display) {
+        const parts = display.split('-');
+        const volume = parseInt(parts[0], 10);
+        const page = parseInt(parts[1], 10);
+        return String(volume).padStart(3, '0') + String(page).padStart(3, '0');
+    }
+
+    /**
+     * 生成单行 HTML
+     */
+    function buildRow(sutra, start, end, title, translator, multiVolume) {
+        let href;
+        if (multiVolume === 1) {
+            href = 'public/sutra' + sutra + '.idx.html';
+        } else {
+            const startPadded = padStartEnd(start);
+            const endPadded = padStartEnd(end);
+            href = 'public/sutra.html?start=' + startPadded + '&end=' + endPadded + '&sutra=' + sutra;
         }
 
-        /**
-         * 将 "册-页" 格式转为6位数字 (册3位+页3位)
-         */
-        function padStartEnd(display) {
-            var parts = display.split('-');
-            var volume = parseInt(parts[0], 10);
-            var page = parseInt(parts[1], 10);
-            return String(volume).padStart(3, '0') + String(page).padStart(3, '0');
+        // 译者：分号转 <br>
+        const translatorHtml = translator.replace(/；/g, '<br>');
+
+        return '<tr>\n' +
+            '            <td>' + sutra + '</td>\n' +
+            '            <td><a href="' + href + '">' + title + '</a></td>\n' +
+            '            <td>' + translatorHtml + '</td>\n' +
+            '        </tr>';
+    }
+
+    /**
+     * 构建分类标题行
+     */
+    function buildCategoryRow(sutra, categoryName) {
+        return '<tr id="anchor_' + sutra + '">\n' +
+            '            <td></td>\n' +
+            '            <td colspan="2"><strong>' + categoryName + '</strong></td>\n' +
+            '        </tr>';
+    }
+
+    // ============================================================
+    // 主逻辑：生成表格
+    // ============================================================
+
+    const table = document.getElementById('sutraTable');
+    if (!table) {
+        console.error('❌ 找不到表格元素 #sutraTable');
+        throw new Error('表格元素不存在');
+    }
+
+    const htmlRows = [];
+    const insertedCategories = {};
+
+    for (let i = 0; i < sutraLinks.length; i++) {
+        const row = sutraLinks[i];
+        const sutra = row[0];
+        const start = row[1];
+        const end = row[2];
+        const title = row[3];
+        const translator = row[4];
+        const multiVolume = row[5];
+
+        // 检查是否应该插入分类标题
+        if (categoryMap[sutra] !== undefined && !insertedCategories[sutra]) {
+            htmlRows.push(buildCategoryRow(sutra, categoryMap[sutra]));
+            insertedCategories[sutra] = true;
         }
 
-        /**
-         * 生成单行 HTML
-         */
-        function buildRow(sutra, start, end, title, translator, multiVolume) {
-            var href;
-            if (multiVolume === 1) {
-                href = 'public/sutra' + sutra + '.idx.html';
-            } else {
-                var startPadded = padStartEnd(start);
-                var endPadded = padStartEnd(end);
-                href = 'public/sutra.html?start=' + startPadded + '&end=' + endPadded + '&sutra=' + sutra;
+        // 生成数据行
+        htmlRows.push(buildRow(sutra, start, end, title, translator, multiVolume));
+    }
+
+    // 填入表格
+    table.innerHTML = htmlRows.join('\n');
+
+    console.log('✅ 表格生成完成，共 ' + sutraLinks.length + ' 行');
+
+    // ============================================================
+    // 给每部经加上 id，以便跳转
+    // ============================================================
+    const rows = document.querySelectorAll('table tr');
+    rows.forEach(function(row) {
+        const firstTd = row.querySelector('td:first-child');
+        if (firstTd) {
+            const text = firstTd.textContent.trim();
+            if (/^\d+$/.test(text)) {
+                firstTd.id = 'sutra' + text;
             }
-
-            // 译者：分号转 <br>
-            var translatorHtml = translator.replace(/；/g, '<br>');
-
-            return '<tr>\n' +
-                '            <td>' + sutra + '</td>\n' +
-                '            <td><a href="' + href + '">' + title + '</a></td>\n' +
-                '            <td>' + translatorHtml + '</td>\n' +
-                '        </tr>';
         }
-
-        /**
-         * 构建分类标题行
-         */
-        function buildCategoryRow(sutra, categoryName) {
-            return '<tr id="anchor_' + sutra + '">\n' +
-                '            <td></td>\n' +
-                '            <td colspan="2"><strong>' + categoryName + '</strong></td>\n' +
-                '        </tr>';
-        }
-
-        // ============================================================
-        // 主逻辑：生成表格
-        // ============================================================
-
-        var table = document.getElementById('sutraTable');
-        if (!table) {
-            console.error('❌ 找不到表格元素 #sutraTable');
-            return;
-        }
-
-        var htmlRows = [];
-        var insertedCategories = {};
-
-        for (var i = 0; i < sutraLinks.length; i++) {
-            var row = sutraLinks[i];
-            var sutra = row[0];
-            var start = row[1];
-            var end = row[2];
-            var title = row[3];
-            var translator = row[4];
-            var multiVolume = row[5];
-
-            // 检查是否应该插入分类标题
-            if (categoryMap[sutra] !== undefined && !insertedCategories[sutra]) {
-                htmlRows.push(buildCategoryRow(sutra, categoryMap[sutra]));
-                insertedCategories[sutra] = true;
-            }
-
-            // 生成数据行
-            htmlRows.push(buildRow(sutra, start, end, title, translator, multiVolume));
-        }
-
-        // 填入表格
-        table.innerHTML = htmlRows.join('\n');
-
-        console.log('✅ 表格生成完成，共 ' + sutraLinks.length + ' 行');
-
-        // ============================================================
-        // 给每部经加上 id，以便跳转
-        // ============================================================
-        var rows = document.querySelectorAll('table tr');
-        rows.forEach(function(row) {
-            var firstTd = row.querySelector('td:first-child');
-            if (firstTd) {
-                var text = firstTd.textContent.trim();
-                if (/^\d+$/.test(text)) {
-                    firstTd.id = 'sutra' + text;
-                }
-            }
-        });
-
-    })();
+    });
     </script>
 
 </body>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="erratum.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.css">
+  <title>乾隆大藏经 · 勘误表</title>
+</head>
+
+<body>
+<div class="container">
+  <div id="section-char" class="section-block">
+    <div class="global-header">
+      <h1>📜 勘误表 · 单字或多字错误核对</h1>
+      <div class="badge-group">
+        <span id="totalCount">📌 共 ?? 条</span>
+        <span>🖌 按勘误表逐条修改确认所有单个字或若干字的错误</span>
+      </div>
+    </div>
+
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table class="table-correction">
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody id="correctionBody">
+            <!-- 由 JavaScript 动态生成 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="silk-border">
+      <div style="display: flex; gap: 1.8rem; flex-wrap: wrap; align-items: center;">
+        <span style="color: #897a6a; font-size: 0.85rem;">🪷 小幻 · 2026年7月2日 🪷</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import erratumData from './data/erratum.json' assert { type: 'json' };
+import { sutraLinks } from '../data/sutra_links.js';
+
+// ============================================================
+// 工具函数：根据册和页查找经书信息
+// ============================================================
+function findSutraByVolumePage(volume, page) {
+    const targetVol = Number(volume);
+    const targetPage = Number(page);
+    
+    for (const [sutraNum, start, end, title, translator] of sutraLinks) {
+        const [startVol, startPage] = start.split('-').map(Number);
+        const [endVol, endPage] = end.split('-').map(Number);
+        
+        // 检查册号是否在范围内
+        if (targetVol < startVol || targetVol > endVol) continue;
+        
+        // 如果在起始册，检查页码
+        if (targetVol === startVol && targetPage < startPage) continue;
+        
+        // 如果在结束册，检查页码
+        if (targetVol === endVol && targetPage > endPage) continue;
+        
+        // 匹配成功
+        return { sutraNum, start, end, title, translator };
+    }
+    
+    return null;
+}
+
+// ============================================================
+// 工具函数：格式化页码（中文数字）
+// ============================================================
+function toChineseNumber(num) {
+    const digits = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+    const numStr = String(num);
+    let result = '';
+    for (const char of numStr) {
+        result += digits[Number(char)];
+    }
+    return result;
+}
+
+// ============================================================
+// 工具函数：生成图片链接
+// ============================================================
+function buildImageUrl(volume, page) {
+    const vol = String(volume).padStart(3, '0');
+    const pg = String(page).padStart(3, '0');
+    return `http://img.daxumi.top/${vol}/${pg}.png`;
+}
+
+// ============================================================
+// 工具函数：生成更正链接（跳转到经书）
+// ============================================================
+function buildCorrectionUrl(volume, page, sutraInfo) {
+    if (!sutraInfo) return '#';
+    
+    const { sutraNum, start, end } = sutraInfo;
+    const startPadded = start.replace('-', '');
+    const endPadded = end.replace('-', '');
+    // 页码要补成6位：册3位+页3位
+    const pagePadded = String(volume).padStart(3, '0') + String(page).padStart(3, '0');
+    
+    return `../public/sutra.html?start=${startPadded}&end=${endPadded}&sutra=${sutraNum}#page=${pagePadded}`;
+}
+
+// ============================================================
+// 主逻辑：生成表格
+// ============================================================
+function generateTable() {
+    const tbody = document.getElementById('correctionBody');
+    if (!tbody) {
+        console.error('❌ 找不到表格体 #correctionBody');
+        return;
+    }
+
+    let htmlRows = [];
+    let currentGroup = 0;
+
+    // 按 group 分组
+    const groupedData = {};
+    erratumData.forEach(item => {
+        const group = item.group || 0;
+        if (!groupedData[group]) {
+            groupedData[group] = [];
+        }
+        groupedData[group].push(item);
+    });
+
+    // 按 group 顺序生成
+    const groupKeys = Object.keys(groupedData).sort((a, b) => Number(a) - Number(b));
+    
+    groupKeys.forEach((groupKey, index) => {
+        const items = groupedData[groupKey];
+        const groupNum = index + 1;
+        
+        // 添加分组标题行
+        htmlRows.push(`
+          <tr>
+            <td></td>
+            <td><a href="#group-${groupNum}">第${toChineseNumber(groupNum)}组对照表</a></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        `);
+
+        // 添加该组的数据行
+        items.forEach(item => {
+            const volume = item.volume;
+            const page = item.page;
+            const section = item.section || '';
+            const location = item.location || '';
+            const correction = item.correction || '';
+            const note = item.note || '';
+
+            // 查找对应的经书
+            const sutraInfo = findSutraByVolumePage(volume, page);
+
+            // 构建原文链接（图片）
+            const imageUrl = buildImageUrl(volume, page);
+            const locationHtml = `<a href="${imageUrl}" target="_blank">${location}</a>`;
+
+            // 构建更正链接（跳转到经书）
+            const correctionUrl = buildCorrectionUrl(volume, page, sutraInfo);
+            const correctionHtml = correctionUrl !== '#' 
+                ? `<a href="${correctionUrl}" target="_blank">${correction}</a>`
+                : correction;
+
+            // 册数转中文
+            const volumeChinese = toChineseNumber(volume);
+            const pageChinese = toChineseNumber(page);
+
+            htmlRows.push(`
+              <tr>
+                <td>${volumeChinese}</td>
+                <td>${pageChinese}</td>
+                <td>${section}</td>
+                <td>${locationHtml}</td>
+                <td>${correctionHtml}</td>
+                <td>${note}</td>
+              </tr>
+            `);
+        });
+    });
+
+    // 填入表格
+    tbody.innerHTML = htmlRows.join('\n');
+    
+    // 更新总数
+    document.getElementById('totalCount').textContent = `📌 共 ${erratumData.length} 条`;
+    
+    console.log(`✅ 勘误表生成完成，共 ${erratumData.length} 条记录`);
+}
+
+// ============================================================
+// 执行
+// ============================================================
+generateTable();
+</script>
+
+</body>
+</html>

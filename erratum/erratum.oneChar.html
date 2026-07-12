@@ -41,7 +41,12 @@
 </div>
 
 <script type="module">
-import erratumData from './data/erratum.json' assert { type: 'json' };
+
+// 用 fetch 加载 JSON
+const response = await fetch('./data/erratum.json');
+const erratumData = await response.json();
+
+// 用 import 加载 JS
 import { sutraLinks } from '../data/sutra_links.js';
 
 // ============================================================

@@ -40,42 +40,9 @@
   </div>
 </div>
 
+
 <script type="module">
-
-// 先测试路径
-console.log('Current URL:', window.location.href);
-console.log('Fetching: ./data/erratum.json');
-
-try {
-    const response = await fetch('./data/erratum.json');
-    console.log('Status:', response.status);
-    console.log('Content-Type:', response.headers.get('content-type'));
-    
-    const text = await response.text();
-    console.log('File content length:', text.length);
-    console.log('First 100 chars:', text.substring(0, 100));
-    console.log('Last 100 chars:', text.substring(text.length - 100));
-    
-    if (!text || text.trim() === '') {
-        throw new Error('File is empty!');
-    }
-    
-    const erratumData = JSON.parse(text);
-    console.log('✅ 成功解析，共', erratumData.length, '条数据');
-    
-    import { sutraLinks } from '../data/sutra_links.js';
-    // ... 继续
-} catch (error) {
-    console.error('❌ 错误:', error);
-}
-
-
-
-// 用 fetch 加载 JSON
-const response = await fetch('./data/erratum.json');
-const erratumData = await response.json();
-
-// 用 import 加载 JS
+// ✅ 所有 import 必须在模块顶层
 import { sutraLinks } from '../data/sutra_links.js';
 
 // ============================================================
@@ -84,24 +51,17 @@ import { sutraLinks } from '../data/sutra_links.js';
 function findSutraByVolumePage(volume, page) {
     const targetVol = Number(volume);
     const targetPage = Number(page);
-    
+
     for (const [sutraNum, start, end, title, translator] of sutraLinks) {
         const [startVol, startPage] = start.split('-').map(Number);
         const [endVol, endPage] = end.split('-').map(Number);
-        
-        // 检查册号是否在范围内
+
         if (targetVol < startVol || targetVol > endVol) continue;
-        
-        // 如果在起始册，检查页码
         if (targetVol === startVol && targetPage < startPage) continue;
-        
-        // 如果在结束册，检查页码
         if (targetVol === endVol && targetPage > endPage) continue;
-        
-        // 匹配成功
+
         return { sutraNum, start, end, title, translator };
     }
-    
     return null;
 }
 
@@ -132,47 +92,61 @@ function buildImageUrl(volume, page) {
 // ============================================================
 function buildCorrectionUrl(volume, page, sutraInfo) {
     if (!sutraInfo) return '#';
-    
     const { sutraNum, start, end } = sutraInfo;
     const startPadded = start.replace('-', '');
     const endPadded = end.replace('-', '');
-    // 页码要补成6位：册3位+页3位
     const pagePadded = String(volume).padStart(3, '0') + String(page).padStart(3, '0');
-    
     return `../public/sutra.html?start=${startPadded}&end=${endPadded}&sutra=${sutraNum}#page=${pagePadded}`;
 }
 
 // ============================================================
-// 主逻辑：生成表格
+// 主逻辑：加载 JSON 并生成表格
 // ============================================================
-function generateTable() {
+try {
+    console.log('Current URL:', window.location.href);
+    console.log('Fetching: ./data/erratum.json');
+
+    // ✅ 加载 JSON（在顶层作用域）
+    const response = await fetch('./data/erratum.json');
+    console.log('Status:', response.status);
+    console.log('Content-Type:', response.headers.get('content-type'));
+
+    const text = await response.text();
+    console.log('File content length:', text.length);
+    console.log('First 100 chars:', text.substring(0, 100));
+    console.log('Last 100 chars:', text.substring(text.length - 100));
+
+    if (!text || text.trim() === '') {
+        throw new Error('File is empty!');
+    }
+
+    const erratumData = JSON.parse(text);
+    console.log('✅ 成功解析，共', erratumData.length, '条数据');
+
+    // ============================================================
+    // 生成表格
+    // ============================================================
     const tbody = document.getElementById('correctionBody');
     if (!tbody) {
         console.error('❌ 找不到表格体 #correctionBody');
         return;
     }
 
-    let htmlRows = [];
-    let currentGroup = 0;
-
-    // 按 group 分组
+    const htmlRows = [];
     const groupedData = {};
+    
     erratumData.forEach(item => {
         const group = item.group || 0;
-        if (!groupedData[group]) {
-            groupedData[group] = [];
-        }
+        if (!groupedData[group]) groupedData[group] = [];
         groupedData[group].push(item);
     });
 
-    // 按 group 顺序生成
     const groupKeys = Object.keys(groupedData).sort((a, b) => Number(a) - Number(b));
-    
+
     groupKeys.forEach((groupKey, index) => {
         const items = groupedData[groupKey];
         const groupNum = index + 1;
-        
-        // 添加分组标题行
+
         htmlRows.push(`
           <tr>
             <td></td>
@@ -184,7 +158,6 @@ function generateTable() {
           </tr>
         `);
 
-        // 添加该组的数据行
         items.forEach(item => {
             const volume = item.volume;
             const page = item.page;
@@ -193,20 +166,15 @@ function generateTable() {
             const correction = item.correction || '';
             const note = item.note || '';
 
-            // 查找对应的经书
             const sutraInfo = findSutraByVolumePage(volume, page);
-
-            // 构建原文链接（图片）
             const imageUrl = buildImageUrl(volume, page);
             const locationHtml = `<a href="${imageUrl}" target="_blank">${location}</a>`;
 
-            // 构建更正链接（跳转到经书）
             const correctionUrl = buildCorrectionUrl(volume, page, sutraInfo);
-            const correctionHtml = correctionUrl !== '#' 
+            const correctionHtml = correctionUrl !== '#'
                 ? `<a href="${correctionUrl}" target="_blank">${correction}</a>`
                 : correction;
 
-            // 册数转中文
             const volumeChinese = toChineseNumber(volume);
             const pageChinese = toChineseNumber(page);
 
@@ -223,20 +191,15 @@ function generateTable() {
         });
     });
 
-    // 填入表格
     tbody.innerHTML = htmlRows.join('\n');
-    
-    // 更新总数
     document.getElementById('totalCount').textContent = `📌 共 ${erratumData.length} 条`;
-    
     console.log(`✅ 勘误表生成完成，共 ${erratumData.length} 条记录`);
-}
 
-// ============================================================
-// 执行
-// ============================================================
-generateTable();
+} catch (error) {
+    console.error('❌ 错误:', error);
+}
 </script>
+
 
 </body>
 </html>

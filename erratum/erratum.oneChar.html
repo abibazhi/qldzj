@@ -112,7 +112,7 @@ function buildCorrectionUrl(volume, page, sutraInfo) {
     // end = 结束册(3位) + 结束页(3位)
     const endPadded = endVolPadded + endPagePadded;
     
-    return `../desktop_sutra?start=${startPadded}&end=${endPadded}&idx=${idxPadded}&sutra=${sutraNum}`;
+    return `../public/sutra.html?start=${startPadded}&end=${endPadded}&idx=${idxPadded}&sutra=${sutraNum}`;
 }
 
 

@@ -1,13 +1,19 @@
 # 匹配 public 目录下的 .idx 文件
-/public/*.idx
+/public/*.idx.html
   Cache-Control: public, max-age=3600, must-revalidate
 
-# 根目录下的 index.html（60秒缓存）
-/index.html
-  Cache-Control: public, max-age=60, must-revalidate
-
-/oneVolSutra.json
+/*.html
   Cache-Control: public, max-age=3600, must-revalidate
 
-/*.js
+/data/*.*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# 所有 JS 文件（包括子目录）
+*.js
   Content-Type: application/javascript; charset=utf-8
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# 所有 JSON 文件（包括子目录）
+*.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=3600, must-revalidate

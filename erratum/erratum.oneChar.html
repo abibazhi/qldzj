@@ -40,9 +40,7 @@
   </div>
 </div>
 
-
 <script type="module">
-// ✅ 所有 import 必须在模块顶层
 import { sutraLinks } from '../data/sutra_links.js';
 
 // ============================================================
@@ -100,106 +98,118 @@ function buildCorrectionUrl(volume, page, sutraInfo) {
 }
 
 // ============================================================
-// 主逻辑：加载 JSON 并生成表格
+// 主逻辑
 // ============================================================
-try {
-    console.log('Current URL:', window.location.href);
-    console.log('Fetching: ./data/erratum.json');
+async function generateTable() {
+    try {
+        console.log('Current URL:', window.location.href);
+        console.log('Fetching: ./data/erratum.json');
 
-    // ✅ 加载 JSON（在顶层作用域）
-    const response = await fetch('./data/erratum.json');
-    console.log('Status:', response.status);
-    console.log('Content-Type:', response.headers.get('content-type'));
+        const response = await fetch('./data/erratum.json');
+        console.log('Status:', response.status);
+        console.log('Content-Type:', response.headers.get('content-type'));
 
-    const text = await response.text();
-    console.log('File content length:', text.length);
-    console.log('First 100 chars:', text.substring(0, 100));
-    console.log('Last 100 chars:', text.substring(text.length - 100));
+        const text = await response.text();
+        console.log('File content length:', text.length);
+        console.log('First 100 chars:', text.substring(0, 100));
+        console.log('Last 100 chars:', text.substring(text.length - 100));
 
-    if (!text || text.trim() === '') {
-        throw new Error('File is empty!');
-    }
+        if (!text || text.trim() === '') {
+            throw new Error('File is empty!');
+        }
 
-    const erratumData = JSON.parse(text);
-    console.log('✅ 成功解析，共', erratumData.length, '条数据');
+        const erratumData = JSON.parse(text);
+        console.log('✅ 成功解析，共', erratumData.length, '条数据');
 
-    // ============================================================
-    // 生成表格
-    // ============================================================
-    const tbody = document.getElementById('correctionBody');
-    if (!tbody) {
-        console.error('❌ 找不到表格体 #correctionBody');
-        return;
-    }
+        // ============================================================
+        // 生成表格
+        // ============================================================
+        const tbody = document.getElementById('correctionBody');
+        if (!tbody) {
+            console.error('❌ 找不到表格体 #correctionBody');
+            return;
+        }
 
-    const htmlRows = [];
-    const groupedData = {};
-    
-    erratumData.forEach(item => {
-        const group = item.group || 0;
-        if (!groupedData[group]) groupedData[group] = [];
-        groupedData[group].push(item);
-    });
+        const htmlRows = [];
+        const groupedData = {};
 
-    const groupKeys = Object.keys(groupedData).sort((a, b) => Number(a) - Number(b));
+        erratumData.forEach(item => {
+            const group = item.group || 0;
+            if (!groupedData[group]) groupedData[group] = [];
+            groupedData[group].push(item);
+        });
 
-    groupKeys.forEach((groupKey, index) => {
-        const items = groupedData[groupKey];
-        const groupNum = index + 1;
+        const groupKeys = Object.keys(groupedData).sort((a, b) => Number(a) - Number(b));
 
-        htmlRows.push(`
-          <tr>
-            <td></td>
-            <td><a href="#group-${groupNum}">第${toChineseNumber(groupNum)}组对照表</a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        `);
+        groupKeys.forEach((groupKey, index) => {
+            const items = groupedData[groupKey];
+            const groupNum = index + 1;
 
-        items.forEach(item => {
-            const volume = item.volume;
-            const page = item.page;
-            const section = item.section || '';
-            const location = item.location || '';
-            const correction = item.correction || '';
-            const note = item.note || '';
-
-            const sutraInfo = findSutraByVolumePage(volume, page);
-            const imageUrl = buildImageUrl(volume, page);
-            const locationHtml = `<a href="${imageUrl}" target="_blank">${location}</a>`;
-
-            const correctionUrl = buildCorrectionUrl(volume, page, sutraInfo);
-            const correctionHtml = correctionUrl !== '#'
-                ? `<a href="${correctionUrl}" target="_blank">${correction}</a>`
-                : correction;
-
-            const volumeChinese = toChineseNumber(volume);
-            const pageChinese = toChineseNumber(page);
-
+            // 添加分组标题行
             htmlRows.push(`
               <tr>
-                <td>${volumeChinese}</td>
-                <td>${pageChinese}</td>
-                <td>${section}</td>
-                <td>${locationHtml}</td>
-                <td>${correctionHtml}</td>
-                <td>${note}</td>
+                <td></td>
+                <td><a href="#group-${groupNum}">第${toChineseNumber(groupNum)}组对照表</a></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
               </tr>
             `);
+
+            // 添加该组的数据行
+            items.forEach(item => {
+                const volume = item.volume;
+                const page = item.page;
+                const section = item.section || '';
+                const location = item.location || '';
+                const correction = item.correction || '';
+                const note = item.note || '';
+
+                // 查找对应的经书
+                const sutraInfo = findSutraByVolumePage(volume, page);
+
+                // 构建原文链接（图片）
+                const imageUrl = buildImageUrl(volume, page);
+                const locationHtml = `<a href="${imageUrl}" target="_blank">${location}</a>`;
+
+                // 构建更正链接（跳转到经书）
+                const correctionUrl = buildCorrectionUrl(volume, page, sutraInfo);
+                const correctionHtml = correctionUrl !== '#'
+                    ? `<a href="${correctionUrl}" target="_blank">${correction}</a>`
+                    : correction;
+
+                // 册数转中文
+                const volumeChinese = toChineseNumber(volume);
+                const pageChinese = toChineseNumber(page);
+
+                htmlRows.push(`
+                  <tr>
+                    <td>${volumeChinese}</td>
+                    <td>${pageChinese}</td>
+                    <td>${section}</td>
+                    <td>${locationHtml}</td>
+                    <td>${correctionHtml}</td>
+                    <td>${note}</td>
+                  </tr>
+                `);
+            });
         });
-    });
 
-    tbody.innerHTML = htmlRows.join('\n');
-    document.getElementById('totalCount').textContent = `📌 共 ${erratumData.length} 条`;
-    console.log(`✅ 勘误表生成完成，共 ${erratumData.length} 条记录`);
+        tbody.innerHTML = htmlRows.join('\n');
+        document.getElementById('totalCount').textContent = `📌 共 ${erratumData.length} 条`;
+        console.log(`✅ 勘误表生成完成，共 ${erratumData.length} 条记录`);
 
-} catch (error) {
-    console.error('❌ 错误:', error);
+    } catch (error) {
+        console.error('❌ 错误:', error);
+    }
 }
-</script>
 
+// ============================================================
+// 执行
+// ============================================================
+generateTable();
+</script>
 
 </body>
 </html>

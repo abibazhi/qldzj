@@ -42,6 +42,35 @@
 
 <script type="module">
 
+// 先测试路径
+console.log('Current URL:', window.location.href);
+console.log('Fetching: ./data/erratum.json');
+
+try {
+    const response = await fetch('./data/erratum.json');
+    console.log('Status:', response.status);
+    console.log('Content-Type:', response.headers.get('content-type'));
+    
+    const text = await response.text();
+    console.log('File content length:', text.length);
+    console.log('First 100 chars:', text.substring(0, 100));
+    console.log('Last 100 chars:', text.substring(text.length - 100));
+    
+    if (!text || text.trim() === '') {
+        throw new Error('File is empty!');
+    }
+    
+    const erratumData = JSON.parse(text);
+    console.log('✅ 成功解析，共', erratumData.length, '条数据');
+    
+    import { sutraLinks } from '../data/sutra_links.js';
+    // ... 继续
+} catch (error) {
+    console.error('❌ 错误:', error);
+}
+
+
+
 // 用 fetch 加载 JSON
 const response = await fetch('./data/erratum.json');
 const erratumData = await response.json();

@@ -8,12 +8,24 @@
 /data/*.*
   Cache-Control: public, max-age=3600, must-revalidate
 
-# 所有 JS 文件（包括子目录）
-*.js
+# JS 文件
+/js/*.js
   Content-Type: application/javascript; charset=utf-8
   Cache-Control: public, max-age=3600, must-revalidate
 
-# 所有 JSON 文件（包括子目录）
-*.json
+/data/*.js
+  Content-Type: application/javascript; charset=utf-8
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/erratum/*.js
+  Content-Type: application/javascript; charset=utf-8
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# JSON 文件
+/data/*.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/erratum/data/*.json
   Content-Type: application/json; charset=utf-8
   Cache-Control: public, max-age=3600, must-revalidate

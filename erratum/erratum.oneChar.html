@@ -88,7 +88,7 @@ function buildImageUrl(volume, page) {
 // ============================================================
 // 工具函数：生成更正链接（跳转到经书）
 // ============================================================
-function buildCorrectionUrl(volume, page, sutraInfo) {
+function buildCorrectionUrl1(volume, page, sutraInfo) {
     if (!sutraInfo) return '#';
     const { sutraNum, start, end } = sutraInfo;
     const startPadded = start.replace('-', '');
@@ -96,6 +96,33 @@ function buildCorrectionUrl(volume, page, sutraInfo) {
     const pagePadded = String(volume).padStart(3, '0') + String(page).padStart(3, '0');
     return `../public/sutra.html?start=${startPadded}&end=${endPadded}&sutra=${sutraNum}#page=${pagePadded}`;
 }
+
+function buildCorrectionUrl(volume, page, sutraInfo) {
+    if (!sutraInfo) return '#';
+    
+    const { sutraNum, start, end } = sutraInfo;
+    
+    // start 和 end 已经是 "册-页" 格式，需要拆开分别补零
+    const [startVol, startPage] = start.split('-');
+    const [endVol, endPage] = end.split('-');
+    
+    // 各部分补零到3位
+    const startVolPadded = String(startVol).padStart(3, '0');
+    const startPagePadded = String(startPage).padStart(3, '0');
+    const endVolPadded = String(endVol).padStart(3, '0');
+    const endPagePadded = String(endPage).padStart(3, '0');
+    
+    // idx = 当前册(3位) + 当前页(3位)
+    const idxPadded = String(volume).padStart(3, '0') + String(page).padStart(3, '0');
+    
+    // start = 起始册(3位) + 起始页(3位)
+    const startPadded = startVolPadded + startPagePadded;
+    // end = 结束册(3位) + 结束页(3位)
+    const endPadded = endVolPadded + endPagePadded;
+    
+    return `../public/desktop_sutra?start=${startPadded}&end=${endPadded}&idx=${idxPadded}&sutra=${sutraNum}`;
+}
+
 
 // ============================================================
 // 主逻辑

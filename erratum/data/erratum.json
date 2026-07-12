@@ -202,7 +202,7 @@
     "page": 160,
     "section": "上",
     "location": "第十三行十四行第一字",
-    "correction": "經論",
+    "correction": "<span style=\"border:1px solid #000;padding:0 4px;\">經</span><span style=\"border:1px solid #000;padding:0 4px;\">論</span>",
     "note": "",
     "group": 6
   },

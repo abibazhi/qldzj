@@ -79,11 +79,21 @@ function toChineseNumber(num) {
 // ============================================================
 // 工具函数：生成图片链接
 // ============================================================
-function buildImageUrl(volume, page) {
+function buildImageUrl1(volume, page) {
     const vol = String(volume).padStart(3, '0');
     const pg = String(page).padStart(3, '0');
     return `http://img.daxumi.top/${vol}/${pg}.png`;
 }
+
+// ============================================================
+// 工具函数：生成图片链接
+// ============================================================
+function buildImageUrl(volume, page) {
+    const vol = String(volume).padStart(3, '0');
+    // 页码保持原样，不补零
+    return `http://img.daxumi.top/${vol}/${page}.png`;
+}
+
 
 // ============================================================
 // 工具函数：生成更正链接（跳转到经书）

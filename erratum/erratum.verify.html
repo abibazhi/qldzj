@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="erratum.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.css">
-  <title>乾隆大藏经 · 勘误表（图文对照 · 动态版）</title>
+  <title>乾隆大藏经 · 勘误表（核对版）</title>
   <style>
     .container {
       zoom: 0.8;
@@ -37,6 +37,17 @@
       transform: translateY(-1px);
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
+    td a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    td a:hover {
+      text-decoration: underline;
+    }
+    .verify-note {
+      color: #5f4f3f;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 
@@ -44,11 +55,11 @@
 <div class="container">
   <div id="section-pic" class="section-block">
     <div class="global-header">
-      <h1>📜 勘误表 · 图文对照</h1>
+      <h1>📜 勘误表 · 核对版</h1>
       <div class="badge-group">
-        <span>🖌 完全按图片翻录</span>
+        <span>🖌 带链接核对版本</span>
         <span id="totalCount">📌 共 ?? 条</span>
-        <a href="erratum.verify.html" class="page-switch-btn" title="切换到核对版本">📋 核对版本</a>
+        <a href="erratum.json.html" class="page-switch-btn" title="切换到图文对照">🖼 图文对照</a>
       </div>
     </div>
 
@@ -201,18 +212,41 @@ function generateContent() {
 }
 
 // ============================================================
-// 生成表格行
+// 生成表格行（带链接版本）
 // ============================================================
 function generateRows(items) {
     return items.map(item => {
         const volumeStr = item.volume !== null ? volumeToChinese(item.volume) : '';
         const pageStr = item.page === '目錄' ? '目錄' : (item.page !== null ? toChineseNumber(item.page) : '');
         const section = item.section || '';
-        const location = item.location || '';
-        const correction = item.correction || '';
-        const note = item.note || '';
+        
+        // 原文列：有链接则显示链接
+        let locationHtml = item.location || '';
+        if (item.locationHref) {
+            // 支持多个链接（用 | 分隔）
+            const hrefs = item.locationHref.split(' | ');
+            if (hrefs.length === 1) {
+                locationHtml = `<a href="${item.locationHref}" target="_blank">${item.location}</a>`;
+            } else {
+                locationHtml = `<a href="${hrefs[0]}" target="_blank">${item.location}</a>`;
+            }
+        }
+        
+        // 更正列：有链接则显示链接
+        let correctionHtml = item.correction || '';
+        if (item.correctionHref) {
+            const hrefs = item.correctionHref.split(' | ');
+            if (hrefs.length === 1) {
+                correctionHtml = `<a href="${item.correctionHref}" target="_blank">${item.correction}</a>`;
+            } else {
+                correctionHtml = `<a href="${hrefs[0]}" target="_blank">${item.correction}</a>`;
+            }
+        }
+        
+        // 备注列：显示核对备注
+        const noteHtml = item.verifyNote ? `<span class="verify-note">${item.verifyNote}</span>` : (item.note || '');
 
-        return `<tr><td>${volumeStr}</td><td>${pageStr}</td><td>${section}</td><td>${location}</td><td>${correction}</td><td>${note}</td></tr>`;
+        return `<tr><td>${volumeStr}</td><td>${pageStr}</td><td>${section}</td><td>${locationHtml}</td><td>${correctionHtml}</td><td>${noteHtml}</td></tr>`;
     }).join('\n              ');
 }
 

@@ -11,13 +11,28 @@
       zoom: 0.8;
       transform: none;
       transform-origin: unset;
-      max-width: 1500px;
+      max-width: 1600px;
       margin: 0 auto;
     }
-    td:nth-child(6) {
+    td:nth-child(6), td:nth-child(7) {
       background-color: #fffdfb;
       color: inherit;
       font-size: inherit;
+    }
+    th:nth-child(1), td:nth-child(1) { width: 7%; text-align: center; }
+    th:nth-child(2), td:nth-child(2) { width: 7%; text-align: center; }
+    th:nth-child(3), td:nth-child(3) { width: 4%; text-align: center; }
+    th:nth-child(4), td:nth-child(4) { width: 25%; text-align: left; }
+    th:nth-child(5), td:nth-child(5) { width: 30%; text-align: left; }
+    th:nth-child(6), td:nth-child(6) { width: 12%; text-align: left; }
+    th:nth-child(7), td:nth-child(7) { width: 15%; text-align: left; }
+    td:nth-child(4), td:nth-child(5), td:nth-child(6), td:nth-child(7) {
+      white-space: normal;
+      word-break: break-word;
+    }
+    td:nth-child(7) {
+      color: #5f4f3f;
+      font-size: 0.85rem;
     }
     .silk-border {
       margin-bottom: 1.5rem;
@@ -189,7 +204,7 @@ function generateContent() {
         <div class="table-wrapper">
           <table>
             <thead>
-              <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+              <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th><th>核对备注</th></tr>
             </thead>
             <tbody>
               ${generateRows(group.items)}
@@ -243,10 +258,12 @@ function generateRows(items) {
             }
         }
         
-        // 备注列：显示核对备注
-        const noteHtml = item.verifyNote ? `<span class="verify-note">${item.verifyNote}</span>` : (item.note || '');
+        // 備註列：原始勘误表备注
+        const noteHtml = item.note || '';
+        // 核对备注列：核对后的备注
+        const verifyNoteHtml = item.verifyNote ? `<span class="verify-note">${item.verifyNote}</span>` : '';
 
-        return `<tr><td>${volumeStr}</td><td>${pageStr}</td><td>${section}</td><td>${locationHtml}</td><td>${correctionHtml}</td><td>${noteHtml}</td></tr>`;
+        return `<tr><td>${volumeStr}</td><td>${pageStr}</td><td>${section}</td><td>${locationHtml}</td><td>${correctionHtml}</td><td>${noteHtml}</td><td>${verifyNoteHtml}</td></tr>`;
     }).join('\n              ');
 }
 

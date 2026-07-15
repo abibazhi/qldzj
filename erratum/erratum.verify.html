@@ -247,9 +247,9 @@ function generateRows(items) {
             // 支持多个链接（用 | 分隔）
             const hrefs = item.locationHref.split(' | ');
             if (hrefs.length === 1) {
-                locationHtml = `<a href="${item.locationHref}" target="_blank">${item.location}</a>`;
+                locationHtml = `<a href="${item.locationHref}">${item.location}</a>`;
             } else {
-                locationHtml = `<a href="${hrefs[0]}" target="_blank">${item.location}</a>`;
+                locationHtml = `<a href="${hrefs[0]}">${item.location}</a>`;
             }
         }
         
@@ -258,9 +258,9 @@ function generateRows(items) {
         if (item.correctionHref) {
             const hrefs = item.correctionHref.split(' | ');
             if (hrefs.length === 1) {
-                correctionHtml = `<a href="${item.correctionHref}" target="_blank">${item.correction}</a>`;
+                correctionHtml = `<a href="${item.correctionHref}">${item.correction}</a>`;
             } else {
-                correctionHtml = `<a href="${hrefs[0]}" target="_blank">${item.correction}</a>`;
+                correctionHtml = `<a href="${hrefs[0]}">${item.correction}</a>`;
             }
         }
         

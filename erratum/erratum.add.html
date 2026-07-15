@@ -119,13 +119,13 @@ function generateTable() {
         // 原文列：有链接则显示链接
         let locationHtml = item.location || '';
         if (item.locationHref) {
-            locationHtml = `<a href="${item.locationHref}" target="_blank">${item.location}</a>`;
+            locationHtml = `<a href="${item.locationHref}">${item.location}</a>`;
         }
         
         // 更正列：有链接则显示链接
         let correctionHtml = item.correction || '';
         if (item.correctionHref) {
-            correctionHtml = `<a href="${item.correctionHref}" target="_blank">${item.correction}</a>`;
+            correctionHtml = `<a href="${item.correctionHref}">${item.correction}</a>`;
         }
         
         // 备注列：保留原始HTML（可能包含链接）

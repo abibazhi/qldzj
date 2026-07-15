@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="erratum.css">
+  <title>乾隆大藏经 · 勘误表（增补）</title>
+  <style>
+    .container {
+      zoom: 0.8;
+      transform: none;
+      transform-origin: unset;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    .silk-border {
+      margin-bottom: 1.5rem;
+    }
+    .page-switch-btn {
+      display: inline-block;
+      background: #b7a48b;
+      color: #fff;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: 0.15s;
+    }
+    .page-switch-btn:hover {
+      background: #a08b7a;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    td a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+    td a:hover {
+      text-decoration: underline;
+    }
+    th:nth-child(1), td:nth-child(1) { width: 8%; text-align: center; }
+    th:nth-child(2), td:nth-child(2) { width: 8%; text-align: center; }
+    th:nth-child(3), td:nth-child(3) { width: 5%; text-align: center; }
+    th:nth-child(4), td:nth-child(4) { width: 30%; text-align: left; }
+    th:nth-child(5), td:nth-child(5) { width: 30%; text-align: left; }
+    th:nth-child(6), td:nth-child(6) { width: 19%; text-align: left; }
+    td:nth-child(4), td:nth-child(5), td:nth-child(6) {
+      white-space: normal;
+      word-break: break-word;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <div id="section-add" class="section-block">
+    <div class="global-header">
+      <h1>📜 勘误表 · 增补</h1>
+      <div class="badge-group">
+        <a href="erratum.json.html" class="page-switch-btn" title="切换到原版">原版</a>
+        <a href="erratum.verify.html" class="page-switch-btn" title="切换到核对版">核对版</a>
+      </div>
+    </div>
+
+    <div class="col-table">
+      <div class="table-wrapper">
+        <table class="table-correction">
+          <thead>
+            <tr><th>册數</th><th>頁碼</th><th>欄</th><th>原文</th><th>更正</th><th>備註</th></tr>
+          </thead>
+          <tbody id="addBody">
+            <!-- 由 JavaScript 动态生成 -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="silk-border">
+      <div style="display: flex; gap: 1.8rem; flex-wrap: wrap; align-items: center;">
+        <span style="color: #897a6a; font-size: 0.85rem;">🪷 千问 · 2026年7月14日 🪷</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { erratumAddData } from './data/erratum_add.json.js';
+
+// ============================================================
+// 工具函数：数字转中文数字（逐位转换）
+// ============================================================
+function toChineseNumber(num) {
+    if (num === null || num === undefined) return '';
+    const digits = ['〇', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
+    const numStr = String(num);
+    let result = '';
+    for (const char of numStr) {
+        result += digits[Number(char)];
+    }
+    return result;
+}
+
+// ============================================================
+// 主逻辑：生成表格内容
+// ============================================================
+function generateTable() {
+    const tbody = document.getElementById('addBody');
+    if (!tbody) {
+        console.error('❌ 找不到表格体 #addBody');
+        return;
+    }
+
+    const items = erratumAddData.items;
+    const htmlRows = items.map(item => {
+        const volumeStr = item.volume !== null ? toChineseNumber(item.volume) : '';
+        const pageStr = item.page === '目录' ? '目录' : (item.page !== null ? toChineseNumber(item.page) : '');
+        const section = item.section || '';
+        
+        // 原文列：有链接则显示链接
+        let locationHtml = item.location || '';
+        if (item.locationHref) {
+            locationHtml = `<a href="${item.locationHref}" target="_blank">${item.location}</a>`;
+        }
+        
+        // 更正列：有链接则显示链接
+        let correctionHtml = item.correction || '';
+        if (item.correctionHref) {
+            correctionHtml = `<a href="${item.correctionHref}" target="_blank">${item.correction}</a>`;
+        }
+        
+        // 备注列：保留原始HTML（可能包含链接）
+        const noteHtml = item.note || '';
+
+        return `<tr><td>${volumeStr}</td><td>${pageStr}</td><td>${section}</td><td>${locationHtml}</td><td>${correctionHtml}</td><td>${noteHtml}</td></tr>`;
+    });
+
+    tbody.innerHTML = htmlRows.join('\n');
+    console.log(`✅ 增补表生成完成，共 ${items.length} 条记录`);
+}
+
+// ============================================================
+// 执行
+// ============================================================
+generateTable();
+</script>
+
+</body>
+</html>

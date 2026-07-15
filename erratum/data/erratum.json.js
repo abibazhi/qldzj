@@ -181,7 +181,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/023/C2.png",
           correctionHref: "https://qldzj.daxumi.top/idx.html#sutra75",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 24,
@@ -192,7 +192,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/024/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra83.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 25,
@@ -211,7 +211,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/027/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra85.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 28,
@@ -313,7 +313,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/034/C3.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra155.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         }
       ]
     },
@@ -667,7 +667,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/051/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra539.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 52,
@@ -757,7 +757,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/063/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra999.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 63,
@@ -768,7 +768,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/063/C4.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1012.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 63,
@@ -818,7 +818,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/064/C3.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1022.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 64,
@@ -829,7 +829,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/064/C4.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1024.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 64,
@@ -866,7 +866,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/069/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1111.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 70,
@@ -991,7 +991,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/086/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1188.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 87,
@@ -1002,7 +1002,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/087/C3.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1203.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 87,
@@ -1013,7 +1013,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/087/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1191.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 87,
@@ -1024,7 +1024,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/087/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1192.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 88,
@@ -1077,7 +1077,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/091/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1256.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 91,
@@ -1114,7 +1114,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/101/C2.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1272.idx",
-          verifyNote: "未修改。（一至十二）指千字文编号共12卷，冗余信息。"
+          verifyNote: "未处理。（一至十二）指千字文编号共12卷，冗余信息。"
         },
         {
           volume: 101,
@@ -1142,7 +1142,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/102/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1272.idx",
-          verifyNote: "未修改。（一三至一八）指千字文编号共6卷，冗余信息。"
+          verifyNote: "未处理。（一三至一八）指千字文编号共6卷，冗余信息。"
         },
         {
           volume: 102,
@@ -1511,7 +1511,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/136/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1557.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 136,
@@ -1685,7 +1685,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/147/C2.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1609.idx",
-          verifyNote: "未修改。（一至二十）包括科文和序，经文19卷。冗余信息。"
+          verifyNote: "未处理。（一至二十）包括科文和序，经文19卷。冗余信息。"
         },
         {
           volume: 147,
@@ -1774,7 +1774,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/150/C1.png",
           correctionHref: "https://qldzj.daxumi.top/idx.html#sutra1615",
-          verifyNote: "已修改。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 150,
@@ -1785,7 +1785,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/150/C1.png",
           correctionHref: "https://qldzj.daxumi.top/idx.html#sutra1616",
-          verifyNote: "未修改。本来就是对的。"
+          verifyNote: "未处理。本来就是对的。"
         },
         {
           volume: 151,
@@ -2002,7 +2002,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/160/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1646.idx",
-          verifyNote: "未修改。冗余信息。"
+          verifyNote: "未处理。冗余信息。"
         },
         {
           volume: 160,

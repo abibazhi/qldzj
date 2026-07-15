@@ -206,7 +206,15 @@ function generateContent() {
 function generateRows(items) {
     return items.map(item => {
         const volumeStr = item.volume !== null ? volumeToChinese(item.volume) : '';
-        const pageStr = item.page === '目錄' ? '目錄' : (item.page !== null ? toChineseNumber(item.page) : '');
+        
+        // 特殊处理：V=36, P=13 显示为"十三"，非"一三"
+        let pageStr;
+        if (item.volume === 36 && String(item.page) === "13") {
+            pageStr = "十三";
+        } else {
+            pageStr = item.page === '目錄' ? '目錄' : (item.page !== null ? toChineseNumber(item.page) : '');
+        }
+        
         const section = item.section || '';
         const location = item.location || '';
         const correction = item.correction || '';

@@ -920,9 +920,9 @@ export const erratumAddData = {
       volume: 82,
       page: "目录",
       section: "",
-      location: "\"无性菩薩造 唐三藏法師 玄奘奉詔译\"放在经题后",
+      location: "'无性菩薩造 唐三藏法師 玄奘奉詔译'放在经题后",
       locationHref: "",
-      correction: "放到\"卷一（連一）\"后面",
+      correction: "放到'卷一（連一）'后面",
       correctionHref: "https://qldzj.daxumi.top/public/sutra1165.idx",
       note: "按照第11部经的图片索引，一经多译时译者放正文第一卷后。"
     },
@@ -930,9 +930,9 @@ export const erratumAddData = {
       volume: 82,
       page: "目录",
       section: "",
-      location: "\"唐三藏实叉难陁奉制译\"在经题后",
+      location: "'唐三藏实叉难陁奉制译'在经题后",
       locationHref: "",
-      correction: "放到\"卷上（情八）\"后面",
+      correction: "放到'卷上（情八）'后面",
       correctionHref: "https://qldzj.daxumi.top/public/sutra1243.idx",
       note: "按照第11部经的图片索引，一经多译时译者放正文第一卷后。"
     },

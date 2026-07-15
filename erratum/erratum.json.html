@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="erratum.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.css">
-  <title>乾隆大藏经 · 勘误表（图文对照 · 动态版）</title>
+  <title>乾隆大藏经 · 勘误表（原版）</title>
   <style>
     .container {
       zoom: 0.8;
@@ -44,11 +44,9 @@
 <div class="container">
   <div id="section-pic" class="section-block">
     <div class="global-header">
-      <h1>📜 勘误表 · 图文对照</h1>
+      <h1>📜 勘误表 · 原版</h1>
       <div class="badge-group">
-        <span>🖌 完全按图片翻录</span>
-        <span id="totalCount">📌 共 ?? 条</span>
-        <a href="erratum.verify.html" class="page-switch-btn" title="切换到核对版本">📋 核对版本</a>
+        <a href="erratum.verify.html" class="page-switch-btn" title="切换到核对版">核对版</a>
       </div>
     </div>
 
@@ -193,8 +191,7 @@ function generateContent() {
 
     container.innerHTML = html;
     
-    // 更新总数
-    document.getElementById('totalCount').textContent = `📌 共 ${totalItems} 条`;
+    // 更新组数
     document.getElementById('groupBadge').textContent = `13 组 · ${totalItems} 条`;
     
     console.log(`✅ 勘误表生成完成，共 ${totalItems} 条记录`);

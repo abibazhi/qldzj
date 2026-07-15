@@ -72,9 +72,7 @@
     <div class="global-header">
       <h1>📜 勘误表 · 核对版</h1>
       <div class="badge-group">
-        <span>🖌 带链接核对版本</span>
-        <span id="totalCount">📌 共 ?? 条</span>
-        <a href="erratum.json.html" class="page-switch-btn" title="切换到图文对照">🖼 图文对照</a>
+        <a href="erratum.json.html" class="page-switch-btn" title="切换到原版">原版</a>
       </div>
     </div>
 
@@ -219,8 +217,7 @@ function generateContent() {
 
     container.innerHTML = html;
     
-    // 更新总数
-    document.getElementById('totalCount').textContent = `📌 共 ${totalItems} 条`;
+    // 更新组数
     document.getElementById('groupBadge').textContent = `13 组 · ${totalItems} 条`;
     
     console.log(`✅ 勘误表生成完成，共 ${totalItems} 条记录`);

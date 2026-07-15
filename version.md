@@ -198,6 +198,9 @@
 0. 168册每册的页数，也变成了json。
 0. 以后应该都慢慢变成json文件。html从json生成
 
+## release1.4.5（2026.7.15）勘误表数据保存为json
+0. 把erratum勘误表数据提取为json，再用html展示。
+0. 把erratum.html文件一分为三：原版；核对版；增补
 
 
 ---

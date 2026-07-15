@@ -446,7 +446,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/040/C4.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=040779&end=040784&idx=040780&sutra=329",
-          verifyNote: "不处理。“能九”在四〇册有6页，在四一册有14页。把“能九”都放到四一册更好。不处理更好，因为不影响索引，“能九”也能起到核对作用。"
+          verifyNote: "不处理。“能九”在四〇册有6页，在四一册有14页。把“能九”都放到四一册更好。不处理更好，因为不影响索引。单个千字文编号不应跨册。"
         },
         {
           volume: 40,

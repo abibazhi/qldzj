@@ -62,7 +62,7 @@ export const erratumPicData = {
       originalPage: 363,
       items: [
         { volume: 34, page: 28, section: "", location: "第一至十五行內文多出應刪除", correction: "二九頁以後往前移一欄", note: "見三七七" },
-        { volume: 36, page: 13, section: "上", location: "缺第十一至十五行", correction: "見三七八上", note: "見三七八上" },
+        { volume: 36, page: "十三", section: "上", location: "缺第十一至十五行", correction: "見三七八上", note: "見三七八上" },
         { volume: 36, page: 311, section: "下", location: "第十一行", correction: "變五應轉者者相見轉變六者物轉變七者", note: "" },
         { volume: 37, page: "目錄", section: "", location: "標題六·一八七「隨」", correction: "隋", note: "", locationHref: "https://img.daxumi.top/037/C2.png", correctionHref: "https://qldzj.daxumi.top/idx.html#sutra187", verifyNote: "不用改。都是“隋”。封面是“高齐”。" },
         { volume: 37, page: 396, section: "下", location: "三九六下及三九七上順序錯誤", correction: "三九六下與三九七上應調換", note: "見三七八下<br>見三七九上" },

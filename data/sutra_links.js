@@ -13379,7 +13379,7 @@ const sutraLinks = [
     1
   ],
   [
-    null,
+    "",
     "erratum-1",
     "erratum-62",
     "勘误表",

@@ -53,13 +53,7 @@
                 </svg>
             </a>
             <span class="footer-divider">|</span>
-            <a href="public/sutra.html?start=erratum1&end=erratum62&sutra=" class="footer-icon-simple" title="勘误表">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
-                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                </svg>
-            </a>
-            <span class="footer-divider">|</span>
-            <a href="erratum/erratum.html" class="footer-icon-simple" title="勘误表核对">
+            <a href="erratum/erratum.json.html" class="footer-icon-simple" title="勘误表">
                 <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
                     <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
                 </svg>
@@ -93,6 +87,11 @@
         let href;
         if (multiVolume === 1) {
             href = 'public/sutra' + sutra + '.idx.html';
+        } else if (start.includes('erratum')) {
+            // 勘误表特殊处理：直接去掉连字符
+            const startStr = start.replace('-', '');
+            const endStr = end.replace('-', '');
+            href = 'public/sutra.html?start=' + startStr + '&end=' + endStr + '&sutra=' + sutra;
         } else {
             const startPadded = padStartEnd(start);
             const endPadded = padStartEnd(end);

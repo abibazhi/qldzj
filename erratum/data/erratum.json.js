@@ -90,7 +90,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/016/C2.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=016445&end=016486&idx=016445&sutra=10",
-          verifyNote: "已修改。请看浏览器地址栏，start=016445。"
+          verifyNote: "已修改。见浏览器地址栏start=016445。"
         },
         {
           volume: 17,
@@ -1046,7 +1046,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/088/C1.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=088001&end=088004&sutra=1225",
-          verifyNote: "已修改。请看浏览器地址栏，start=088001。"
+          verifyNote: "已修改。见浏览器地址栏start=088001。"
         },
         {
           volume: 90,

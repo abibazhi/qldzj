@@ -272,7 +272,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/033/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra134.idx",
-          verifyNote: "已修改。应该是“（六至一〇）”"
+          verifyNote: "未处理。应该是“（六至一〇）”。冗余信息。"
         },
         {
           volume: null,

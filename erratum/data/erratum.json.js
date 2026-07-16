@@ -280,7 +280,10 @@ export const erratumPicData = {
           section: "",
           location: "卷六（木六）（木六—木十）",
           correction: "（木七—木十）",
-          note: ""
+          note: "",
+          locationHref: "https://img.daxumi.top/033/C1.png",
+          correctionHref: "https://qldzj.daxumi.top/idx.html#sutra135",
+          verifyNote: "未修改。冗余信息。"
         },
         {
           volume: 33,
@@ -291,7 +294,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/033/C1.png",
           correctionHref: "https://qldzj.daxumi.top/idx.html#sutra135",
-          verifyNote: "已修改。"
+          verifyNote: "未修改。冗余信息。"
         },
         {
           volume: 33,
@@ -339,7 +342,7 @@ export const erratumPicData = {
           location: "缺第十一至十五行",
           correction: "見三七八上",
           note: "見三七八上",
-          verifyNote: "页码原稿为十三，非一三。"
+          verifyNote: "（页码原稿为十三，非一三。）"
         },
         {
           volume: 36,
@@ -358,7 +361,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/037/C2.png",
           correctionHref: "https://qldzj.daxumi.top/idx.html#sutra187",
-          verifyNote: "不用改。都是“隋”。封面是“高齐”。"
+          verifyNote: "未修改。都是“隋”。封面是“高齐”。"
         },
         {
           volume: 37,
@@ -446,7 +449,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/040/C4.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=040779&end=040784&idx=040780&sutra=329",
-          verifyNote: "不处理。“能九”在四〇册有6页，在四一册有14页。把“能九”都放到四一册更好。不处理更好，因为不影响索引。单个千字文编号不应跨册。"
+          verifyNote: "未修改。“能九”在四〇册有6页，在四一册有14页。把“能九”都放到四一册更好。不处理更好，因为不影响索引。单个千字文编号不应跨册。"
         },
         {
           volume: 40,
@@ -501,7 +504,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/043/C3.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=043661&end=043668&sutra=410",
-          verifyNote: "已修改。实际是661页。653是共享封面。"
+          verifyNote: "已修改。实际661。"
         },
         {
           volume: 43,
@@ -512,7 +515,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/043/C3.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=043686&end=043688&sutra=413",
-          verifyNote: "已修改。实际是686页。681是共享封面。"
+          verifyNote: "已修改。实际686。"
         },
         {
           volume: 43,
@@ -523,7 +526,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/043/C3.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=043689&end=043690&sutra=414",
-          verifyNote: "已修改。实际是689页。681是共享封面。"
+          verifyNote: "已修改。实际689。"
         },
         {
           volume: 43,
@@ -534,7 +537,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/043/C3.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=043691&end=043696&sutra=415",
-          verifyNote: "已修改。实际是691页。681是共享封面。"
+          verifyNote: "已修改。实际691。"
         },
         {
           volume: 43,
@@ -545,7 +548,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/043/C4.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=043697&end=043700&sutra=416",
-          verifyNote: "已修改。实际是697页。681是共享封面。"
+          verifyNote: "已修改。实际697。"
         },
         {
           volume: 43,
@@ -628,7 +631,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/047/C2.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=047299&end=047302&sutra=447",
-          verifyNote: "已修改。实际是299页。285是共享封面。"
+          verifyNote: "已修改。实际299。"
         }
       ]
     },
@@ -648,7 +651,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/047/C7.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=047649&end=047650&sutra=495",
-          verifyNote: "已修改。实际是649页。635是共享封面。"
+          verifyNote: "已修改。实际649。"
         },
         {
           volume: 48,
@@ -970,7 +973,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/082/C2.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1165.idx",
-          verifyNote: "不修改。因为正文和索引都这样。"
+          verifyNote: "未修改。因为正文和索引都这样。"
         },
         {
           volume: 84,
@@ -1077,7 +1080,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/091/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1256.idx",
-          verifyNote: "未处理。冗余信息。"
+          verifyNote: "未修改。冗余信息。"
         },
         {
           volume: 91,
@@ -1114,7 +1117,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/101/C2.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1272.idx",
-          verifyNote: "未处理。（一至十二）指千字文编号共12卷，冗余信息。"
+          verifyNote: "未修改。（一至十二）指千字文编号共12卷，冗余信息。"
         },
         {
           volume: 101,
@@ -1142,7 +1145,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/102/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1272.idx",
-          verifyNote: "未处理。（一三至一八）指千字文编号共6卷，冗余信息。"
+          verifyNote: "未修改。（一三至一八）指千字文编号共6卷，冗余信息。"
         },
         {
           volume: 102,
@@ -1511,7 +1514,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/136/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1557.idx",
-          verifyNote: "未处理。冗余信息。"
+          verifyNote: "未修改。冗余信息。"
         },
         {
           volume: 136,
@@ -1685,7 +1688,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/147/C2.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1609.idx",
-          verifyNote: "未处理。（一至二十）包括科文和序，经文19卷。冗余信息。"
+          verifyNote: "未修改。（一至二十）包括科文和序，经文19卷。冗余信息。"
         },
         {
           volume: 147,
@@ -1774,7 +1777,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/150/C1.png",
           correctionHref: "https://qldzj.daxumi.top/idx.html#sutra1615",
-          verifyNote: "未处理。冗余信息。"
+          verifyNote: "未修改。冗余信息。"
         },
         {
           volume: 150,
@@ -1785,7 +1788,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/150/C1.png",
           correctionHref: "https://qldzj.daxumi.top/idx.html#sutra1616",
-          verifyNote: "未处理。本来就是对的。"
+          verifyNote: "未修改。本来就是对的。"
         },
         {
           volume: 151,
@@ -2002,7 +2005,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/160/C1.png",
           correctionHref: "https://qldzj.daxumi.top/public/sutra1646.idx",
-          verifyNote: "未处理。冗余信息。"
+          verifyNote: "未修改。冗余信息。"
         },
         {
           volume: 160,

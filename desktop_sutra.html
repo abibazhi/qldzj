@@ -51,6 +51,12 @@
       border-radius: 4px;
       font-size: 12px;
       z-index: 100;
+      transition: background 0.2s;
+    }
+    .source-badge.erratum-warn {
+      background: rgba(192, 57, 43, 0.85);
+      color: #fff;
+      cursor: help;
     }
 
     .controls {
@@ -118,6 +124,25 @@
 <script type="module">
 import { getBestImageUrl } from './js/imageLoader.js';
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
+import { erratumPicData } from './erratum/data/erratum.json.js';
+
+const oneCharErrataMap = new Map();
+erratumPicData.groups.forEach(group => {
+  group.items.forEach(item => {
+    if (item.page !== "目錄" && item.page !== "" &&
+        item.correction && item.correction.length === 1) {
+      const key = `${item.volume}_${item.page}`;
+      oneCharErrataMap.set(key, item);
+    }
+  });
+});
+
+function checkErratum(vol, page) {
+  const volNum = parseInt(vol, 10);
+  const pageNum = parseInt(page, 10);
+  if (isNaN(volNum) || isNaN(pageNum)) return null;
+  return oneCharErrataMap.get(`${volNum}_${pageNum}`);
+}
 
 let isLoading = false;
 let panzoom = null;
@@ -183,6 +208,14 @@ async function loadImage(vol, page) {
       img.src = '';
       sourceBadge.textContent = '失败';
     }
+    const erratum = checkErratum(vol, page);
+    if (erratum) {
+      sourceBadge.classList.add('erratum-warn');
+      sourceBadge.dataset.erratumText = `勘误：「${erratum.location}」→「${erratum.correction}」`;
+    } else {
+      sourceBadge.classList.remove('erratum-warn');
+      sourceBadge.dataset.erratumText = '';
+    }
   } catch (e) { console.error(e); }
   hideLoading();
   panzoom.reset();
@@ -200,6 +233,8 @@ async function changeImage(direction) {
 container.addEventListener('mousemove', e => {
   const scale = panzoom.getScale();
   if (scale > 1) return hideTip();
+
+  if (e.target === sourceBadge || sourceBadge.contains(e.target)) return;
 
   const r = container.getBoundingClientRect();
   const x = e.clientX - r.left;
@@ -233,6 +268,20 @@ zoomInBtn.onmouseenter = () => showTip(zoomInBtn.getBoundingClientRect().x, zoom
 zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zoomOutBtn.getBoundingClientRect().y-40, "缩小");
 resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
 zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
+
+sourceBadge.addEventListener('mouseenter', e => {
+  if (sourceBadge.dataset.erratumText) {
+    const r = sourceBadge.getBoundingClientRect();
+    showTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
+  }
+});
+sourceBadge.addEventListener('mousemove', e => {
+  if (sourceBadge.dataset.erratumText) {
+    hoverTip.style.left = e.clientX + 'px';
+    hoverTip.style.top = (e.clientY - 36) + 'px';
+  }
+});
+sourceBadge.addEventListener('mouseleave', hideTip);
 
 window.onload = () => {
   initPanzoom();

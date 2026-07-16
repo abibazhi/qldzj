@@ -44,7 +44,7 @@
 
     .source-badge {
       position: absolute;
-      bottom: 20px; left: 20px;
+      bottom: 20px; right: 20px;
       background: rgba(0,0,0,0.6);
       color: #0f0;
       padding: 6px 12px;
@@ -85,9 +85,22 @@
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.2s;
-      min-width: 16em;
+    }
+    .hover-tooltip.thanks-mode {
+      padding: 0;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      min-width: 12em;
+    }
+    .thanks-row {
+      line-height: 1.8;
+    }
+    .thanks-row.full {
+      grid-column: 1 / -1;
       text-align: center;
-      white-space: pre-line;
+    }
+    .thanks-row.middle .thanks-text {
+      text-align: center;
     }
 
     #floatTip {
@@ -167,9 +180,28 @@ function showTempTip(msg, duration = 2000) {
   setTimeout(() => floatTip.style.display = 'none', duration);
 }
 function showTip(x, y, text) {
+  hoverTip.classList.remove('thanks-mode');
   hoverTip.style.left = x + 'px';
   hoverTip.style.top = y + 'px';
   hoverTip.textContent = text;
+  hoverTip.style.opacity = 1;
+}
+function showThanksTip(x, y, provider) {
+  hoverTip.classList.add('thanks-mode');
+  hoverTip.style.left = x + 'px';
+  hoverTip.style.top = y + 'px';
+  hoverTip.innerHTML =
+    '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸</div>' +
+    '<div class="thanks-row middle">🌸</div>' +
+    '<div class="thanks-row middle thanks-text">感谢</div>' +
+    '<div class="thanks-row middle">🌸</div>' +
+    '<div class="thanks-row middle">🌸</div>' +
+    '<div class="thanks-row middle thanks-text">' + provider + '</div>' +
+    '<div class="thanks-row middle">🌸</div>' +
+    '<div class="thanks-row middle">🌸</div>' +
+    '<div class="thanks-row middle thanks-text">提供免费存储</div>' +
+    '<div class="thanks-row middle">🌸</div>' +
+    '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸</div>';
   hoverTip.style.opacity = 1;
 }
 function hideTip() { hoverTip.style.opacity = 0; }
@@ -201,9 +233,9 @@ function showLoading() { isLoading = true; loadingIndicator.style.display = 'blo
 function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
 
 const thanksMap = {
-  'R2': '🌸🌸🌸 感谢 🌸🌸🌸\n🌸🌸🌸 Cloudflare 🌸🌸🌸\n🌸🌸🌸 提供免费存储 🌸🌸🌸',
-  'ImgBB': '🌸🌸🌸 感谢 🌸🌸🌸\n🌸🌸🌸 ImgBB 🌸🌸🌸\n🌸🌸🌸 提供免费存储 🌸🌸🌸',
-  'GitHub': '🌸🌸🌸 感谢 🌸🌸🌸\n🌸🌸🌸 GitHub 🌸🌸🌸\n🌸🌸🌸 提供免费存储 🌸🌸🌸'
+  'R2': 'Cloudflare',
+  'ImgBB': 'ImgBB',
+  'GitHub': 'GitHub'
 };
 
 async function loadImage(vol, page) {
@@ -285,7 +317,7 @@ zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideT
 sourceBadge.addEventListener('mouseenter', e => {
   if (sourceBadge.dataset.hoverText) {
     const r = sourceBadge.getBoundingClientRect();
-    showTip(r.left, r.top - 36, sourceBadge.dataset.hoverText);
+    showThanksTip(r.left, r.top - 140, sourceBadge.dataset.hoverText);
   }
 });
 sourceBadge.addEventListener('mouseleave', hideTip);

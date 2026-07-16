@@ -44,7 +44,7 @@
 
     .source-badge {
       position: absolute;
-      bottom: 20px; right: 20px;
+      bottom: 30px; right: 80px;
       background: rgba(0,0,0,0.6);
       color: #0f0;
       padding: 6px 12px;
@@ -197,6 +197,12 @@ function initPanzoom() {
 function showLoading() { isLoading = true; loadingIndicator.style.display = 'block'; }
 function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
 
+const thanksMap = {
+  'R2': '🌸 感谢 Cloudflare 提供免费存储！',
+  'ImgBB': '🌸 感谢 ImgBB 提供免费存储！',
+  'GitHub': '🌸 感谢 GitHub 提供免费存储！'
+};
+
 async function loadImage(vol, page) {
   showLoading();
   try {
@@ -210,11 +216,14 @@ async function loadImage(vol, page) {
     }
     const erratum = checkErratum(vol, page);
     if (erratum) {
+      sourceBadge.textContent = '勘误';
       sourceBadge.classList.add('erratum-warn');
+      sourceBadge.dataset.hoverText = '点击查看';
       sourceBadge.dataset.erratumText = `勘误：「${erratum.location}」→「${erratum.correction}」`;
       showTempTip(sourceBadge.dataset.erratumText, 4000);
     } else {
       sourceBadge.classList.remove('erratum-warn');
+      sourceBadge.dataset.hoverText = thanksMap[best?.key] || '';
       sourceBadge.dataset.erratumText = '';
     }
   } catch (e) { console.error(e); }
@@ -269,6 +278,14 @@ zoomInBtn.onmouseenter = () => showTip(zoomInBtn.getBoundingClientRect().x, zoom
 zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zoomOutBtn.getBoundingClientRect().y-40, "缩小");
 resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
 zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
+
+sourceBadge.addEventListener('mouseenter', e => {
+  if (sourceBadge.dataset.hoverText) {
+    const r = sourceBadge.getBoundingClientRect();
+    showTip(r.left, r.top - 36, sourceBadge.dataset.hoverText);
+  }
+});
+sourceBadge.addEventListener('mouseleave', hideTip);
 
 sourceBadge.addEventListener('click', e => {
   if (sourceBadge.dataset.erratumText) {

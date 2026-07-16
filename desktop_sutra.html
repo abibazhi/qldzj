@@ -44,7 +44,7 @@
 
     .source-badge {
       position: absolute;
-      bottom: 30px; right: 80px;
+      bottom: 20px; left: 20px;
       background: rgba(0,0,0,0.6);
       color: #0f0;
       padding: 6px 12px;
@@ -85,6 +85,9 @@
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.2s;
+      min-width: 16em;
+      text-align: center;
+      white-space: pre-line;
     }
 
     #floatTip {
@@ -198,9 +201,9 @@ function showLoading() { isLoading = true; loadingIndicator.style.display = 'blo
 function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
 
 const thanksMap = {
-  'R2': '🌸 感谢 Cloudflare 提供免费存储！',
-  'ImgBB': '🌸 感谢 ImgBB 提供免费存储！',
-  'GitHub': '🌸 感谢 GitHub 提供免费存储！'
+  'R2': '🌸🌸🌸 感谢 🌸🌸🌸\n🌸🌸🌸 Cloudflare 🌸🌸🌸\n🌸🌸🌸 提供免费存储 🌸🌸🌸',
+  'ImgBB': '🌸🌸🌸 感谢 🌸🌸🌸\n🌸🌸🌸 ImgBB 🌸🌸🌸\n🌸🌸🌸 提供免费存储 🌸🌸🌸',
+  'GitHub': '🌸🌸🌸 感谢 🌸🌸🌸\n🌸🌸🌸 GitHub 🌸🌸🌸\n🌸🌸🌸 提供免费存储 🌸🌸🌸'
 };
 
 async function loadImage(vol, page) {

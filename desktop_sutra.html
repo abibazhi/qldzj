@@ -56,7 +56,7 @@
     .source-badge.erratum-warn {
       background: rgba(192, 57, 43, 0.85);
       color: #fff;
-      cursor: help;
+      cursor: pointer;
     }
 
     .controls {
@@ -158,10 +158,10 @@ const resetBtn = document.getElementById('resetBtn');
 const hoverTip = document.getElementById('hoverTip');
 const floatTip = document.getElementById('floatTip');
 
-function showTempTip(msg) {
+function showTempTip(msg, duration = 2000) {
   floatTip.textContent = msg;
   floatTip.style.display = 'block';
-  setTimeout(() => floatTip.style.display = 'none', 2000);
+  setTimeout(() => floatTip.style.display = 'none', duration);
 }
 function showTip(x, y, text) {
   hoverTip.style.left = x + 'px';
@@ -212,6 +212,7 @@ async function loadImage(vol, page) {
     if (erratum) {
       sourceBadge.classList.add('erratum-warn');
       sourceBadge.dataset.erratumText = `勘误：「${erratum.location}」→「${erratum.correction}」`;
+      showTempTip(sourceBadge.dataset.erratumText, 4000);
     } else {
       sourceBadge.classList.remove('erratum-warn');
       sourceBadge.dataset.erratumText = '';
@@ -269,19 +270,12 @@ zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zo
 resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
 zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
 
-sourceBadge.addEventListener('mouseenter', e => {
+sourceBadge.addEventListener('click', e => {
   if (sourceBadge.dataset.erratumText) {
-    const r = sourceBadge.getBoundingClientRect();
-    showTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
+    e.stopPropagation();
+    showTempTip(sourceBadge.dataset.erratumText, 4000);
   }
 });
-sourceBadge.addEventListener('mousemove', e => {
-  if (sourceBadge.dataset.erratumText) {
-    hoverTip.style.left = e.clientX + 'px';
-    hoverTip.style.top = (e.clientY - 36) + 'px';
-  }
-});
-sourceBadge.addEventListener('mouseleave', hideTip);
 
 window.onload = () => {
   initPanzoom();

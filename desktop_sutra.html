@@ -317,7 +317,7 @@ zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideT
 sourceBadge.addEventListener('mouseenter', e => {
   if (sourceBadge.dataset.hoverText) {
     const r = sourceBadge.getBoundingClientRect();
-    showThanksTip(r.left, r.top - 140, sourceBadge.dataset.hoverText);
+    showThanksTip(r.left - 200 , r.top - 140, sourceBadge.dataset.hoverText);
   }
 });
 sourceBadge.addEventListener('mouseleave', hideTip);

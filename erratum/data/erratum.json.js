@@ -826,7 +826,8 @@ export const erratumPicData = {
           correction: "曳引",
           note: "",
           locationHref: "http://img.daxumi.top/063/727.png",
-          correctionHref: "../public/sutra.html?start=063591&end=064118&idx=063727&sutra=1012"
+          correctionHref: "../public/sutra.html?start=063591&end=064118&idx=063727&sutra=1012",
+          verifyNote: "加提醒。"
         },
         {
           volume: 64,
@@ -874,7 +875,8 @@ export const erratumPicData = {
           correction: "比法",
           note: "",
           locationHref: "http://img.daxumi.top/068/77.png",
-          correctionHref: "../public/sutra.html?start=068001&end=069410&idx=068077&sutra=1110"
+          correctionHref: "../public/sutra.html?start=068001&end=069410&idx=068077&sutra=1110",
+          verifyNote: "加提醒。"
         },
         {
           volume: 69,
@@ -1003,7 +1005,8 @@ export const erratumPicData = {
           correction: "得治",
           note: "",
           locationHref: "http://img.daxumi.top/084/109.png",
-          correctionHref: "../public/sutra.html?start=084065&end=084298&idx=084109&sutra=1172"
+          correctionHref: "../public/sutra.html?start=084065&end=084298&idx=084109&sutra=1172",
+          verifyNote: "加提醒。"
         },
         {
           volume: 86,
@@ -1128,7 +1131,8 @@ export const erratumPicData = {
           correction: "兩耳",
           note: "",
           locationHref: "http://img.daxumi.top/092/284.png",
-          correctionHref: "../public/sutra.html?start=089097&end=092538&idx=092284&sutra=1256"
+          correctionHref: "../public/sutra.html?start=089097&end=092538&idx=092284&sutra=1256",
+          verifyNote: "加提醒。"
         },
         {
           volume: 101,
@@ -1269,7 +1273,8 @@ export const erratumPicData = {
           correction: "平行",
           note: "",
           locationHref: "http://img.daxumi.top/113/667.png",
-          correctionHref: "../public/sutra.html?start=113165&end=114144&idx=113667&sutra=1469"
+          correctionHref: "../public/sutra.html?start=113165&end=114144&idx=113667&sutra=1469",
+          verifyNote: "加提醒。"
         },
         {
           volume: 119,

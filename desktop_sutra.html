@@ -146,9 +146,12 @@ const oneCharErrataMap = new Map();
 erratumPicData.groups.forEach(group => {
   group.items.forEach(item => {
     if (item.page !== "目錄" && item.page !== "" &&
-        item.correction && item.correction.length === 1) {
+        item.correction && item.correction.length <= 2) {
       const key = `${item.volume}_${item.page}`;
-      oneCharErrataMap.set(key, item);
+      if (!oneCharErrataMap.has(key)) {
+        oneCharErrataMap.set(key, []);
+      }
+      oneCharErrataMap.get(key).push(item);
     }
   });
 });
@@ -158,6 +161,30 @@ function checkErratum(vol, page) {
   const pageNum = parseInt(page, 10);
   if (isNaN(volNum) || isNaN(pageNum)) return null;
   return oneCharErrataMap.get(`${volNum}_${pageNum}`);
+}
+
+function formatErratumText(items) {
+  if (!items || items.length === 0) return '';
+  
+  const allSameSection = items.every(item => item.section === items[0].section);
+  
+  if (items.length === 1) {
+    const item = items[0];
+    const sectionText = item.section ? `（${item.section}栏）` : '';
+    return `勘误${sectionText}：「${item.location}」→「${item.correction}」`;
+  }
+  
+  if (allSameSection) {
+    const sectionText = items[0].section ? `（${items[0].section}栏）` : '';
+    const parts = items.map((item, i) => `${i + 1}. 「${item.location}」→「${item.correction}」`);
+    return `勘误${sectionText}：${parts.join(' ')}`;
+  }
+  
+  const parts = items.map((item, i) => {
+    const sectionText = item.section ? `（${item.section}栏）` : '';
+    return `${i + 1}. ${sectionText}「${item.location}」→「${item.correction}」`;
+  });
+  return `勘误：${parts.join(' ')}`;
 }
 
 let isLoading = false;
@@ -254,8 +281,7 @@ async function loadImage(vol, page) {
       sourceBadge.textContent = '勘误';
       sourceBadge.classList.add('erratum-warn');
       sourceBadge.dataset.hoverText = '点击显示';
-      const sectionText = erratum.section ? `（${erratum.section}栏）` : '';
-      sourceBadge.dataset.erratumText = `勘误${sectionText}：「${erratum.location}」→「${erratum.correction}」`;
+      sourceBadge.dataset.erratumText = formatErratumText(erratum);
       showTempTip(sourceBadge.dataset.erratumText, 4000);
     } else {
       sourceBadge.classList.remove('erratum-warn');

@@ -1079,7 +1079,7 @@ export const erratumPicData = {
           page: 19,
           section: "上",
           location: "第八行第一字",
-          correction: "曠",
+          correction: "嗔",
           note: "",
           locationHref: "http://img.daxumi.top/090/19.png",
           correctionHref: "../public/sutra.html?start=089097&end=092538&idx=090019&sutra=1256",

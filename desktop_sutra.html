@@ -99,14 +99,13 @@
       grid-column: 1 / -1;
       text-align: center;
     }
-    .thanks-row.middle .thanks-text {
+    .thanks-row.middle.thanks-text {
       text-align: center;
     }
 
     #floatTip {
       position: fixed;
-      top: 30px; left: 50%;
-      transform: translateX(-50%);
+      right: 100px; bottom: 100px;
       background: #c0392b;
       color: #fff;
       padding: 8px 20px;
@@ -191,7 +190,9 @@ function showThanksTip(x, y, provider) {
   hoverTip.style.left = x + 'px';
   hoverTip.style.top = y + 'px';
   hoverTip.innerHTML =
-    '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸</div>' +
+    '<div class="thanks-row middle">🌸</div>' +
+    '<div class="thanks-row middle thanks-text">🌸🌸🌸🌸🌸</div>' +
+    '<div class="thanks-row middle">🌸</div>' +
     '<div class="thanks-row middle">🌸</div>' +
     '<div class="thanks-row middle thanks-text">感谢</div>' +
     '<div class="thanks-row middle">🌸</div>' +
@@ -201,7 +202,9 @@ function showThanksTip(x, y, provider) {
     '<div class="thanks-row middle">🌸</div>' +
     '<div class="thanks-row middle thanks-text">提供免费存储</div>' +
     '<div class="thanks-row middle">🌸</div>' +
-    '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸</div>';
+    '<div class="thanks-row middle">🌸</div>' +
+    '<div class="thanks-row middle thanks-text">🌸🌸🌸🌸🌸</div>' +
+    '<div class="thanks-row middle">🌸</div>';
   hoverTip.style.opacity = 1;
 }
 function hideTip() { hoverTip.style.opacity = 0; }
@@ -253,7 +256,7 @@ async function loadImage(vol, page) {
     if (erratum) {
       sourceBadge.textContent = '勘误';
       sourceBadge.classList.add('erratum-warn');
-      sourceBadge.dataset.hoverText = '点击查看';
+      sourceBadge.dataset.hoverText = '点击显示';
       sourceBadge.dataset.erratumText = `勘误：「${erratum.location}」→「${erratum.correction}」`;
       showTempTip(sourceBadge.dataset.erratumText, 4000);
     } else {
@@ -317,7 +320,11 @@ zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideT
 sourceBadge.addEventListener('mouseenter', e => {
   if (sourceBadge.dataset.hoverText) {
     const r = sourceBadge.getBoundingClientRect();
-    showThanksTip(r.left - 200 , r.top - 140, sourceBadge.dataset.hoverText);
+    if (sourceBadge.dataset.erratumText) {
+      showTip(r.left, r.top - 36, sourceBadge.dataset.hoverText);
+    } else {
+      showThanksTip(r.left, r.top - 140, sourceBadge.dataset.hoverText);
+    }
   }
 });
 sourceBadge.addEventListener('mouseleave', hideTip);

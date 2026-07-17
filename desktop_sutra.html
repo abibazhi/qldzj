@@ -200,7 +200,7 @@ function formatErratumText(items) {
   // 根据更正内容判断是否为指令性信息
   // 包含"應"字的视为指令（如"應刪除"、"應空白"、"應反字"）
   function formatItem(item) {
-    return `「${item.location}」→${item.correction}`;
+    return `${item.location} → ${item.correction}`;
   }
   
   // 单条勘误

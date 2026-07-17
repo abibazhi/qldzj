@@ -254,7 +254,8 @@ async function loadImage(vol, page) {
       sourceBadge.textContent = '勘误';
       sourceBadge.classList.add('erratum-warn');
       sourceBadge.dataset.hoverText = '点击显示';
-      sourceBadge.dataset.erratumText = `勘误：「${erratum.location}」→「${erratum.correction}」`;
+      const sectionText = erratum.section ? `（${erratum.section}栏）` : '';
+      sourceBadge.dataset.erratumText = `勘误${sectionText}：「${erratum.location}」→「${erratum.correction}」`;
       showTempTip(sourceBadge.dataset.erratumText, 4000);
     } else {
       sourceBadge.classList.remove('erratum-warn');

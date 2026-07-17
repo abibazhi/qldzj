@@ -105,7 +105,8 @@
 
     #floatTip {
       position: fixed;
-      right: 100px; bottom: 100px;
+      top: 30px; left: 50%;
+      transform: translateX(-50%);
       background: #c0392b;
       color: #fff;
       padding: 8px 20px;
@@ -323,7 +324,7 @@ sourceBadge.addEventListener('mouseenter', e => {
     if (sourceBadge.dataset.erratumText) {
       showTip(r.left, r.top - 36, sourceBadge.dataset.hoverText);
     } else {
-      showThanksTip(r.left, r.top - 140, sourceBadge.dataset.hoverText);
+      showThanksTip(r.left - 50, r.top - 140, sourceBadge.dataset.hoverText);
     }
   }
 });

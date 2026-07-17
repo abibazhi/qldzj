@@ -191,9 +191,7 @@ function showThanksTip(x, y, provider) {
   hoverTip.style.left = x + 'px';
   hoverTip.style.top = y + 'px';
   hoverTip.innerHTML =
-    '<div class="thanks-row middle">🌸</div>' +
-    '<div class="thanks-row middle thanks-text">🌸🌸🌸🌸🌸</div>' +
-    '<div class="thanks-row middle">🌸</div>' +
+    '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>' +
     '<div class="thanks-row middle">🌸</div>' +
     '<div class="thanks-row middle thanks-text">感谢</div>' +
     '<div class="thanks-row middle">🌸</div>' +
@@ -203,9 +201,7 @@ function showThanksTip(x, y, provider) {
     '<div class="thanks-row middle">🌸</div>' +
     '<div class="thanks-row middle thanks-text">提供免费存储</div>' +
     '<div class="thanks-row middle">🌸</div>' +
-    '<div class="thanks-row middle">🌸</div>' +
-    '<div class="thanks-row middle thanks-text">🌸🌸🌸🌸🌸</div>' +
-    '<div class="thanks-row middle">🌸</div>';
+    '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>';
   hoverTip.style.opacity = 1;
 }
 function hideTip() { hoverTip.style.opacity = 0; }
@@ -324,7 +320,7 @@ sourceBadge.addEventListener('mouseenter', e => {
     if (sourceBadge.dataset.erratumText) {
       showTip(r.left, r.top - 36, sourceBadge.dataset.hoverText);
     } else {
-      showThanksTip(r.left - 50, r.top - 140, sourceBadge.dataset.hoverText);
+      showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
     }
   }
 });

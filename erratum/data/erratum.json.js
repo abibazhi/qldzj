@@ -473,7 +473,8 @@ export const erratumPicData = {
           section: "下",
           location: "有三段內文",
           correction: "應空白",
-          note: ""
+          note: "",
+          verifyNote: "加提醒。"
         }
       ]
     },
@@ -927,7 +928,8 @@ export const erratumPicData = {
           correction: "培也也",
           note: "",
           locationHref: "http://img.daxumi.top/075/227.png",
-          correctionHref: "../public/sutra.html?start=075171&end=075520&idx=075227&sutra=1120"
+          correctionHref: "../public/sutra.html?start=075171&end=075520&idx=075227&sutra=1120",
+          verifyNote: "加提醒。"
         },
         {
           volume: 75,
@@ -1393,7 +1395,8 @@ export const erratumPicData = {
           correction: "應刪除",
           note: "",
           locationHref: "http://img.daxumi.top/129/379.png",
-          correctionHref: "../public/sutra.html?start=129001&end=129670&idx=129379&sutra=1538"
+          correctionHref: "../public/sutra.html?start=129001&end=129670&idx=129379&sutra=1538",
+          verifyNote: "加提醒。"
         },
         {
           volume: 129,
@@ -1441,7 +1444,8 @@ export const erratumPicData = {
           correction: "應刪除",
           note: "",
           locationHref: "http://img.daxumi.top/130/34.png",
-          correctionHref: "../public/sutra.html?start=130031&end=131102&idx=130034&sutra=1545"
+          correctionHref: "../public/sutra.html?start=130031&end=131102&idx=130034&sutra=1545",
+          verifyNote: "加提醒。"
         },
         {
           volume: 131,
@@ -1457,7 +1461,8 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十行內文多",
           correction: "應刪除",
-          note: ""
+          note: "",
+          verifyNote: "加提醒。"
         },
         {
           volume: 131,
@@ -1522,7 +1527,8 @@ export const erratumPicData = {
           section: "上",
           location: "最後一行多出",
           correction: "應刪除",
-          note: ""
+          note: "",
+          verifyNote: "加提醒。"
         },
         {
           volume: 134,
@@ -1681,7 +1687,8 @@ export const erratumPicData = {
           section: "下",
           location: "缺第十一行",
           correction: "空界月",
-          note: ""
+          note: "",
+          verifyNote: "加提醒。"
         },
         {
           volume: 144,
@@ -1805,7 +1812,7 @@ export const erratumPicData = {
           note: "見四一八上",
           locationHref: "http://img.daxumi.top/149/756.png",
           correctionHref: "../public/sutra.html?start=149721&end=149868&idx=149756&sutra=1614",
-          verifyNote: "<a href='https://img.daxumi.top/erratum/58.png'>見四一八上</a>"
+          verifyNote: "加提醒。<a href='https://img.daxumi.top/erratum/58.png'>見四一八上</a>"
         },
         {
           volume: 150,
@@ -1870,7 +1877,8 @@ export const erratumPicData = {
           correction: "應刪除",
           note: "",
           locationHref: "http://img.daxumi.top/151/667.png",
-          correctionHref: "../public/sutra.html?start=150519&end=151704&idx=151667&sutra=1621"
+          correctionHref: "../public/sutra.html?start=150519&end=151704&idx=151667&sutra=1621",
+          verifyNote: "加提醒。"
         },
         {
           volume: 151,
@@ -1886,7 +1894,7 @@ export const erratumPicData = {
         {
           volume: 151,
           page: 687,
-          section: "下",
+          section: "上",
           location: "第九行第一字「百」",
           correction: "白",
           note: "",
@@ -1902,7 +1910,8 @@ export const erratumPicData = {
           correction: "應刪除",
           note: "",
           locationHref: "http://img.daxumi.top/151/820.png",
-          correctionHref: "../public/sutra.html?start=151705&end=152154&idx=151820&sutra=1622"
+          correctionHref: "../public/sutra.html?start=151705&end=152154&idx=151820&sutra=1622",
+          verifyNote: "加提醒。"
         },
         {
           volume: 153,
@@ -2043,7 +2052,8 @@ export const erratumPicData = {
           section: "上",
           location: "第十一行",
           correction: "應刪除",
-          note: ""
+          note: "",
+          verifyNote: "加提醒。"
         },
         {
           volume: 160,

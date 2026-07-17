@@ -142,11 +142,35 @@ import { getBestImageUrl } from './js/imageLoader.js';
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
 import { erratumPicData } from './erratum/data/erratum.json.js';
 
+// ============================================================
+// 勘误提示功能
+// ============================================================
+// 筛选条件：
+//   - 排除"目錄"页和空页
+//   - 更正内容长度 <= 3 字符（包括单字、双字、三字更正）
+//   - 支持指令性信息（如"應刪除"、"應空白"、"應反字"）
+//
+// 数据结构：
+//   - Map 的 key 为 "volume_page"（如 "63_727"）
+//   - Map 的 value 为数组，支持同一页多条勘误
+//
+// 显示格式：
+//   - 单条同栏：勘误（上栏）：「位置」→「更正」
+//   - 多条同栏：勘误（下栏）：1. 「位置1」→「更正1」 2. 「位置2」→「更正2」
+//   - 多条不同栏：勘误：1. （上栏）「位置1」→「更正1」 2. （下栏）「位置2」→「更正2」
+//
+// 指令性信息处理：
+//   - 包含"應"字的更正（如"應刪除"、"應空白"）用"需要"连接
+//   - 实际更正字用"→"连接
+//   - 示例：「有三段內文」需要「應空白」
+//          「第一行第一字」→「乃」
+// ============================================================
+
 const oneCharErrataMap = new Map();
 erratumPicData.groups.forEach(group => {
   group.items.forEach(item => {
     if (item.page !== "目錄" && item.page !== "" &&
-        item.correction && item.correction.length <= 2) {
+        item.correction && item.correction.length <= 3) {
       const key = `${item.volume}_${item.page}`;
       if (!oneCharErrataMap.has(key)) {
         oneCharErrataMap.set(key, []);
@@ -163,26 +187,42 @@ function checkErratum(vol, page) {
   return oneCharErrataMap.get(`${volNum}_${pageNum}`);
 }
 
+/**
+ * 格式化勘误提示文本
+ * @param {Array} items - 同一页的勘误条目数组
+ * @returns {string} 格式化后的提示文本
+ */
 function formatErratumText(items) {
   if (!items || items.length === 0) return '';
   
   const allSameSection = items.every(item => item.section === items[0].section);
   
+  // 根据更正内容判断是否为指令性信息
+  // 包含"應"字的视为指令（如"應刪除"、"應空白"、"應反字"）
+  function formatItem(item) {
+    const isInstruction = item.correction.includes('應');
+    const connector = isInstruction ? '需要' : '→';
+    return `「${item.location}」${connector}「${item.correction}」`;
+  }
+  
+  // 单条勘误
   if (items.length === 1) {
     const item = items[0];
     const sectionText = item.section ? `（${item.section}栏）` : '';
-    return `勘误${sectionText}：「${item.location}」→「${item.correction}」`;
+    return `勘误${sectionText}：${formatItem(item)}`;
   }
   
+  // 多条勘误且同栏
   if (allSameSection) {
     const sectionText = items[0].section ? `（${items[0].section}栏）` : '';
-    const parts = items.map((item, i) => `${i + 1}. 「${item.location}」→「${item.correction}」`);
+    const parts = items.map((item, i) => `${i + 1}. ${formatItem(item)}`);
     return `勘误${sectionText}：${parts.join(' ')}`;
   }
   
+  // 多条勘误且不同栏
   const parts = items.map((item, i) => {
     const sectionText = item.section ? `（${item.section}栏）` : '';
-    return `${i + 1}. ${sectionText}「${item.location}」→「${item.correction}」`;
+    return `${i + 1}. ${sectionText}${formatItem(item)}`;
   });
   return `勘误：${parts.join(' ')}`;
 }

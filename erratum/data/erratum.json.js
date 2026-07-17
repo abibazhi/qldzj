@@ -178,7 +178,9 @@ export const erratumPicData = {
           section: "下",
           location: "缺第十一行",
           correction: "入法界體性經",
-          note: ""
+          note: "",
+          locationHref: "http://img.daxumi.top/020/530.png",
+          correctionHref: "../public/sutra.html?start=020521&end=020530&idx=020530&sutra=47"
         },
         {
           volume: 21,

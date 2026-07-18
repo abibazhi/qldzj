@@ -518,7 +518,7 @@ export const erratumPicData = {
           note: "",
           correctionHref: "../public/sutra.html?start=004099&end=040600&idx=040529&sutra=313",
           locationHref: "http://img.daxumi.top/040/529.png",
-          verifyNote: "加提醒。"
+          verifyNote: "加提醒。就是整个下栏应该空白。"
         }
       ]
     },
@@ -1032,7 +1032,8 @@ export const erratumPicData = {
           correction: "<span style=\"border:1px solid #000;padding:0 4px;\">經</span><span style=\"border:1px solid #000;padding:0 4px;\">論</span>",
           note: "",
           locationHref: "http://img.daxumi.top/078/160.png",
-          correctionHref: "../public/sutra.html?start=078093&end=080408&idx=078160&sutra=1163"
+          correctionHref: "../public/sutra.html?start=078093&end=080408&idx=078160&sutra=1163",
+          verifyNote: "加提醒。"
         },
         {
           volume: 79,
@@ -1578,7 +1579,7 @@ export const erratumPicData = {
           note: "",
           correctionHref: "../public/sutra.html?start=131315&end=131826&idx=131537&sutra=1555",
           locationHref: "http://img.daxumi.top/131/537.png",
-          verifyNote: "加提醒。"
+          verifyNote: "<b>不明白</b>"
         },
         {
           volume: 131,

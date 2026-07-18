@@ -1294,7 +1294,7 @@ export const erratumPicData = {
           section: "上下",
           location: "全",
           correction: "見三九七",
-          note: "見三九七"
+          note: "見三九七",
           correctionHref: "../public/sutra.html?start=103329&end=103394&idx=103343&sutra=1283",
           locationHref: "http://img.daxumi.top/103/342.png"
         },
@@ -1304,7 +1304,7 @@ export const erratumPicData = {
           section: "上下",
           location: "全",
           correction: "見三九八",
-          note: "見三九八"
+          note: "見三九八",
           correctionHref: "../public/sutra.html?start=103329&end=103394&idx=103344&sutra=1283",
           locationHref: "http://img.daxumi.top/103/342.png"
         },

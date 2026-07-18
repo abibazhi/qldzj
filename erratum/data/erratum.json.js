@@ -518,7 +518,7 @@ export const erratumPicData = {
           note: "",
           correctionHref: "../public/sutra.html?start=004099&end=040600&idx=040529&sutra=313",
           locationHref: "http://img.daxumi.top/040/529.png",
-          verifyNote: "加提醒。就是整个下栏应该空白。"
+          verifyNote: "加提醒。（就是整个下栏应该空白。）"
         }
       ]
     },
@@ -1579,7 +1579,7 @@ export const erratumPicData = {
           note: "",
           correctionHref: "../public/sutra.html?start=131315&end=131826&idx=131537&sutra=1555",
           locationHref: "http://img.daxumi.top/131/537.png",
-          verifyNote: "<b>不明白</b>"
+          verifyNote: "（<b>不明白，删除后上下文似乎不通？</b>）"
         },
         {
           volume: 131,

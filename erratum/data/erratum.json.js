@@ -1360,7 +1360,7 @@ export const erratumPicData = {
           section: "下",
           location: "缺第一至五行",
           correction: "見四〇二上",
-          note: "見四〇二上",
+          note: "<a href='http://img.daxumi.top/erratum/42.png'>見四〇二上</a>",
           correctionHref: "../public/sutra.html?start=108247&end=108354&idx=108354&sutra=1344",
           locationHref: "http://img.daxumi.top/108/354.png",
           verifyNote: "加提醒（缺行）"

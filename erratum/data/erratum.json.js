@@ -1819,7 +1819,7 @@ export const erratumPicData = {
           section: "上",
           location: "第六行以後缺十行",
           correction: "見四二四下四二五上",
-          note: "<a href='http://img.daxumi.top/erratum/57.png'>見四一四</a>",
+          note: "<a href='http://img.daxumi.top/erratum/54.png'>見四一四</a>",
           correctionHref: "../public/sutra.html?start=140415&end=140488&idx=140417&sutra=1586",
           locationHref: "http://img.daxumi.top/140/417.png",
           verifyNote: "加提醒（缺行）"

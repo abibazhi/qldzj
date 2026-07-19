@@ -52,7 +52,8 @@ export const erratumPicData = {
           correction: "盤山華嚴道人裝",
           note: "",
           correctionHref: "../public/sutra.html?start=001163&end=001482&idx=002503&sutra=1",
-          locationHref: "http://img.daxumi.top/002/503.png"
+          locationHref: "http://img.daxumi.top/002/503.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 3,
@@ -93,7 +94,8 @@ export const erratumPicData = {
           correction: "見三七六上",
           note: "見三七六上",
           correctionHref: "../public/sutra.html?start=001163&end=001482&idx=013429&sutra=1",
-          locationHref: "http://img.daxumi.top/013/429.png"
+          locationHref: "http://img.daxumi.top/013/429.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 16,
@@ -180,7 +182,8 @@ export const erratumPicData = {
           correction: "入法界體性經",
           note: "",
           locationHref: "http://img.daxumi.top/020/530.png",
-          correctionHref: "../public/sutra.html?start=020521&end=020530&idx=020530&sutra=47"
+          correctionHref: "../public/sutra.html?start=020521&end=020530&idx=020530&sutra=47",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 21,
@@ -223,7 +226,8 @@ export const erratumPicData = {
           correction: "",
           note: "見三七六下",
           correctionHref: "../public/sutra.html?start=025369&end=002790&idx=025536&sutra=84",
-          locationHref: "http://img.daxumi.top/025/536.png"
+          locationHref: "http://img.daxumi.top/025/536.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 27,
@@ -288,7 +292,8 @@ export const erratumPicData = {
           correction: "大般涅槃經卷第二十三",
           note: "",
           correctionHref: "../public/sutra.html?start=000301&end=031128&idx=030438&sutra=110",
-          locationHref: "http://img.daxumi.top/030/438.png"
+          locationHref: "http://img.daxumi.top/030/438.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 33,
@@ -475,7 +480,8 @@ export const erratumPicData = {
           correction: "佛說觀彌勒菩薩上生兜率陀天經",
           note: "",
           correctionHref: "../public/sutra.html?start=038287&end=038295&idx=038295&sutra=200",
-          locationHref: "http://img.daxumi.top/038/295.png"
+          locationHref: "http://img.daxumi.top/038/295.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 39,
@@ -687,7 +693,8 @@ export const erratumPicData = {
           correction: "佛說大普賢陀羅尼經",
           note: "",
           correctionHref: "../public/sutra.html?start=047570&end=047571&idx=047571&sutra=471",
-          locationHref: "http://img.daxumi.top/047/571.png"
+          locationHref: "http://img.daxumi.top/047/571.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 47,
@@ -812,7 +819,8 @@ export const erratumPicData = {
           correction: "見三九一上",
           note: "見三九一上",
           correctionHref: "../public/sutra.html?start=006223&end=006246&idx=062041&sutra=965",
-          locationHref: "http://img.daxumi.top/062/041.png"
+          locationHref: "http://img.daxumi.top/062/041.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 62,
@@ -830,7 +838,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十行內文錯誤",
           correction: "見三九二上",
-          note: "見三九二上"
+          note: "見三九二上",
           correctionHref: "../public/sutra.html?start=062349&end=062500&idx=062490&sutra=973",
           locationHref: "http://img.daxumi.top/062/490.png"
         },
@@ -938,7 +946,8 @@ export const erratumPicData = {
           correction: "佛說如來不思議祕密大乘經卷第十七",
           note: "",
           correctionHref: "../public/sutra.html?start=065473&end=065618&idx=065594&sutra=1038",
-          locationHref: "http://img.daxumi.top/065/594.png"
+          locationHref: "http://img.daxumi.top/065/594.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 68,
@@ -970,7 +979,8 @@ export const erratumPicData = {
           correction: "比丘聞其中有少欲知足行頭陀樂學戒知",
           note: "",
           correctionHref: "../public/sutra.html?start=069487&end=070856&idx=070122&sutra=1112",
-          locationHref: "http://img.daxumi.top/070/122.png"
+          locationHref: "http://img.daxumi.top/070/122.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 71,
@@ -1013,7 +1023,8 @@ export const erratumPicData = {
           correction: "見三九三上",
           note: "見三九三上",
           correctionHref: "../public/sutra.html?start=075521&end=075560&idx=075560&sutra=1121",
-          locationHref: "http://img.daxumi.top/075/560.png"
+          locationHref: "http://img.daxumi.top/075/560.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 78,
@@ -1351,7 +1362,8 @@ export const erratumPicData = {
           correction: "見四〇二上",
           note: "見四〇二上",
           correctionHref: "../public/sutra.html?start=108247&end=108354&idx=108354&sutra=1344",
-          locationHref: "http://img.daxumi.top/108/354.png"
+          locationHref: "http://img.daxumi.top/108/354.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 108,
@@ -1405,7 +1417,8 @@ export const erratumPicData = {
           correction: "妙本靈迹皆非淺短能知但戀慕玄風無所",
           note: "",
           correctionHref: "../public/sutra.html?start=120721&end=120814&idx=120791&sutra=1499",
-          locationHref: "http://img.daxumi.top/120/791.png"
+          locationHref: "http://img.daxumi.top/120/791.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 124,
@@ -1474,7 +1487,8 @@ export const erratumPicData = {
           correction: "郢切蔽也 僂 力主切俯也",
           note: "",
           correctionHref: "../public/sutra.html?start=001281&end=128560&idx=128401&sutra=1533",
-          locationHref: "http://img.daxumi.top/128/401.png"
+          locationHref: "http://img.daxumi.top/128/401.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 128,
@@ -1539,7 +1553,8 @@ export const erratumPicData = {
           correction: "差摩婆帝受記經一卷",
           note: "",
           correctionHref: "../public/sutra.html?start=001291&end=129670&idx=129627&sutra=1538",
-          locationHref: "http://img.daxumi.top/129/627.png"
+          locationHref: "http://img.daxumi.top/129/627.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 129,
@@ -1591,7 +1606,8 @@ export const erratumPicData = {
           correction: "攝理盡又無事理相離之過故事隨理而",
           note: "",
           correctionHref: "../public/sutra.html?start=131315&end=131826&idx=131657&sutra=1555",
-          locationHref: "http://img.daxumi.top/131/657.png"
+          locationHref: "http://img.daxumi.top/131/657.png",
+          verifyNote: "加提醒（缺行）"
         }
       ]
     },
@@ -1610,7 +1626,8 @@ export const erratumPicData = {
           correction: "文封故言念念然念與劫皆有相即相入等",
           note: "",
           correctionHref: "../public/sutra.html?start=001331&end=137196&idx=133097&sutra=1557",
-          locationHref: "http://img.daxumi.top/133/097.png"
+          locationHref: "http://img.daxumi.top/133/097.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 133,
@@ -1620,7 +1637,8 @@ export const erratumPicData = {
           correction: "見四〇七上",
           note: "見四〇七上",
           correctionHref: "../public/sutra.html?start=001331&end=137196&idx=133407&sutra=1557",
-          locationHref: "http://img.daxumi.top/133/407.png"
+          locationHref: "http://img.daxumi.top/133/407.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 133,
@@ -1803,7 +1821,8 @@ export const erratumPicData = {
           correction: "見四二四下四二五上",
           note: "見四一四",
           correctionHref: "../public/sutra.html?start=140415&end=140488&idx=140417&sutra=1586",
-          locationHref: "http://img.daxumi.top/140/417.png"
+          locationHref: "http://img.daxumi.top/140/417.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 140,
@@ -1813,7 +1832,8 @@ export const erratumPicData = {
           correction: "物為能轉心為所轉以心逐境遷",
           note: "",
           correctionHref: "../public/sutra.html?start=140489&end=141144&idx=140573&sutra=1587",
-          locationHref: "http://img.daxumi.top/140/573.png"
+          locationHref: "http://img.daxumi.top/140/573.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 141,
@@ -1956,7 +1976,8 @@ export const erratumPicData = {
           correction: "佛祖歷代通載卷第七",
           note: "",
           correctionHref: "../public/sutra.html?start=148779&end=149720&idx=149090&sutra=1613",
-          locationHref: "http://img.daxumi.top/149/090.png"
+          locationHref: "http://img.daxumi.top/149/090.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 149,
@@ -1966,7 +1987,8 @@ export const erratumPicData = {
           correction: "佛祖歷代通載卷第十",
           note: "",
           correctionHref: "../public/sutra.html?start=148779&end=149720&idx=149179&sutra=1613",
-          locationHref: "http://img.daxumi.top/149/179.png"
+          locationHref: "http://img.daxumi.top/149/179.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 149,
@@ -1976,7 +1998,8 @@ export const erratumPicData = {
           correction: "佛祖歷代通載卷第三十",
           note: "",
           correctionHref: "../public/sutra.html?start=148779&end=149720&idx=149594&sutra=1613",
-          locationHref: "http://img.daxumi.top/149/594.png"
+          locationHref: "http://img.daxumi.top/149/594.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 149,
@@ -2263,7 +2286,8 @@ export const erratumPicData = {
           correction: "大德僧聽眾僧所因諍事令僧闘諍而不和",
           note: "",
           correctionHref: "../public/sutra.html?start=159667&end=160380&idx=160162&sutra=1646",
-          locationHref: "http://img.daxumi.top/160/162.png"
+          locationHref: "http://img.daxumi.top/160/162.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 161,
@@ -2273,7 +2297,8 @@ export const erratumPicData = {
           correction: "言若合云凡是所作見彼無常如瓶等者",
           note: "",
           correctionHref: "../public/sutra.html?start=161305&end=161424&idx=161312&sutra=1650",
-          locationHref: "http://img.daxumi.top/161/312.png"
+          locationHref: "http://img.daxumi.top/161/312.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 161,
@@ -2294,7 +2319,8 @@ export const erratumPicData = {
           correction: "第十行應刪除",
           note: "見四二二下",
           correctionHref: "../public/sutra.html?start=161425&end=161446&idx=161432&sutra=1651",
-          locationHref: "http://img.daxumi.top/161/432.png"
+          locationHref: "http://img.daxumi.top/161/432.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 161,
@@ -2304,7 +2330,8 @@ export const erratumPicData = {
           correction: "頭角成龍去蚯蚓依舊鑽泥沙喝一喝",
           note: "",
           correctionHref: "../public/sutra.html?start=161447&end=161774&idx=161521&sutra=1652",
-          locationHref: "http://img.daxumi.top/161/521.png"
+          locationHref: "http://img.daxumi.top/161/521.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 163,
@@ -2314,7 +2341,8 @@ export const erratumPicData = {
           correction: "三了妄六虛生空老",
           note: "",
           correctionHref: "../public/sutra.html?start=163399&end=163462&idx=163403&sutra=1660",
-          locationHref: "http://img.daxumi.top/163/403.png"
+          locationHref: "http://img.daxumi.top/163/403.png",
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 164,
@@ -2324,7 +2352,8 @@ export const erratumPicData = {
           correction: "有義無癡作即是慧別有自性正對無明如",
           note: "",
           correctionHref: "../public/sutra.html?start=001641&end=164868&idx=164464&sutra=1663",
-          locationHref: "http://img.daxumi.top/164/464.png"
+          locationHref: "http://img.daxumi.top/164/464.png",
+          verifyNote: "加提醒（缺行）"
         }
       ]
     }

@@ -58,6 +58,11 @@
       color: #fff;
       cursor: pointer;
     }
+    .source-badge.erratum-warn-missing {
+      background: rgba(230, 126, 34, 0.85);
+      color: #fff;
+      cursor: pointer;
+    }
 
     .controls {
       position: fixed;
@@ -170,7 +175,8 @@ const oneCharErrataMap = new Map();
 erratumPicData.groups.forEach(group => {
   group.items.forEach(item => {
     if (item.page !== "目錄" && item.page !== "" &&
-        item.correction && item.correction.length <= 3) {
+        ((item.correction && item.correction.length <= 3) ||
+         (item.verifyNote && item.verifyNote.includes('加提醒')))) {
       const key = `${item.volume}_${item.page}`;
       if (!oneCharErrataMap.has(key)) {
         oneCharErrataMap.set(key, []);
@@ -316,13 +322,15 @@ async function loadImage(vol, page) {
     }
     const erratum = checkErratum(vol, page);
     if (erratum) {
+      const hasMissing = erratum.some(item => item.verifyNote && item.verifyNote.includes('缺行'));
       sourceBadge.textContent = '勘误';
-      sourceBadge.classList.add('erratum-warn');
+      sourceBadge.classList.remove('erratum-warn', 'erratum-warn-missing');
+      sourceBadge.classList.add(hasMissing ? 'erratum-warn-missing' : 'erratum-warn');
       sourceBadge.dataset.hoverText = '点击显示';
       sourceBadge.dataset.erratumText = formatErratumText(erratum);
       showTempTip(sourceBadge.dataset.erratumText, 4000);
     } else {
-      sourceBadge.classList.remove('erratum-warn');
+      sourceBadge.classList.remove('erratum-warn', 'erratum-warn-missing');
       sourceBadge.dataset.hoverText = thanksMap[best?.key] || '';
       sourceBadge.dataset.erratumText = '';
     }

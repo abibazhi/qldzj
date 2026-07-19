@@ -30,7 +30,7 @@ export const erratumPicData = {
           section: "上",
           location: "遺漏十五行字",
           correction: "四八一頁下四八二頁上之間補十五行",
-          note: "見三七四",
+          note: "<a href='https://img.daxumi.top/erratum/14.png'>見三七四</a>",
           correctionHref: "../public/sutra.html?start=001163&end=014082&idx=002482&sutra=1",
           locationHref: "http://img.daxumi.top/002/482.png"
         },
@@ -40,7 +40,7 @@ export const erratumPicData = {
           section: "下",
           location: "一至十五行內文錯誤",
           correction: "見三七五",
-          note: "見三七五",
+          note: "<a href='https://img.daxumi.top/erratum/15.png'>見三七五</a>",
           correctionHref: "../public/sutra.html?start=001163&end=014082&idx=002491&sutra=1",
           locationHref: "http://img.daxumi.top/002/491.png"
         },
@@ -365,7 +365,7 @@ export const erratumPicData = {
           section: "",
           location: "第一至十五行內文多出應刪除",
           correction: "二九頁以後往前移一欄",
-          note: "見三七七",
+          note: "<a href='https://img.daxumi.top/erratum/17.png'>見三七七</a>",
           correctionHref: "../public/sutra.html?start=034001&end=034050&idx=034028&sutra=144",
           locationHref: "http://img.daxumi.top/034/28.png"
         },
@@ -375,7 +375,7 @@ export const erratumPicData = {
           section: "上",
           location: "缺第十一至十五行",
           correction: "見三七八上",
-          note: "見三七八上",
+          note: "<a href='https://img.daxumi.top/erratum/18.png'>見三七八上</a>",
           correctionHref: "../public/sutra.html?start=036001&end=036014&idx=036013&sutra=166",
           locationHref: "http://img.daxumi.top/036/13.png",
           verifyNote: "（页码原稿为十三，非一三。）"
@@ -407,7 +407,7 @@ export const erratumPicData = {
           section: "下",
           location: "三九六下及三九七上順序錯誤",
           correction: "三九六下與三九七上應調換",
-          note: "見三七八下<br>見三七九上",
+          note: "<a href='https://img.daxumi.top/erratum/18.png'>見三七八下</a><br><a href='https://img.daxumi.top/erratum/19.png'>見三七九上</a>",
           correctionHref: "../public/sutra.html?start=037377&end=037474&idx=037396&sutra=185",
           locationHref: "http://img.daxumi.top/037/396.png"
         },
@@ -417,7 +417,7 @@ export const erratumPicData = {
           section: "下",
           location: "四〇五下及四〇六上順序錯誤",
           correction: "四〇五下與四〇六上應調換",
-          note: "見三七九下<br>見三八〇上",
+          note: "<a href='https://img.daxumi.top/erratum/19.png'>見三七九下</a><br><a href='https://img.daxumi.top/erratum/20.png'>見三八〇上</a>",
           correctionHref: "../public/sutra.html?start=037377&end=037474&idx=037405&sutra=185",
           locationHref: "http://img.daxumi.top/037/405.png"
         },
@@ -427,7 +427,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至十五行內文顛倒",
           correction: "見三八〇下 三八一上",
-          note: "見三八〇下<br>見三八一上",
+          note: "<a href='https://img.daxumi.top/erratum/20.png'>見三八〇下</a><br><a href='https://img.daxumi.top/erratum/21.png'>見三八一上</a>",
           correctionHref: "../public/sutra.html?start=037377&end=037474&idx=037407&sutra=185",
           locationHref: "http://img.daxumi.top/037/407.png"
         },
@@ -437,7 +437,7 @@ export const erratumPicData = {
           section: "下",
           location: "四九四下及四九五上順序錯誤",
           correction: "四九四下與四九五上應調換",
-          note: "見三八一下<br>見三八二上",
+          note: "<a href='https://img.daxumi.top/erratum/21.png'>見三八一下</a><br><a href='https://img.daxumi.top/erratum/22.png'>見三八二上</a>",
           correctionHref: "../public/sutra.html?start=037475&end=037556&idx=037494&sutra=186",
           locationHref: "http://img.daxumi.top/037/494.png"
         },
@@ -447,7 +447,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十行順序錯誤",
           correction: "第一至五行與六至十行應調換",
-          note: "見三八二下",
+          note: "<a href='https://img.daxumi.top/erratum/22.png'>見三八二下</a>",
           correctionHref: "../public/sutra.html?start=038001&end=038011&idx=038006&sutra=188",
           locationHref: "http://img.daxumi.top/038/6.png"
         },
@@ -457,7 +457,7 @@ export const erratumPicData = {
           section: "下",
           location: "一八二下及一八三上順序錯誤",
           correction: "一八二下與一八三上應調換",
-          note: "見三八三",
+          note: "<a href='https://img.daxumi.top/erratum/23.png'>見三八三</a>",
           correctionHref: "../public/sutra.html?start=038119&end=038208&idx=038182&sutra=193",
           locationHref: "http://img.daxumi.top/038/182.png"
         },
@@ -511,7 +511,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十五行內文重覆",
           correction: "見三八四",
-          note: "見三八四",
+          note: "<a href='https://img.daxumi.top/erratum/24.png'>見三八四</a>",
           correctionHref: "../public/sutra.html?start=040099&end=040600&idx=040131&sutra=313",
           locationHref: "http://img.daxumi.top/040/131.png"
         },
@@ -541,7 +541,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十五行內文遺漏",
           correction: "見三八五上",
-          note: "見三八五上",
+          note: "<a href='https://img.daxumi.top/erratum/25.png'>見三八五上</a>",
           correctionHref: "../public/sutra.html?start=040099&end=040600&idx=040533&sutra=313",
           locationHref: "http://img.daxumi.top/040/533.png"
         },
@@ -649,7 +649,7 @@ export const erratumPicData = {
           section: "上",
           location: "第十一至十五行內文錯誤",
           correction: "見三八七下",
-          note: "見三八七下",
+          note: "<a href='https://img.daxumi.top/erratum/27.png'>見三八七下</a>",
           correctionHref: "../public/sutra.html?start=045115&end=045234&idx=045146&sutra=422",
           locationHref: "http://img.daxumi.top/045/146.png"
         },
@@ -733,7 +733,7 @@ export const erratumPicData = {
           section: "下",
           location: "七二六下一二段及七二七上第三段七二七下一二段",
           correction: "內文有重覆應刪除",
-          note: "見三八八",
+          note: "<a href='https://img.daxumi.top/erratum/28.png'>見三八八</a>",
           correctionHref: "../public/sutra.html?start=048725&end=048736&idx=048726&sutra=534",
           locationHref: "http://img.daxumi.top/048/726.png"
         },
@@ -754,7 +754,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至五行內文多出",
           correction: "內文多出應刪除",
-          note: "見三八九上",
+          note: "<a href='https://img.daxumi.top/erratum/29.png'>見三八九上</a>",
           correctionHref: "../public/sutra.html?start=051395&end=052618&idx=052131&sutra=540",
           locationHref: "http://img.daxumi.top/052/131.png"
         },
@@ -764,7 +764,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十五行順序錯誤",
           correction: "五六下與五七下應調換",
-          note: "見三八九下<br>見三九〇上",
+          note: "<a href='https://img.daxumi.top/erratum/29.png'>見三八九下</a><br><a href='https://img.daxumi.top/erratum/30.png'>見三九〇上</a>",
           correctionHref: "../public/sutra.html?start=053673&end=054080&idx=054056&sutra=545",
           locationHref: "http://img.daxumi.top/054/56.png"
         },
@@ -785,7 +785,7 @@ export const erratumPicData = {
           section: "下",
           location: "第六至十五行順序錯誤",
           correction: "第六至十行與十一至十五行調換",
-          note: "見三九〇下",
+          note: "<a href='https://img.daxumi.top/erratum/30.png'>見三九〇下</a>",
           correctionHref: "../public/sutra.html?start=055513&end=055618&idx=055549&sutra=665",
           locationHref: "http://img.daxumi.top/055/549.png"
         },
@@ -828,7 +828,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至十五行內文錯誤",
           correction: "見三九一下",
-          note: "見三九一下",
+          note: "<a href='https://img.daxumi.top/erratum/31.png'>見三九一下</a>",
           correctionHref: "../public/sutra.html?start=062349&end=062500&idx=062490&sutra=973",
           locationHref: "http://img.daxumi.top/062/490.png"
         },
@@ -838,7 +838,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十行內文錯誤",
           correction: "見三九二上",
-          note: "見三九二上",
+          note: "<a href='https://img.daxumi.top/erratum/32.png'>見三九二上</a>",
           correctionHref: "../public/sutra.html?start=062349&end=062500&idx=062490&sutra=973",
           locationHref: "http://img.daxumi.top/062/490.png"
         },
@@ -934,7 +934,7 @@ export const erratumPicData = {
           section: "下",
           location: "第六至十五行內文錯誤",
           correction: "見三九二下",
-          note: "見三九二下",
+          note: "<a href='https://img.daxumi.top/erratum/32.png'>見三九二下</a>",
           correctionHref: "../public/sutra.html?start=064631&end=064676&idx=064661&sutra=1023",
           locationHref: "http://img.daxumi.top/064/661.png"
         },
@@ -1021,7 +1021,7 @@ export const erratumPicData = {
           section: "下",
           location: "缺音釋最後一段",
           correction: "見三九三上",
-          note: "<a href='http://img.daxumi.top/erratum/33.png'>見三九三上",
+          note: "<a href='http://img.daxumi.top/erratum/33.png'>見三九三上</a>",
           correctionHref: "../public/sutra.html?start=075521&end=075560&idx=075560&sutra=1121",
           locationHref: "http://img.daxumi.top/075/560.png",
           verifyNote: "加提醒（缺行）"
@@ -1065,7 +1065,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至十行順序錯誤",
           correction: "第一至五行與六至十行應調換",
-          note: "見三九三下",
+          note: "<a href='https://img.daxumi.top/erratum/33.png'>見三九三下</a>",
           correctionHref: "../public/sutra.html?start=080409&end=082480&idx=082228&sutra=1164",
           locationHref: "http://img.daxumi.top/082/228.png"
         }
@@ -1205,7 +1205,7 @@ export const erratumPicData = {
           section: "下",
           location: "第十至十五行內文錯誤",
           correction: "見三九四上",
-          note: "見三九四上",
+          note: "<a href='https://img.daxumi.top/erratum/34.png'>見三九四上</a>",
           correctionHref: "../public/sutra.html?start=089097&end=092538&idx=091004&sutra=1256",
           locationHref: "http://img.daxumi.top/091/4.png"
         },
@@ -1215,7 +1215,7 @@ export const erratumPicData = {
           section: "下",
           location: "第十至十五行內文錯誤",
           correction: "見三九四下",
-          note: "見三九四下",
+          note: "<a href='https://img.daxumi.top/erratum/34.png'>見三九四下</a>",
           correctionHref: "../public/sutra.html?start=089097&end=092538&idx=091009&sutra=1256",
           locationHref: "http://img.daxumi.top/091/9.png"
         },
@@ -1247,7 +1247,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十行內文錯誤",
           correction: "第一至五行與六至十行應對調",
-          note: "見三九五上",
+          note: "<a href='https://img.daxumi.top/erratum/35.png'>見三九五上</a>",
           correctionHref: "../public/sutra.html?start=101001&end=101258&idx=101146&sutra=1269",
           locationHref: "http://img.daxumi.top/101/146.png"
         }
@@ -1288,7 +1288,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至五行內文錯誤",
           correction: "見三九五下",
-          note: "見三九五下",
+          note: "<a href='https://img.daxumi.top/erratum/35.png'>見三九五下</a>",
           correctionHref: "../public/sutra.html?start=103001&end=103072&idx=103025&sutra=1281",
           locationHref: "http://img.daxumi.top/103/25.png"
         },
@@ -1298,7 +1298,7 @@ export const erratumPicData = {
           section: "上下",
           location: "全",
           correction: "見三九六",
-          note: "見三九六",
+          note: "<a href='https://img.daxumi.top/erratum/36.png'>見三九六</a>",
           correctionHref: "../public/sutra.html?start=103329&end=103394&idx=103342&sutra=1283",
           locationHref: "http://img.daxumi.top/103/342.png"
         },
@@ -1308,7 +1308,7 @@ export const erratumPicData = {
           section: "上下",
           location: "全",
           correction: "見三九七",
-          note: "見三九七",
+          note: "<a href='https://img.daxumi.top/erratum/37.png'>見三九七</a>",
           correctionHref: "../public/sutra.html?start=103329&end=103394&idx=103343&sutra=1283",
           locationHref: "http://img.daxumi.top/103/342.png"
         },
@@ -1318,7 +1318,7 @@ export const erratumPicData = {
           section: "上下",
           location: "全",
           correction: "見三九八",
-          note: "見三九八",
+          note: "<a href='https://img.daxumi.top/erratum/38.png'>見三九八</a>",
           correctionHref: "../public/sutra.html?start=103329&end=103394&idx=103344&sutra=1283",
           locationHref: "http://img.daxumi.top/103/342.png"
         },
@@ -1426,7 +1426,7 @@ export const erratumPicData = {
           section: "上",
           location: "第十一至十五行內文錯誤",
           correction: "見四〇二下",
-          note: "見四〇二下",
+          note: "<a href='https://img.daxumi.top/erratum/42.png'>見四〇二下</a>",
           correctionHref: "../public/sutra.html?start=124297&end=124632&idx=124553&sutra=1528",
           locationHref: "http://img.daxumi.top/124/553.png"
         }
@@ -1445,7 +1445,7 @@ export const erratumPicData = {
           section: "下",
           location: "七六五下第十一至十五行七六六下全順序錯誤",
           correction: "七六五下第三段七六六上第一段與七六六上第二三段調換",
-          note: "見四〇三",
+          note: "<a href='https://img.daxumi.top/erratum/43.png'>見四〇三</a>",
           correctionHref: "../public/sutra.html?start=124723&end=125168&idx=124765&sutra=1530",
           locationHref: "http://img.daxumi.top/124/765.png"
         },
@@ -1455,7 +1455,7 @@ export const erratumPicData = {
           section: "下",
           location: "第十一行至十五行錯誤",
           correction: "見四〇四上",
-          note: "見四〇四上",
+          note: "<a href='https://img.daxumi.top/erratum/44.png'>見四〇四上</a>",
           correctionHref: "../public/sutra.html?start=125169&end=125334&idx=125225&sutra=1531",
           locationHref: "http://img.daxumi.top/125/225.png"
         },
@@ -1465,7 +1465,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至十五行內文錯誤",
           correction: "見四〇四下",
-          note: "見四〇四下",
+          note: "<a href='https://img.daxumi.top/erratum/44.png'>見四〇四下</a>",
           correctionHref: "../public/sutra.html?start=125169&end=125334&idx=125226&sutra=1531",
           locationHref: "http://img.daxumi.top/125/226.png"
         },
@@ -1475,7 +1475,7 @@ export const erratumPicData = {
           section: "上",
           location: "第六行至十五行順序錯誤",
           correction: "二四九上六至十五行二四九下一至十行調換",
-          note: "見四〇五",
+          note: "<a href='https://img.daxumi.top/erratum/45.png'>見四〇五</a>",
           correctionHref: "../public/sutra.html?start=125335&end=127854&idx=126249&sutra=1532",
           locationHref: "http://img.daxumi.top/126/249.png"
         },
@@ -1562,7 +1562,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至五行、六至十五行內文錯誤",
           correction: "見四〇六上",
-          note: "見四〇六上",
+          note: "<a href='https://img.daxumi.top/erratum/46.png'>見四〇六上</a>",
           correctionHref: "../public/sutra.html?start=129671&end=129772&idx=129759&sutra=1539",
           locationHref: "http://img.daxumi.top/129/759.png"
         },
@@ -1583,7 +1583,7 @@ export const erratumPicData = {
           section: "下",
           location: "第十至十五行內文錯誤",
           correction: "見四〇六下",
-          note: "見四〇六下",
+          note: "<a href='https://img.daxumi.top/erratum/46.png'>見四〇六下</a>",
           correctionHref: "../public/sutra.html?start=131171&end=131226&idx=131208&sutra=1551",
           locationHref: "http://img.daxumi.top/131/208.png"
         },
@@ -1646,7 +1646,7 @@ export const erratumPicData = {
           section: "上",
           location: "第六至十五行內文錯誤",
           correction: "見四〇七下",
-          note: "見四〇七下",
+          note: "<a href='https://img.daxumi.top/erratum/47.png'>見四〇七下</a>",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=133711&sutra=1557",
           locationHref: "http://img.daxumi.top/133/711.png"
         },
@@ -1656,7 +1656,7 @@ export const erratumPicData = {
           section: "下",
           location: "第六至十五行內文錯誤",
           correction: "見四〇八上",
-          note: "見四〇八上",
+          note: "<a href='https://img.daxumi.top/erratum/48.png'>見四〇八上</a>",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=133743&sutra=1557",
           locationHref: "http://img.daxumi.top/133/743.png"
         },
@@ -1666,7 +1666,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至十五行內文錯誤",
           correction: "見四〇八下",
-          note: "見四〇八下",
+          note: "<a href='https://img.daxumi.top/erratum/48.png'>見四〇八下</a>",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=133779&sutra=1557",
           locationHref: "http://img.daxumi.top/133/779.png"
         },
@@ -1687,7 +1687,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十五行內文錯誤",
           correction: "見四〇九上",
-          note: "見四〇九上",
+          note: "<a href='https://img.daxumi.top/erratum/49.png'>見四〇九上</a>",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=134739&sutra=1557",
           locationHref: "http://img.daxumi.top/134/739.png"
         },
@@ -1697,7 +1697,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至十行內文錯誤",
           correction: "見四〇九下",
-          note: "見四〇九下",
+          note: "<a href='https://img.daxumi.top/erratum/49.png'>見四〇九下</a>",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=134740&sutra=1557",
           locationHref: "http://img.daxumi.top/134/740.png"
         },
@@ -1718,7 +1718,7 @@ export const erratumPicData = {
           section: "上",
           location: "第十一至十五行內文錯誤",
           correction: "見四一〇上",
-          note: "見四一〇上",
+          note: "<a href='https://img.daxumi.top/erratum/50.png'>見四一〇上</a>",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=136577&sutra=1557",
           locationHref: "http://img.daxumi.top/136/577.png"
         },
@@ -1728,7 +1728,7 @@ export const erratumPicData = {
           section: "下",
           location: "第十至十五行順序錯誤",
           correction: "第六至十行與十一至十五行調換",
-          note: "見四一〇下",
+          note: "<a href='https://img.daxumi.top/erratum/50.png'>見四一〇下</a>",
           correctionHref: "../public/sutra.html?start=137745&end=138322&idx=137782&sutra=1562",
           locationHref: "http://img.daxumi.top/137/782.png"
         },
@@ -1738,7 +1738,7 @@ export const erratumPicData = {
           section: "下",
           location: "第十至十五行順序錯誤",
           correction: "第六至十行與十一至十五行調換",
-          note: "見四一一上",
+          note: "<a href='https://img.daxumi.top/erratum/51.png'>見四一一上</a>",
           correctionHref: "../public/sutra.html?start=137745&end=138322&idx=138051&sutra=1562",
           locationHref: "http://img.daxumi.top/138/51.png"
         },
@@ -1748,7 +1748,7 @@ export const erratumPicData = {
           section: "上",
           location: "第六至十五行內文錯誤",
           correction: "見四一一下",
-          note: "見四一一下",
+          note: "<a href='https://img.daxumi.top/erratum/51.png'>見四一一下</a>",
           correctionHref: "../public/sutra.html?start=137745&end=138322&idx=138052&sutra=1562",
           locationHref: "http://img.daxumi.top/138/52.png"
         },
@@ -1758,7 +1758,7 @@ export const erratumPicData = {
           section: "上",
           location: "第十一至十五行錯誤",
           correction: "見四一二上",
-          note: "見四一二上",
+          note: "<a href='https://img.daxumi.top/erratum/52.png'>見四一二上</a>",
           correctionHref: "../public/sutra.html?start=137745&end=138322&idx=138161&sutra=1562",
           locationHref: "http://img.daxumi.top/138/161.png"
         },
@@ -1779,7 +1779,7 @@ export const erratumPicData = {
           section: "上",
           location: "第六至十五行順序錯誤",
           correction: "四〇八上二、三段與四〇八下二、三段調換",
-          note: "見四一二下",
+          note: "<a href='https://img.daxumi.top/erratum/52.png'>見四一二下</a>",
           correctionHref: "../public/sutra.html?start=138323&end=138594&idx=138408&sutra=1563",
           locationHref: "http://img.daxumi.top/138/408.png"
         }
@@ -1809,7 +1809,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十五行順序錯誤",
           correction: "六五〇頁下與六五一上調換",
-          note: "見四一三",
+          note: "<a href='https://img.daxumi.top/erratum/53.png'>見四一三</a>",
           correctionHref: "../public/sutra.html?start=139367&end=140282&idx=139650&sutra=1584",
           locationHref: "http://img.daxumi.top/139/650.png"
         },
@@ -1873,7 +1873,7 @@ export const erratumPicData = {
           section: "上",
           location: "第三至十二行內文錯誤",
           correction: "見四一五上",
-          note: "見四一五上",
+          note: "<a href='https://img.daxumi.top/erratum/55.png'>見四一五上</a>",
           correctionHref: "../public/sutra.html?start=144719&end=144798&idx=144798&sutra=1600",
           locationHref: "http://img.daxumi.top/144/798.png"
         },
@@ -1883,7 +1883,7 @@ export const erratumPicData = {
           section: "上",
           location: "第十一至十五行內文錯誤",
           correction: "見四一五下",
-          note: "見四一五下",
+          note: "<a href='https://img.daxumi.top/erratum/55.png'>見四一五下</a>",
           correctionHref: "../public/sutra.html?start=145323&end=146766&idx=145751&sutra=1602",
           locationHref: "http://img.daxumi.top/145/751.png"
         },
@@ -1893,7 +1893,7 @@ export const erratumPicData = {
           section: "上",
           location: "第六至十五行內文錯誤",
           correction: "見四一六上",
-          note: "見四一六上",
+          note: "<a href='https://img.daxumi.top/erratum/56.png'>見四一六上</a>",
           correctionHref: "../public/sutra.html?start=145323&end=146766&idx=145758&sutra=1602",
           locationHref: "http://img.daxumi.top/145/758.png"
         },
@@ -1925,7 +1925,7 @@ export const erratumPicData = {
           section: "下",
           location: "第六至十五行內文錯誤",
           correction: "見四一六下",
-          note: "見四一六下",
+          note: "<a href='https://img.daxumi.top/erratum/56.png'>見四一六下</a>",
           correctionHref: "../public/sutra.html?start=147525&end=147868&idx=147861&sutra=1609",
           locationHref: "http://img.daxumi.top/147/861.png"
         },
@@ -1945,7 +1945,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至十五行內文錯誤",
           correction: "見四一七上",
-          note: "見四一七上",
+          note: "<a href='https://img.daxumi.top/erratum/57.png'>見四一七上</a>",
           correctionHref: "../public/sutra.html?start=148455&end=148778&idx=148753&sutra=1612",
           locationHref: "http://img.daxumi.top/148/753.png"
         },
@@ -1955,7 +1955,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至五行內文錯誤",
           correction: "見四一七下",
-          note: "見四一七下",
+          note: "<a href='https://img.daxumi.top/erratum/57.png'>見四一七下</a>",
           correctionHref: "../public/sutra.html?start=148779&end=149720&idx=148814&sutra=1613",
           locationHref: "http://img.daxumi.top/148/814.png"
         }
@@ -2007,7 +2007,7 @@ export const erratumPicData = {
           section: "上",
           location: "第六至十五行第四字",
           correction: "應反字",
-          note: "見四一八上",
+          note: "<a href='https://img.daxumi.top/erratum/58.png'>見四一八上</a>",
           locationHref: "http://img.daxumi.top/149/756.png",
           correctionHref: "../public/sutra.html?start=149721&end=149868&idx=149756&sutra=1614",
           verifyNote: "加提醒。<a href='https://img.daxumi.top/erratum/58.png'>見四一八上</a>"
@@ -2040,7 +2040,7 @@ export const erratumPicData = {
           section: "上",
           location: "第六至十行前三字",
           correction: "見四一八下",
-          note: "見四一八下",
+          note: "<a href='https://img.daxumi.top/erratum/58.png'>見四一八下</a>",
           locationHref: "http://img.daxumi.top/151/458.png",
           correctionHref: "../public/sutra.html?start=150519&end=151704&idx=151458&sutra=1621",
           verifyNote: "<a href='https://img.daxumi.top/erratum/58.png'>見四一八下</a>"
@@ -2128,7 +2128,7 @@ export const erratumPicData = {
           section: "下",
           location: "第六至十五行內文錯誤",
           correction: "見四一九上",
-          note: "見四一九上",
+          note: "<a href='https://img.daxumi.top/erratum/59.png'>見四一九上</a>",
           correctionHref: "../public/sutra.html?start=152749&end=153850&idx=153029&sutra=1631",
           locationHref: "http://img.daxumi.top/153/29.png"
         },
@@ -2138,7 +2138,7 @@ export const erratumPicData = {
           section: "上下",
           location: "第一至十五行內文錯誤",
           correction: "見四一九下四二〇上",
-          note: "見四一九下<br>見四二〇上",
+          note: "<a href='https://img.daxumi.top/erratum/59.png'>見四一九下</a><br><a href='https://img.daxumi.top/erratum/60.png'>見四二〇上</a>",
           correctionHref: "../public/sutra.html?start=152749&end=153850&idx=153030&sutra=1631",
           locationHref: "http://img.daxumi.top/153/30.png"
         }
@@ -2157,7 +2157,7 @@ export const erratumPicData = {
           section: "上",
           location: "第五至九行",
           correction: "見四二〇下",
-          note: "見四二〇下",
+          note: "<a href='https://img.daxumi.top/erratum/60.png'>見四二〇下</a>",
           correctionHref: "../public/sutra.html?start=154001&end=154240&idx=154174&sutra=1632",
           locationHref: "http://img.daxumi.top/154/174.png"
         },
@@ -2199,7 +2199,7 @@ export const erratumPicData = {
           section: "下",
           location: "第一至十五行內文錯誤",
           correction: "見四二一上",
-          note: "見四二一上",
+          note: "<a href='https://img.daxumi.top/erratum/61.png'>見四二一上</a>",
           correctionHref: "../public/sutra.html?start=155197&end=156564&idx=156027&sutra=1634",
           locationHref: "http://img.daxumi.top/156/27.png"
         },
@@ -2209,7 +2209,7 @@ export const erratumPicData = {
           section: "上",
           location: "第一至十行內文錯誤",
           correction: "見四二一下",
-          note: "見四二一下",
+          note: "<a href='https://img.daxumi.top/erratum/61.png'>見四二一下</a>",
           correctionHref: "../public/sutra.html?start=155197&end=156564&idx=156028&sutra=1634",
           locationHref: "http://img.daxumi.top/156/28.png"
         },
@@ -2252,7 +2252,7 @@ export const erratumPicData = {
           section: "上",
           location: "第六至十五行內文錯誤",
           correction: "見四二二上",
-          note: "見四二二上",
+          note: "<a href='https://img.daxumi.top/erratum/62.png'>見四二二上</a>",
           correctionHref: "../public/sutra.html?start=158695&end=159214&idx=159212&sutra=1644",
           locationHref: "http://img.daxumi.top/159/212.png"
         },
@@ -2317,7 +2317,7 @@ export const erratumPicData = {
           section: "上",
           location: "缺第五行多第十行",
           correction: "第十行應刪除",
-          note: "見四二二下",
+          note: "<a href='https://img.daxumi.top/erratum/62.png'>見四二二下</a>",
           correctionHref: "../public/sutra.html?start=161425&end=161446&idx=161432&sutra=1651",
           locationHref: "http://img.daxumi.top/161/432.png",
           verifyNote: "加提醒（缺行）"

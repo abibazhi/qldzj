@@ -1627,7 +1627,7 @@ export const erratumPicData = {
           note: "",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=133097&sutra=1557",
           locationHref: "http://img.daxumi.top/133/97.png",
-          verifyNote: "加提醒（缺行）"
+          verifyNote: "加提醒（缺行）（不明白啊，十一行到底加哪里？）"
         },
         {
           volume: 133,

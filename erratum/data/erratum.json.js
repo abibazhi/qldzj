@@ -223,8 +223,8 @@ export const erratumPicData = {
           page: 536,
           section: "下",
           location: "音釋第六至十五行缺",
-          correction: "",
-          note: "見三七六下",
+          correction: "見三七六下",
+          note: "<a href='https://img.daxumi.top/erratum/16.png'>見三七六下</a>",
           correctionHref: "../public/sutra.html?start=025369&end=027090&idx=025536&sutra=84",
           locationHref: "http://img.daxumi.top/025/536.png",
           verifyNote: "加提醒（缺行）"

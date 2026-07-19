@@ -1021,7 +1021,7 @@ export const erratumPicData = {
           section: "下",
           location: "缺音釋最後一段",
           correction: "見三九三上",
-          note: "見三九三上",
+          note: "<a href='http://img.daxumi.top/erratum/33.png'>見三九三上",
           correctionHref: "../public/sutra.html?start=075521&end=075560&idx=075560&sutra=1121",
           locationHref: "http://img.daxumi.top/075/560.png",
           verifyNote: "加提醒（缺行）"

@@ -413,7 +413,7 @@ export const erratumPicData = {
           note: "<a href='https://img.daxumi.top/erratum/18.png'>見三七八下</a><br><a href='https://img.daxumi.top/erratum/19.png'>見三七九上</a>",
           correctionHref: "../public/sutra.html?start=037377&end=037474&idx=037396&sutra=185",
           locationHref: "http://img.daxumi.top/037/396.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(半页顺序错)"
         },
         {
           volume: 37,
@@ -424,7 +424,7 @@ export const erratumPicData = {
           note: "<a href='https://img.daxumi.top/erratum/19.png'>見三七九下</a><br><a href='https://img.daxumi.top/erratum/20.png'>見三八〇上</a>",
           correctionHref: "../public/sutra.html?start=037377&end=037474&idx=037405&sutra=185",
           locationHref: "http://img.daxumi.top/037/405.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(半页顺序错)"
         },
         {
           volume: 37,

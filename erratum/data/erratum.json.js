@@ -33,7 +33,7 @@ export const erratumPicData = {
           note: "<a href='https://img.daxumi.top/erratum/14.png'>見三七四</a>",
           correctionHref: "../public/sutra.html?start=001163&end=014082&idx=002482&sutra=1",
           locationHref: "http://img.daxumi.top/002/482.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(374上正确，插入)"
         },
         {
           volume: 2,
@@ -44,7 +44,7 @@ export const erratumPicData = {
           note: "<a href='https://img.daxumi.top/erratum/15.png'>見三七五</a>",
           correctionHref: "../public/sutra.html?start=001163&end=014082&idx=002491&sutra=1",
           locationHref: "http://img.daxumi.top/002/491.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(375下正确，替换)"
         },
         {
           volume: 2,
@@ -370,7 +370,7 @@ export const erratumPicData = {
           note: "<a href='https://img.daxumi.top/erratum/17.png'>見三七七</a>",
           correctionHref: "../public/sutra.html?start=034001&end=034050&idx=034028&sutra=144",
           locationHref: "http://img.daxumi.top/034/28.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(363页下栏应删除)"
         },
         {
           volume: 36,
@@ -381,7 +381,7 @@ export const erratumPicData = {
           note: "<a href='https://img.daxumi.top/erratum/18.png'>見三七八上</a>",
           correctionHref: "../public/sutra.html?start=036001&end=036014&idx=036013&sutra=166",
           locationHref: "http://img.daxumi.top/036/13.png",
-          verifyNote: "（页码原稿为十三，非一三。）加提醒"
+          verifyNote: "（十三应是一三。）加提醒（缺行）"
         },
         {
           volume: 36,

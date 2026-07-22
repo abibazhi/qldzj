@@ -446,7 +446,7 @@ export const erratumPicData = {
           note: "<a href='https://img.daxumi.top/erratum/21.png'>見三八一下</a><br><a href='https://img.daxumi.top/erratum/22.png'>見三八二上</a>",
           correctionHref: "../public/sutra.html?start=037475&end=037556&idx=037494&sutra=186",
           locationHref: "http://img.daxumi.top/037/494.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(半页顺序错)"
         },
         {
           volume: 38,

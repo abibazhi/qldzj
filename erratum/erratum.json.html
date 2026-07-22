@@ -38,17 +38,20 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-/* ========== 表格行悬停高亮 ========== */
+
+/* ========== 表格行悬停高亮（修正版） ========== */
 .table-wrapper table tbody tr {
-  transition: background-color 0.2s ease; /* 平滑过渡 */
+  transition: background-color 0.2s ease;
 }
-.table-wrapper table tbody tr:hover {
-  background-color: #f5f1e6; /* 古籍风格浅米色，不刺眼 */
+/* ✅ 高亮作用在每一行的每个单元格上 */
+.table-wrapper table tbody tr:hover td {
+  background-color: #f5f1e6 !important;
 }
-/* 保持第6列（备注）原有背景不被覆盖 */
+/* ✅ 第6列（备注）保持原色，不被高亮覆盖 */
 .table-wrapper table tbody tr:hover td:nth-child(6) {
-  background-color: #fffdfb;
+  background-color: #fffdfb !important;
 }
+
 
 
   </style>

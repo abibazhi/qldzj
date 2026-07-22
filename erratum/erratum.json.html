@@ -37,6 +37,20 @@
       transform: translateY(-1px);
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
+
+/* ========== 表格行悬停高亮 ========== */
+.table-wrapper table tbody tr {
+  transition: background-color 0.2s ease; /* 平滑过渡 */
+}
+.table-wrapper table tbody tr:hover {
+  background-color: #f5f1e6; /* 古籍风格浅米色，不刺眼 */
+}
+/* 保持第6列（备注）原有背景不被覆盖 */
+.table-wrapper table tbody tr:hover td:nth-child(6) {
+  background-color: #fffdfb;
+}
+
+
   </style>
 </head>
 

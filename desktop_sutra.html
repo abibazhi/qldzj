@@ -170,7 +170,7 @@ import { erratumPicData } from './erratum/data/erratum.json.js';
 //   - 示例：「有三段內文」需要「應空白」
 //          「第一行第一字」→「乃」
 // ============================================================
-
+const activeErrataMap = new Map(); 
 erratumPicData.groups.forEach(group => {
   group.items.forEach(item => {
     if (item.page !== "目錄" && item.page !== "" &&

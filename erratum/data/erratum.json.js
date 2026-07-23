@@ -663,7 +663,7 @@ export const erratumPicData = {
           note: "見三八七下",
           correctionHref: "../public/sutra.html?start=045115&end=045234&idx=045146&sutra=422",
           locationHref: "http://img.daxumi.top/045/146.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(387下第十一至十五行正确)"
         },
         {
           volume: 45,

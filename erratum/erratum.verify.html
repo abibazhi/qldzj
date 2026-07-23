@@ -148,6 +148,68 @@ function volumeToChinese(num) {
 }
 
 // ============================================================
+// 工具函数：将 note 列中的页码自动转换为勘误表图片链接
+// 规则：見三七四 -> 374 - 360 = 14 -> erratum/14.png
+// ============================================================
+function processNoteToLink1(note) {
+  if (!note || !note.includes('見')) return note;
+
+  // 兼容部分笔记包含 <br> 换行的情况，分段处理
+  const parts = note.split('<br>');
+  const processedParts = parts.map(part => {
+    part = part.trim();
+    if (!part.startsWith('見')) return part;
+
+    // 匹配 "見" + 中文数字 + (可选的"上/下")
+    const match = part.match(/^見([三四五六七八九][〇一二三四五六七八九十]+)([上下]?)$/);
+    if (!match) return part; // 格式不符则原样返回
+
+    // 中文数字逐位转阿拉伯数字
+    const cnMap = {'〇':0, '一':1, '二':2, '三':3, '四':4, '五':5, '六':6, '七':7, '八':8, '九':9};
+    let pageNum = 0;
+    for (const char of match[1]) {
+      pageNum = pageNum * 10 + cnMap[char];
+    }
+
+    // 计算图片序号：374 -> 14，即 pageNum - 360
+    const imgIndex = pageNum - 360;
+    // return `<a href="https://img.daxumi.top/erratum/${imgIndex}.png">${part}</a>`;
+    return `<a href="https://qldzj.daxumi.top/public/sutra.html?start=erratum${imgIndex}&end=erratum{imgIndex}&sutra=">${part}</a>`;
+  });
+
+  return processedParts.join('<br>');
+}
+
+// ============================================================
+// 工具函数：处理 note 列，自动添加勘误表链接
+// 规则：取第一个“見XXX”页码计算 erratumNum = pageNum - 360
+// 格式：https://qldzj.daxumi.top/public/sutra.html?start=erratum{N}&end=erratum{N}&sutra=
+// 注意：即使有多个页码参考，也只取第一个生成链接，但包裹整个 note 文本
+// ============================================================
+function processNoteToLink(note) {
+  if (!note || !note.includes('見')) return note;
+
+  const regex = /見([三四五六七八九][〇一二三四五六七八九十]+)([上下]?)/g;
+  let match = regex.exec(note);
+  if (!match) return note; // 未找到页码格式则原样返回
+
+  // 计算链接参数（严格取第一个匹配的页码）
+  const firstPageStr = match[1];
+  const cnMap = {'〇':0, '一':1, '二':2, '三':3, '四':4, '五':5, '六':6, '七':7, '八':8, '九':9};
+  let pageNum = 0;
+  for (const char of firstPageStr) {
+    pageNum = pageNum * 10 + cnMap[char];
+  }
+
+  const erratumNum = pageNum - 360;
+  const url = `https://qldzj.daxumi.top/public/sutra.html?start=erratum${erratumNum}&end=erratum${erratumNum}&sutra=`;
+
+  // 将整个 note 文本（含 <br> 等）包裹在单个 <a> 标签中
+  return `<a href="${url}">${note}</a>`;
+}
+
+
+// ============================================================
 // 主逻辑：生成所有组的内容
 // ============================================================
 function generateContent() {
@@ -224,39 +286,6 @@ function generateContent() {
     document.getElementById('groupBadge').textContent = `13 组 · ${totalItems} 条`;
     
     console.log(`✅ 勘误表生成完成，共 ${totalItems} 条记录`);
-}
-
-// ============================================================
-// 工具函数：将 note 列中的页码自动转换为勘误表图片链接
-// 规则：見三七四 -> 374 - 360 = 14 -> erratum/14.png
-// ============================================================
-function processNoteToLink(note) {
-  if (!note || !note.includes('見')) return note;
-
-  // 兼容部分笔记包含 <br> 换行的情况，分段处理
-  const parts = note.split('<br>');
-  const processedParts = parts.map(part => {
-    part = part.trim();
-    if (!part.startsWith('見')) return part;
-
-    // 匹配 "見" + 中文数字 + (可选的"上/下")
-    const match = part.match(/^見([三四五六七八九][〇一二三四五六七八九十]+)([上下]?)$/);
-    if (!match) return part; // 格式不符则原样返回
-
-    // 中文数字逐位转阿拉伯数字
-    const cnMap = {'〇':0, '一':1, '二':2, '三':3, '四':4, '五':5, '六':6, '七':7, '八':8, '九':9};
-    let pageNum = 0;
-    for (const char of match[1]) {
-      pageNum = pageNum * 10 + cnMap[char];
-    }
-
-    // 计算图片序号：374 -> 14，即 pageNum - 360
-    const imgIndex = pageNum - 360;
-    // return `<a href="https://img.daxumi.top/erratum/${imgIndex}.png">${part}</a>`;
-    return `<a href="https://qldzj.daxumi.top/public/sutra.html?start=erratum${imgIndex}&end=erratum{imgIndex}&sutra=">${part}</a>`;
-  });
-
-  return processedParts.join('<br>');
 }
 
 

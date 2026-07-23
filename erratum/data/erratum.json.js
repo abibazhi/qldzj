@@ -629,7 +629,7 @@ export const erratumPicData = {
           correction: "六七五頁與六七六頁應調換",
           note: "見三八五下<br>至三八七上",
           correctionHref: "../public/sutra.html?start=043669&end=043680&idx=043675&sutra=411",
-          locationHref: "http://img.daxumi.top/043/675.png"
+          locationHref: "http://img.daxumi.top/043/675.png",
           verifyNote: "加提醒（整页顺序错误）"
         },
         {

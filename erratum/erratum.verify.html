@@ -252,7 +252,8 @@ function processNoteToLink(note) {
 
     // 计算图片序号：374 -> 14，即 pageNum - 360
     const imgIndex = pageNum - 360;
-    return `<a href="https://img.daxumi.top/erratum/${imgIndex}.png">${part}</a>`;
+    // return `<a href="https://img.daxumi.top/erratum/${imgIndex}.png">${part}</a>`;
+    return `<a href="https://qldzj.daxumi.top/public/sutra.html?start=erratum${imgIndex}&end=erratum{imgIndex}&sutra=">${part}</a>`;
   });
 
   return processedParts.join('<br>');

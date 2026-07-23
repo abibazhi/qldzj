@@ -171,15 +171,16 @@ import { erratumPicData } from './erratum/data/erratum.json.js';
 //          「第一行第一字」→「乃」
 // ============================================================
 
-const oneCharErrataMap = new Map();
+//const oneCharErrataMap = new Map();
+const activeErrataMap = new Map();
 erratumPicData.groups.forEach(group => {
   group.items.forEach(item => {
     if (item.page !== "目錄" && item.page !== "" &&
         ((item.correction && item.correction.length <= 3) ||
          (item.verifyNote && item.verifyNote.includes('加提醒')))) {
       const key = `${item.volume}_${item.page}`;
-      if (!oneCharErrataMap.has(key)) {
-        oneCharErrataMap.set(key, []);
+      if (!activeErrataMap.has(key)) {
+        activeErrataMap.set(key, []);
       }
       oneCharErrataMap.get(key).push(item);
     }

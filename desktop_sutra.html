@@ -171,8 +171,6 @@ import { erratumPicData } from './erratum/data/erratum.json.js';
 //          「第一行第一字」→「乃」
 // ============================================================
 
-//const oneCharErrataMap = new Map();
-const activeErrataMap = new Map();
 erratumPicData.groups.forEach(group => {
   group.items.forEach(item => {
     if (item.page !== "目錄" && item.page !== "" &&
@@ -182,7 +180,7 @@ erratumPicData.groups.forEach(group => {
       if (!activeErrataMap.has(key)) {
         activeErrataMap.set(key, []);
       }
-      oneCharErrataMap.get(key).push(item);
+      activeErrataMap.get(key).push(item);
     }
   });
 });
@@ -191,7 +189,7 @@ function checkErratum(vol, page) {
   const volNum = parseInt(vol, 10);
   const pageNum = parseInt(page, 10);
   if (isNaN(volNum) || isNaN(pageNum)) return null;
-  return oneCharErrataMap.get(`${volNum}_${pageNum}`);
+  return activeErrataMap.get(`${volNum}_${pageNum}`);
 }
 
 /**

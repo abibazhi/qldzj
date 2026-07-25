@@ -1510,7 +1510,7 @@ export const erratumPicData = {
           note: "見四〇五",
           correctionHref: "../public/sutra.html?start=125335&end=127854&idx=126249&sutra=1532",
           locationHref: "http://img.daxumi.top/126/249.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(连续两段和后序两段顺序错误)"
         },
         {
           volume: 128,

@@ -1272,7 +1272,7 @@ export const erratumPicData = {
           note: "見三九五上",
           correctionHref: "../public/sutra.html?start=101001&end=101258&idx=101146&sutra=1269",
           locationHref: "http://img.daxumi.top/101/146.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(146页下栏第一第二段次序错误。)"
         }
       ]
     },

@@ -836,7 +836,7 @@ export const erratumPicData = {
           note: "見三九一上",
           correctionHref: "../public/sutra.html?start=062023&end=062046&idx=062041&sutra=965",
           locationHref: "http://img.daxumi.top/062/41.png",
-          verifyNote: "加提醒（缺行）"
+          verifyNote: "加提醒（最后一段缺失）"
         },
         {
           volume: 62,

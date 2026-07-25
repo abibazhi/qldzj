@@ -1228,7 +1228,7 @@ export const erratumPicData = {
           note: "見三九四上",
           correctionHref: "../public/sutra.html?start=089097&end=092538&idx=091004&sutra=1256",
           locationHref: "http://img.daxumi.top/091/4.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(第4页下栏最后一段错。394页上栏最后一段对。)"
         },
         {
           volume: 91,

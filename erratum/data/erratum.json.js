@@ -1239,7 +1239,7 @@ export const erratumPicData = {
           note: "見三九四下",
           correctionHref: "../public/sutra.html?start=089097&end=092538&idx=091009&sutra=1256",
           locationHref: "http://img.daxumi.top/091/9.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(第9页下栏最后一段错。394页下栏最后一段对。)"
         },
         {
           volume: 92,

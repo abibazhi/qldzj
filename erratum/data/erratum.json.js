@@ -1087,7 +1087,7 @@ export const erratumPicData = {
           note: "見三九三下",
           correctionHref: "../public/sutra.html?start=080409&end=082480&idx=082228&sutra=1164",
           locationHref: "http://img.daxumi.top/082/228.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(段落次序错误。上栏第一段和第二段应调换)"
         }
       ]
     },

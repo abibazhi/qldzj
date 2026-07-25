@@ -1620,7 +1620,7 @@ export const erratumPicData = {
           note: "見四〇六下",
           correctionHref: "../public/sutra.html?start=131171&end=131226&idx=131208&sutra=1551",
           locationHref: "http://img.daxumi.top/131/208.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(208下栏第三段不对。406下栏第三段对。)"
         },
         {
           volume: 131,

@@ -1357,7 +1357,8 @@ export const erratumPicData = {
           correction: "見三九九至四〇一",
           note: "見三九九至四〇一",
           correctionHref: "../public/sutra.html?start=106485&end=106750&idx=106694&sutra=1315",
-          locationHref: "http://img.daxumi.top/106/694.png"
+          locationHref: "http://img.daxumi.top/106/694.png",
+          verifyNote: "加提醒(连续三页错误。)"
         },
         {
           volume: 107,

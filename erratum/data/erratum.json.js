@@ -748,7 +748,7 @@ export const erratumPicData = {
           note: "見三八八",
           correctionHref: "../public/sutra.html?start=048725&end=048736&idx=048726&sutra=534",
           locationHref: "http://img.daxumi.top/048/726.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(726下第一段和727上第三段相同，之间内容应删除)"
         },
         {
           volume: 51,

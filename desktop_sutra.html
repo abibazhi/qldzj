@@ -171,12 +171,30 @@ import { erratumPicData } from './erratum/data/erratum.json.js';
 //          「第一行第一字」→「乃」
 // ============================================================
 const activeErrataMap = new Map(); 
+let lastVolume = null;             // <--- 【新增】用于记忆上一行的册数
+
 erratumPicData.groups.forEach(group => {
   group.items.forEach(item => {
+
+    // ============================================================
+    // 【核心修改】：继承逻辑（如果当前为空，则使用上一行的册数）
+    // ============================================================
+    const effectiveVol = item.volume !== null ? item.volume : lastVolume;
+    
+    // 只有当当前行明确写了册数时，才更新“记忆”；否则保持上一行的值
+    if (item.volume !== null) {
+      lastVolume = item.volume; 
+    }
+
+
     if (item.page !== "目錄" && item.page !== "" &&
         ((item.correction && item.correction.length <= 3) ||
          (item.verifyNote && item.verifyNote.includes('加提醒')))) {
-      const key = `${item.volume}_${item.page}`;
+
+      // const key = `${item.volume}_${item.page}`;
+      // 【关键】：使用 effectiveVol（继承后的册数）而不是 item.volume
+      const key = `${effectiveVol}_${item.page}`; 
+
       if (!activeErrataMap.has(key)) {
         activeErrataMap.set(key, []);
       }

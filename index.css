@@ -4,229 +4,240 @@ body {
     padding: 20px;
     background-color: #f9f9f9;
 }
+
 h1 {
     text-align: center;
     font-size: 2em;
     margin-bottom: 30px;
     color: #333;
 }
-.container, .special-anchor {
-    max-width: 1000px; /* 与.container保持一致 */
-    margin: 0 auto; /* 居中显示 */
-    padding: 0 20px 20px 20px; /* 增加内边距，底部留白 */
+
+/* ===== 容器统一 ===== */
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
     background-color: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border-radius: 12px 12px 0 0;  /* 顶部圆角，底部无圆角 */
+    overflow: hidden;  /* 确保子元素不溢出圆角 */
 }
+
 .special-anchor {
-    padding: 10px 20px; /* 增加额外的内边距 */
-    border-bottom: 1px solid #ddd; /* 可选：增加下边框以区分 */
-    background-color: #fafafa; /* 轻微不同的背景颜色用于区分 */
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+    background-color: #fafafa;
+    border-radius: 12px 12px 0 0;  /* 与容器保持一致 */
+    margin: 0 -20px;  /* 负边距抵消 container 的 padding，实现全宽 */
+    padding-left: 40px;  /* 补偿负边距导致的偏移 */
+    padding-right: 40px;
 }
+
+/* ===== 表格样式 ===== */
 table {
     border-collapse: collapse;
     width: 100%;
 }
+
 th, td {
     border: 1px solid #999;
     padding: 10px;
     text-align: left;
 }
+
 th {
     background-color: #f2f2f2;
 }
+
 a {
     color: #0066cc;
     text-decoration: none;
 }
+
 a:hover {
     text-decoration: underline;
 }
 
+/* ===== 警示图标 ===== */
 .scroll-link, .preface-link {
-  display: inline-block; /* 确保元素在一行内显示 */
-  padding-right: 5px; /* 给第二个链接前留一点空白 */
-  text-decoration: none; /* 如果需要移除下划线可以取消注释 */
+    display: inline-block;
+    padding-right: 5px;
+    text-decoration: none;
 }
 
 .scroll-link {
-  padding-left: 5px; /* 给第一个链接和这个链接之间增加一点空隙 */
+    padding-left: 5px;
 }
-/* 在 <a> 上显示黄色小三角警示（仅图标，不干扰文字） */
+
 a.suspect {
-  position: relative;
-  text-decoration: none; /* 确保下划线不会被图标干扰 */
+    position: relative;
+    text-decoration: none;
 }
 
 a.suspect::after {
-  content: "⚠️";
-  position: absolute;
-  top: 0;
-  right: "-16px"; /* 图标放在链接文字右侧一点，避免重叠 */
-  font-size: 0.8em;
-  color: #d9a000; /* 醒目的黄色 */
-  opacity: 0.8;
-  pointer-events: none; /* 确保点击区域不受影响 */
-}
-
-/* 警示图标样式 */
-.suspect-icon {
-  display: inline-block;
-  margin-left: 4px; /* 与文字之间留一点空隙 */
-  font-size: 0.8em;
-  color: #d9a000;
-  opacity: 0.8;
-  vertical-align: top; /* 避免影响行高 */
-  line-height: 1;
-}
-.suspect-icon {
-  display: inline-block;
-  margin-left: 4px;
-  font-size: 0.8em;
-  color: #d9a000;
-  opacity: 0.8;
-  vertical-align: middle; /* 关键：与文字垂直居中对齐 */
-  line-height: 1;
+    content: "⚠️";
+    position: absolute;
+    top: 0;
+    right: "-16px";
+    font-size: 0.8em;
+    color: #d9a000;
+    opacity: 0.8;
+    pointer-events: none;
 }
 
 .suspect-icon {
-  display: inline-block;
-  margin-left: 4px;
-  font-size: 0.8em;
-  color: #d9a000;
-  opacity: 0.8;
-  vertical-align: baseline; /* 先对齐基线 */
-  transform: translateY(-0.1em); /* 向下微移 0.1 倍当前字体大小 */
-  line-height: 1;
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 0.8em;
+    color: #d9a000;
+    opacity: 0.8;
+    vertical-align: baseline;
+    transform: translateY(-0.1em);
+    line-height: 1;
 }
 
-/* 移动端微调 */
-@media (max-width: 600px) {
-  .suspect-icon {
-    margin-left: 3px;
-    font-size: 0.75em;
-  }
+/* ===== 底部信息栏 ===== */
+.footer-info {
+    background: #ffffff;
+    padding: 28px 30px 22px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    border-top: none;  /* 去掉上边框 */
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    border-radius: 0 0 12px 12px;  /* 底部圆角 */
+    box-sizing: border-box;
+    transition: box-shadow 0.3s ease;
 }
 
+.footer-info:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
 
-        /* ===== 底部信息栏 ===== */
-        .footer-info {
-            background: #ffffff;
-            border-radius: 12px;
-            padding: 28px 30px 22px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-            border: 1px solid #eaeef2;
-            max-width: 800px;
-            margin: 0 auto;
-            width: 100%;
-            transition: box-shadow 0.3s ease;
-        }
+/* ---- 链接容器 ---- */
+.footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+}
 
-        .footer-info:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
+/* ---- 每个图标链接 ---- */
+.footer-icon-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: #4a5568;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    background: transparent;
+    border: 1px solid transparent;
+}
 
-        /* ---- 链接容器 ---- */
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px 10px;
-        }
+.footer-icon-link i {
+    font-size: 1.4rem;
+    transition: transform 0.25s ease;
+}
 
-        /* ---- 每个图标链接 ---- */
-        .footer-icon-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            color: #4a5568;
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: all 0.25s ease;
-            background: transparent;
-            border: 1px solid transparent;
-        }
+.footer-icon-link:hover {
+    background: #f0f4f8;
+    border-color: #dce4ec;
+    color: #1a202c;
+    transform: translateY(-2px);
+}
 
-        .footer-icon-link i {
-            font-size: 1.4rem;
-            transition: transform 0.25s ease;
-        }
+.footer-icon-link:hover i {
+    transform: scale(1.12);
+}
 
-        .footer-icon-link:hover {
-            background: #f0f4f8;
-            border-color: #dce4ec;
-            color: #1a202c;
-            transform: translateY(-2px);
-        }
+/* ---- 分割线 ---- */
+.footer-divider {
+    color: #cbd5e0;
+    font-size: 1.2rem;
+    font-weight: 300;
+    user-select: none;
+    padding: 0 4px;
+}
 
-        .footer-icon-link:hover i {
-            transform: scale(1.12);
-        }
+/* ---- 底部备注 ---- */
+.footer-note {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #edf2f7;
+    text-align: center;
+    font-size: 0.82rem;
+    color: #a0aec0;
+    letter-spacing: 0.3px;
+}
 
-        /* ---- 分割线 ---- */
-        .footer-divider {
-            color: #cbd5e0;
-            font-size: 1.2rem;
-            font-weight: 300;
-            user-select: none;
-            padding: 0 4px;
-        }
+.footer-note .heart {
+    color: #e53e3e;
+    display: inline-block;
+    animation: pulse 2s ease-in-out infinite;
+}
 
-        /* ---- 底部备注 ---- */
-        .footer-note {
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #edf2f7;
-            text-align: center;
-            font-size: 0.82rem;
-            color: #a0aec0;
-            letter-spacing: 0.3px;
-        }
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
 
-        .footer-note .heart {
-            color: #e53e3e;
-            display: inline-block;
-            animation: pulse 2s ease-in-out infinite;
-        }
+.footer-note a {
+    color: #4299e1;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-        }
+.footer-note a:hover {
+    color: #2b6cb0;
+    text-decoration: underline;
+}
 
-        .footer-note a {
-            color: #4299e1;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
+/* ===== 响应式 ===== */
+@media (max-width: 520px) {
+    .container {
+        padding: 0 10px;
+        border-radius: 8px 8px 0 0;
+    }
 
-        .footer-note a:hover {
-            color: #2b6cb0;
-            text-decoration: underline;
-        }
+    .special-anchor {
+        margin: 0 -10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        border-radius: 8px 8px 0 0;
+    }
 
-        /* ===== 响应式 ===== */
-        @media (max-width: 520px) {
-            .footer-info {
-                padding: 18px 14px 14px;
-            }
+    .footer-info {
+        padding: 18px 14px 14px;
+        border-radius: 0 0 8px 8px;
+    }
 
-            .footer-icon-link {
-                padding: 6px 12px;
-                font-size: 0.8rem;
-            }
+    .footer-icon-link {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
 
-            .footer-icon-link .link-label {
-                display: none;
-            }
+    .footer-icon-link .link-label {
+        display: none;
+    }
 
-            .footer-icon-link i {
-                font-size: 1.3rem;
-            }
-        }
+    .footer-icon-link i {
+        font-size: 1.3rem;
+    }
+}
 
+@media (max-width: 400px) {
+    .footer-info {
+        padding: 14px 10px 12px;
+    }
 
+    .footer-icon-link {
+        padding: 4px 8px;
+    }
+}

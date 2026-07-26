@@ -97,6 +97,22 @@ a.suspect::after {
 }
 
 /* ===== 底部信息栏（独立，与表格分开） ===== */
+
+/* ===== 底部信息栏 ===== */
+.footer-info {
+    background: #ffffff;
+    padding: 28px 20px 22px;  /* ✅ 左右改为 20px，与 .container 对齐 */
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    max-width: 1000px;
+    margin: 20px auto 0 auto;
+    width: 100%;
+    border-radius: 12px;
+    box-sizing: border-box;
+    transition: box-shadow 0.3s ease;
+}
+
+
 .footer-info {
     background: #ffffff;
     padding: 28px 30px 22px;
@@ -199,6 +215,7 @@ a.suspect::after {
 }
 
 /* ===== 响应式 ===== */
+
 @media (max-width: 520px) {
     .container {
         padding: 0 10px 15px 10px;
@@ -213,7 +230,7 @@ a.suspect::after {
     }
 
     .footer-info {
-        padding: 18px 14px 14px;
+        padding: 18px 10px 14px;  /* ✅ 与 .container 的 padding 一致 */
         border-radius: 8px;
         margin-top: 15px;
     }
@@ -245,7 +262,7 @@ a.suspect::after {
     }
 
     .footer-info {
-        padding: 14px 10px 12px;
+        padding: 14px 8px 12px;  /* ✅ 与 .container 的 padding 一致 */
     }
 
     .footer-icon-link {

@@ -31,6 +31,10 @@ h1 {
     margin: 0;
 }
 
+.special-anchor a:first-child {
+    margin-left: 0;
+}
+
 /* ===== 表格样式 ===== */
 table {
     border-collapse: collapse;

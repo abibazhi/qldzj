@@ -25,14 +25,10 @@ h1 {
 
 /* ===== 快速跳转锚点 ===== */
 .special-anchor {
-    padding: 10px 0;
+    padding: 10px 20px;      /* 左右内边距与 container 一致 */
     border-bottom: 1px solid #ddd;
     background-color: #fafafa;
-    margin: 0;
-}
-
-.special-anchor a:first-child {
-    margin-left: 0;
+    margin: 0 -20px;         /* 负边距撑满白色区域 */
 }
 
 /* ===== 表格样式 ===== */
@@ -208,7 +204,8 @@ a.suspect::after {
     }
 
     .special-anchor {
-        padding: 8px 0;
+        padding: 8px 10px;
+        margin: 0 -10px;
         font-size: 0.85rem;
     }
 
@@ -238,7 +235,8 @@ a.suspect::after {
     }
 
     .special-anchor {
-        padding: 6px 0;
+        padding: 6px 8px;
+        margin: 0 -8px;
         font-size: 0.75rem;
     }
 

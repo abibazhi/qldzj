@@ -16,7 +16,7 @@ h1 {
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 0 20px 20px 20px;
+    padding: 0;  /* ✅ 去掉所有 padding */
     background-color: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border-radius: 12px;
@@ -25,10 +25,10 @@ h1 {
 
 /* ===== 快速跳转锚点 ===== */
 .special-anchor {
-    padding: 10px 20px;      /* 左右内边距与 container 一致 */
+    padding: 10px 20px;  /* ✅ 直接加内边距 */
     border-bottom: 1px solid #ddd;
     background-color: #fafafa;
-    margin: 0 -20px;         /* 负边距撑满白色区域 */
+    margin: 0;
 }
 
 /* ===== 表格样式 ===== */
@@ -199,13 +199,11 @@ a.suspect::after {
 /* ===== 响应式 ===== */
 @media (max-width: 520px) {
     .container {
-        padding: 0 10px 15px 10px;
         border-radius: 8px;
     }
 
     .special-anchor {
         padding: 8px 10px;
-        margin: 0 -10px;
         font-size: 0.85rem;
     }
 
@@ -230,13 +228,8 @@ a.suspect::after {
 }
 
 @media (max-width: 400px) {
-    .container {
-        padding: 0 8px 12px 8px;
-    }
-
     .special-anchor {
         padding: 6px 8px;
-        margin: 0 -8px;
         font-size: 0.75rem;
     }
 

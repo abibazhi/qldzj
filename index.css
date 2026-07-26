@@ -16,7 +16,7 @@ h1 {
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 20px;  /* ✅ 白色包围圈 */
+    padding: 20px;  /* 白色包围圈 */
     background-color: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border-radius: 12px;
@@ -25,11 +25,11 @@ h1 {
 
 /* ===== 快速跳转锚点 ===== */
 .special-anchor {
-    padding: 10px 15px;  /* ✅ 和表格单元格内边距一致 */
+    padding: 10px 15px;  /* 和表格单元格内边距一致 */
     border-bottom: 1px solid #ddd;
     background-color: #fafafa;
-    margin: 0;
-    border-radius: 8px 8px 0 0;
+    margin: -20px -20px 0 -20px;  /* 负边距撑满白色包围圈 */
+    border-radius: 12px 12px 0 0;  /* 顶部圆角和 container 一致 */
 }
 
 /* ===== 表格样式 ===== */
@@ -40,9 +40,10 @@ table {
 
 th, td {
     border: 1px solid #999;
-    padding: 10px 15px;  /* ✅ 和 special-anchor 内边距一致 */
+    padding: 10px 15px;
     text-align: left;
 }
+
 
 th {
     background-color: #f2f2f2;

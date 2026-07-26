@@ -180,3 +180,37 @@ a.suspect::after {
     transition: transform 0.2s;
 }
 
+.footer-icon-simple {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* 关键：设置固定大小，确保图标可见 */
+    width: 32px;
+    height: 32px;
+    
+    /* 关键：设置图标颜色 */
+    color: #555; 
+    
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    
+    /* 确保图标在容器内居中 */
+    line-height: 0;
+}
+
+.footer-icon-simple:hover {
+    color: #24292f;
+    background-color: #f0f4f8;
+}
+
+/* 注意：Iconify 生成的图标是 <svg> 标签，但它是 <iconify-icon> 的子元素 */
+/* 不需要单独针对 svg 做 transform，除非你明确知道它的 DOM 结构 */
+/* 如果图标本身没有动效需求，可以删除这个规则 */
+.footer-icon-simple:hover svg {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+}
+
+

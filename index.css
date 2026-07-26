@@ -110,107 +110,124 @@ a.suspect::after {
 
 
 /* ===== 底部信息栏 ===== */
-.footer-info {
-    margin-top: 30px;
-    padding: 20px 0 10px 0;
-    border-top: 2px solid #e8e8e8;
-    text-align: center;
-    font-size: 0.95em;
-    color: #555;
-}
+        .footer-info {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 28px 30px 22px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid #eaeef2;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            transition: box-shadow 0.3s ease;
+        }
 
-.footer-links {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px 4px;
-}
+        .footer-info:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
 
-.footer-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-}
+        /* ---- 链接容器 ---- */
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+        }
 
-.footer-label {
-    color: #888;
-    font-weight: 500;
-}
+        /* ---- 每个图标链接 ---- */
+        .footer-icon-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            background: transparent;
+            border: 1px solid transparent;
+        }
 
-.footer-divider {
-    color: #ccc;
-    margin: 0 6px;
-    user-select: none;
-}
+        .footer-icon-link iconify-icon {
+            font-size: 1.5rem;
+            transition: transform 0.25s ease;
+        }
 
-.footer-info a {
-    color: #0066cc;
-    text-decoration: none;
-    transition: color 0.2s;
-}
+        .footer-icon-link:hover {
+            background: #f0f4f8;
+            border-color: #dce4ec;
+            color: #1a202c;
+            transform: translateY(-2px);
+        }
 
-.footer-info a:hover {
-    color: #003d99;
-    text-decoration: underline;
-}
+        .footer-icon-link:hover iconify-icon {
+            transform: scale(1.12);
+        }
 
-.footer-note {
-    margin-top: 10px;
-    font-size: 0.85em;
-    color: #999;
-}
+        /* ---- 分割线 ---- */
+        .footer-divider {
+            color: #cbd5e0;
+            font-size: 1.2rem;
+            font-weight: 300;
+            user-select: none;
+            padding: 0 4px;
+        }
 
-.footer-icon-simple {
-    display: inline-flex;
-    align-items: center;
-    color: #555;
-    padding: 4px 8px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-}
+        /* ---- 底部备注 ---- */
+        .footer-note {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #edf2f7;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #a0aec0;
+            letter-spacing: 0.3px;
+        }
 
-.footer-icon-simple:hover {
-    color: #24292f;
-    background-color: #f0f4f8;
-}
+        .footer-note .heart {
+            color: #e53e3e;
+            display: inline-block;
+            animation: pulse 2s ease-in-out infinite;
+        }
 
-.footer-icon-simple:hover svg {
-    transform: scale(1.05);
-    transition: transform 0.2s;
-}
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
 
-.footer-icon-simple {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    
-    /* 关键：设置固定大小，确保图标可见 */
-    width: 32px;
-    height: 32px;
-    
-    /* 关键：设置图标颜色 */
-    color: #555; 
-    
-    padding: 4px 8px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    
-    /* 确保图标在容器内居中 */
-    line-height: 0;
-}
+        .footer-note a {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
 
-.footer-icon-simple:hover {
-    color: #24292f;
-    background-color: #f0f4f8;
-}
+        .footer-note a:hover {
+            color: #2b6cb0;
+            text-decoration: underline;
+        }
 
-/* 注意：Iconify 生成的图标是 <svg> 标签，但它是 <iconify-icon> 的子元素 */
-/* 不需要单独针对 svg 做 transform，除非你明确知道它的 DOM 结构 */
-/* 如果图标本身没有动效需求，可以删除这个规则 */
-.footer-icon-simple:hover svg {
-    transform: scale(1.05);
-    transition: transform 0.2s;
-}
+        /* ===== 响应式 ===== */
+        @media (max-width: 520px) {
+            .footer-info {
+                padding: 18px 14px 14px;
+            }
+
+            .footer-icon-link {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+
+            .footer-icon-link .link-label {
+                display: none;
+            }
+
+            .footer-icon-link iconify-icon {
+                font-size: 1.4rem;
+            }
+        }
 
 

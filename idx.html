@@ -7,6 +7,7 @@
 
     <!-- ⭐ 添加 Iconify 库 -->
     <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+
     <script>
     var _hmt = _hmt || [];
     (function() {
@@ -47,26 +48,41 @@
     </div>
 
     <!-- 底部信息栏 -->
-    <div class="footer-info">
+    <footer class="footer-info">
         <div class="footer-links">
-            <!-- 1. 替换 GitHub 图标 -->
-            <a href="https://github.com/abibazhi/qldzj" class="footer-icon-simple" title="项目地址">
-                <!-- 使用 Iconify 渲染 GitHub 图标 -->
+
+            <!-- 1. GitHub -->
+            <a href="https://github.com/abibazhi/qldzj"
+               class="footer-icon-link"
+               title="查看项目源码"
+               target="_blank"
+               rel="noopener noreferrer">
                 <iconify-icon icon="logos:github-icon" width="28" height="28"></iconify-icon>
+                <span class="link-label">项目地址</span>
             </a>
-            
+
             <span class="footer-divider">|</span>
-            
-            <!-- 2. 替换 勘误表 图标 (这里使用通用的 edit/notes 图标) -->
-            <a href="erratum/erratum.json.html" class="footer-icon-simple" title="勘误表核对及增补">
-                <!-- 使用 Iconify 渲染记事本/编辑图标 -->
+
+            <!-- 2. 勘误表 -->
+            <a href="erratum/erratum.json.html"
+               class="footer-icon-link"
+               title="勘误表核对及增补">
                 <iconify-icon icon="tabler:file-pencil" width="28" height="28"></iconify-icon>
+                <span class="link-label">勘误表</span>
             </a>
+
         </div>
+
         <div class="footer-note">
-            本目录仅供学习参考，如有错误欢迎提交 Issue 或 PR 指正
+            <span class="heart">❤</span>
+            本目录仅供学习参考，如有错误欢迎提交
+            <a href="https://github.com/abibazhi/qldzj/issues" target="_blank">Issue</a>
+            或
+            <a href="https://github.com/abibazhi/qldzj/pulls" target="_blank">PR</a>
+            指正
         </div>
-    </div>
+    </footer>
+
 
 
 

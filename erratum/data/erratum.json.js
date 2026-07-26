@@ -1654,14 +1654,14 @@ export const erratumPicData = {
       originalPage: 370,
       items: [
         {
-          volume: 133,
+          volume: 132,
           page: 97,
           section: "下",
           location: "缺第十一行",
           correction: "文封故言念念然念與劫皆有相即相入等",
           note: "",
-          correctionHref: "../public/sutra.html?start=133001&end=137196&idx=133097&sutra=1557",
-          locationHref: "http://img.daxumi.top/133/97.png",
+          correctionHref: "../public/sutra.html?start=132001&end=137196&idx=12097&sutra=1557",
+          locationHref: "http://img.daxumi.top/133/92.png",
           verifyNote: "加提醒（缺行）（不明白啊，十一行到底加哪里？）"
         },
         {

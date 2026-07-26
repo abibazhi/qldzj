@@ -295,6 +295,10 @@ function generateContent() {
 // ============================================================
 function generateRows(items) {
     return items.map(item => {
+        // 定义链接图标，可根据喜好替换为 🔗, ↗, 📖 等
+        const ICON_LINK = '🔗'; 
+        const ICON_CORRECTION = '🔗'; // 🔍或者也用 🔗，或者用 📖 表示“去原文验证”
+
         const volumeStr = item.volume !== null ? volumeToChinese(item.volume) : '';
         
         // 特殊处理：V=36, P=13 显示为"十三"，非"一三"
@@ -307,6 +311,7 @@ function generateRows(items) {
         
         const section = item.section || '';
         
+```
         // 原文列：有链接则显示链接
         let locationHtml = item.location || '';
         if (item.locationHref) {
@@ -329,6 +334,27 @@ function generateRows(items) {
                 correctionHtml = `<a href="${hrefs[0]}">${item.correction}</a>`;
             }
         }
+```
+// 原文列：文字 + 链接图标
+let locationHtml = item.location || '';
+if (item.locationHref) {
+    const hrefs = item.locationHref.split(' | ');
+    // 如果有多重链接，默认打开第一个，hover提示其他
+    const href = hrefs[0];
+    const title = hrefs.length > 1 ? '点击查看原文 (另有 ' + (hrefs.length - 1) + ' 个关联链接)' : '点击查看原文';
+    // 使用 <span> 包裹图标，添加 hover 提示，避免文字本身成为链接
+    locationHtml = `${item.location} <a href="${href}" title="${title}" style="text-decoration:none; font-size:0.85em; margin-left:4px; color:#5f4f3f;">${ICON_LINK}</a>`;
+}
+
+// 更正列：文字 + 链接图标
+let correctionHtml = item.correction || '';
+if (item.correctionHref) {
+    const hrefs = item.correctionHref.split(' | ');
+    const href = hrefs[0];
+    const title = hrefs.length > 1 ? '点击查看更正 (另有 ' + (hrefs.length - 1) + ' 个关联链接)' : '点击查看更正';
+    // 使用 <span> 包裹图标
+    correctionHtml = `${item.correction} <a href="${href}" title="${title}" style="text-decoration:none; font-size:0.85em; margin-left:4px; color:#0066cc;">${ICON_CORRECTION}</a>`;
+}
         
         //// 備註列：原始勘误表备注
         //const noteHtml = item.note || '';

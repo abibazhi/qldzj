@@ -1649,7 +1649,8 @@ export const erratumPicData = {
 
     // ========== 第10组：原稿第 370 页，共 16 条 ==========
     {
-      groupNum: 10,
+      groupNum: 10,华严会本悬谈会玄记
+第132册
       image: "https://img.daxumi.top/erratum/10.png",
       originalPage: 370,
       items: [
@@ -1673,7 +1674,7 @@ export const erratumPicData = {
           note: "見四〇七上",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=133407&sutra=1557",
           locationHref: "http://img.daxumi.top/133/407.png",
-          verifyNote: "加提醒（缺行）"
+          verifyNote: "加提醒（勘误407页的上栏开始三行对。）"
         },
         {
           volume: 133,

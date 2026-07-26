@@ -311,8 +311,9 @@ function generateRows(items) {
         
         const section = item.section || '';
         
-```
+
         // 原文列：有链接则显示链接
+/*
         let locationHtml = item.location || '';
         if (item.locationHref) {
             // 支持多个链接（用 | 分隔）
@@ -323,8 +324,10 @@ function generateRows(items) {
                 locationHtml = `<a href="${hrefs[0]}">${item.location}</a>`;
             }
         }
+*/
         
         // 更正列：有链接则显示链接
+/*
         let correctionHtml = item.correction || '';
         if (item.correctionHref) {
             const hrefs = item.correctionHref.split(' | ');
@@ -334,27 +337,32 @@ function generateRows(items) {
                 correctionHtml = `<a href="${hrefs[0]}">${item.correction}</a>`;
             }
         }
-```
-// 原文列：文字 + 链接图标
-let locationHtml = item.location || '';
-if (item.locationHref) {
-    const hrefs = item.locationHref.split(' | ');
-    // 如果有多重链接，默认打开第一个，hover提示其他
-    const href = hrefs[0];
-    const title = hrefs.length > 1 ? '点击查看原文 (另有 ' + (hrefs.length - 1) + ' 个关联链接)' : '点击查看原文';
-    // 使用 <span> 包裹图标，添加 hover 提示，避免文字本身成为链接
-    locationHtml = `${item.location} <a href="${href}" title="${title}" style="text-decoration:none; font-size:0.85em; margin-left:4px; color:#5f4f3f;">${ICON_LINK}</a>`;
-}
+*/
 
-// 更正列：文字 + 链接图标
-let correctionHtml = item.correction || '';
-if (item.correctionHref) {
-    const hrefs = item.correctionHref.split(' | ');
-    const href = hrefs[0];
-    const title = hrefs.length > 1 ? '点击查看更正 (另有 ' + (hrefs.length - 1) + ' 个关联链接)' : '点击查看更正';
-    // 使用 <span> 包裹图标
-    correctionHtml = `${item.correction} <a href="${href}" title="${title}" style="text-decoration:none; font-size:0.85em; margin-left:4px; color:#0066cc;">${ICON_CORRECTION}</a>`;
-}
+
+        // ==========================================
+        // 【新增】安全处理链接：如果链接存在，追加图标；否则显示纯文本
+        // ==========================================
+        
+        // 1. 原文列
+        let locationHtml = item.location || '';
+        // 安全检查：确保 item.locationHref 存在且不为空字符串
+        if (item.locationHref) {
+            const href = item.locationHref.split(' | ')[0]; // 取第一个链接
+            // 使用 &nbsp; 分隔文字和图标，防止紧贴
+            locationHtml = `${item.location}&nbsp;<a href="${href}" title="点击查看原文" style="text-decoration:none; color:#5f4f3f; font-size:0.85em;">${ICON_ORIG}</a>`;
+        }
+        
+        // 2. 更正列
+        let correctionHtml = item.correction || '';
+        // 安全检查：确保 item.correctionHref 存在且不为空字符串
+        if (item.correctionHref) {
+            const href = item.correctionHref.split(' | ')[0]; // 取第一个链接
+            correctionHtml = `${item.correction}&nbsp;<a href="${href}" title="点击查看更正" style="text-decoration:none; color:#0066cc; font-size:0.85em;">${ICON_COR}</a>`;
+        }
+
+
+
         
         //// 備註列：原始勘误表备注
         //const noteHtml = item.note || '';

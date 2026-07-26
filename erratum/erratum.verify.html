@@ -296,8 +296,8 @@ function generateContent() {
 function generateRows(items) {
     return items.map(item => {
         // 定义链接图标，可根据喜好替换为 🔗, ↗, 📖 等
-        const ICON_LINK = '🔗'; 
-        const ICON_CORRECTION = '🔗'; // 🔍或者也用 🔗，或者用 📖 表示“去原文验证”
+        const ICON_ORIG = '🔗'; 
+        const ICON_COR = '🔗'; // 🔍或者也用 🔗，或者用 📖 表示“去原文验证”
 
         const volumeStr = item.volume !== null ? volumeToChinese(item.volume) : '';
         

@@ -1706,7 +1706,7 @@ export const erratumPicData = {
           note: "見四〇八下",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=133779&sutra=1557",
           locationHref: "http://img.daxumi.top/133/779.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(原文上栏错。備註下栏对。)"
         },
         {
           volume: 134,
@@ -1728,7 +1728,7 @@ export const erratumPicData = {
           note: "見四〇九上",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=134739&sutra=1557",
           locationHref: "http://img.daxumi.top/134/739.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(原文下栏错。備註上栏对。)"
         },
         {
           volume: 134,
@@ -1739,7 +1739,7 @@ export const erratumPicData = {
           note: "見四〇九下",
           correctionHref: "../public/sutra.html?start=133001&end=137196&idx=134740&sutra=1557",
           locationHref: "http://img.daxumi.top/134/740.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(原文上栏前两段错。備註下栏对。)"
         },
         {
           volume: 136,

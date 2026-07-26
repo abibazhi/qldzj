@@ -98,7 +98,7 @@ a.suspect::after {
 /* ===== 底部信息栏（紧凑版） ===== */
 .footer-info {
     max-width: 1000px;
-    margin: 0 auto;
+    margin: 20px auto 0 auto;
     padding: 20px;
     background-color: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -110,7 +110,6 @@ a.suspect::after {
     padding: 16px 20px 14px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border: 1px solid #ddd;
-    margin: 20px auto 0 auto;
     width: 100%;
     border-radius: 12px;
     box-sizing: border-box;

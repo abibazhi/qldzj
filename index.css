@@ -16,7 +16,7 @@ h1 {
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 20px;  /* 白色包围圈 */
+    padding: 20px;
     background-color: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border-radius: 12px;
@@ -25,11 +25,11 @@ h1 {
 
 /* ===== 快速跳转锚点 ===== */
 .special-anchor {
-    padding: 10px 15px;  /* 和表格单元格内边距一致 */
+    padding: 10px 15px;
     border-bottom: 1px solid #ddd;
     background-color: #fafafa;
-    margin: -20px -20px 0 -20px;  /* 负边距撑满白色包围圈 */
-    border-radius: 12px 12px 0 0;  /* 顶部圆角和 container 一致 */
+    margin: -20px -20px 0 -20px;
+    border-radius: 12px 12px 0 0;
 }
 
 /* ===== 表格样式 ===== */
@@ -43,7 +43,6 @@ th, td {
     padding: 10px 15px;
     text-align: left;
 }
-
 
 th {
     background-color: #f2f2f2;
@@ -99,7 +98,7 @@ a.suspect::after {
 /* ===== 底部信息栏 ===== */
 .footer-info {
     background: #ffffff;
-    padding: 28px 20px 22px;
+    padding: 28px 20px 22px;  /* ✅ 和 container 的 padding 一致 */
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border: 1px solid #ddd;
     max-width: 1000px;
@@ -207,7 +206,9 @@ a.suspect::after {
 
     .special-anchor {
         padding: 8px 10px;
+        margin: -10px -10px 0 -10px;
         font-size: 0.85rem;
+        border-radius: 8px 8px 0 0;
     }
 
     th, td {
@@ -241,6 +242,7 @@ a.suspect::after {
 
     .special-anchor {
         padding: 6px 8px;
+        margin: -8px -8px 0 -8px;
         font-size: 0.75rem;
     }
 

@@ -112,6 +112,11 @@
 <script type="module">
 import { erratumPicData } from './data/erratum.json.js';
 
+// 定义链接图标，可根据喜好替换为 🔗, ↗, 📖 等
+const ICON_ORIG = '🔗'; 
+const ICON_COR = '🔍'; // 🔍或者也用 🔗，或者用 📖 表示“去原文验证”
+const ICON_NOTE = '📌'; // 使用图钉图标，表示“笔记/备注”
+
 // ============================================================
 // 工具函数：数字转中文数字（逐位转换）
 // 例如：460 → 四六〇，102 → 一〇二
@@ -186,7 +191,7 @@ function processNoteToLink1(note) {
 // 格式：https://qldzj.daxumi.top/public/sutra.html?start=erratum{N}&end=erratum{N}&sutra=
 // 注意：即使有多个页码参考，也只取第一个生成链接，但包裹整个 note 文本
 // ============================================================
-function processNoteToLink(note) {
+function processNoteToLink2(note) {
   if (!note || !note.includes('見')) return note;
 
   const regex = /見([三四五六七八九][〇一二三四五六七八九十]+)([上下]?)/g;
@@ -207,6 +212,39 @@ function processNoteToLink(note) {
   // 将整个 note 文本（含 <br> 等）包裹在单个 <a> 标签中
   return `<a href="${url}">${note}</a>`;
 }
+
+function processNoteToLink(note) {
+  if (!note || !note.includes('見')) return note;
+
+  const regex = /見([三四五六七八九][〇一二三四五六七八九十]+)([上下]?)/g;
+  let match = regex.exec(note);
+  if (!match) return note; 
+
+  const firstPageStr = match[1];
+  const cnMap = {'〇':0, '一':1, '二':2, '三':3, '四':4, '五':5, '六':6, '七':7, '八':8, '九':9};
+  let pageNum = 0;
+  for (const char of firstPageStr) {
+    pageNum = pageNum * 10 + cnMap[char];
+  }
+
+  const erratumNum = pageNum - 360;
+  const url = `https://qldzj.daxumi.top/public/sutra.html?start=erratum${erratumNum}&end=erratum${erratumNum}&sutra=`;
+
+  // 【关键修改】：不再包裹整个 note，而是只替换第一个匹配的“見XXX”为带图标的链接
+  // 这样其他文字（如换行后的第二行）保持普通样式，更清晰
+  let result = note;
+  // 替换第一个匹配项
+  const firstMatch = note.substring(match.index, match.index + match[0].length);
+  const linkHtml = `<a href="${url}" target="_blank" title="查看勘误影像" style="text-decoration:none; color:#0066cc; font-size:0.85em;">${firstMatch} ${ICON_NOTE}</a>`;
+  
+  // 使用 replaceFirst 方法（JS原生不支持，需手动处理）
+  result = note.replace(firstMatch, linkHtml);
+  
+  return result;
+}
+
+
+
 
 
 // ============================================================
@@ -295,9 +333,6 @@ function generateContent() {
 // ============================================================
 function generateRows(items) {
     return items.map(item => {
-        // 定义链接图标，可根据喜好替换为 🔗, ↗, 📖 等
-        const ICON_ORIG = '🔗'; 
-        const ICON_COR = '🔗'; // 🔍或者也用 🔗，或者用 📖 表示“去原文验证”
 
         const volumeStr = item.volume !== null ? volumeToChinese(item.volume) : '';
         

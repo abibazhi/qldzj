@@ -182,7 +182,7 @@ function processNoteToLink(note) {
   let result = note;
   // 替换第一个匹配项
   const firstMatch = note.substring(match.index, match.index + match[0].length);
-  const linkHtml = `${firstMatch} <a href="${url}" target="_blank" title="查看勘误影像" style="text-decoration:none; color:#0066cc; font-size:0.85em;">${ICON_NOTE}</a>`;
+  const linkHtml = `${firstMatch} <a href="${url}" title="查看勘误影像" style="text-decoration:none; color:#0066cc; font-size:0.85em;">${ICON_NOTE}</a>`;
   
   // 使用 replaceFirst 方法（JS原生不支持，需手动处理）
   result = note.replace(firstMatch, linkHtml);

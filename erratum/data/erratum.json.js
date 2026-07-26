@@ -1649,8 +1649,7 @@ export const erratumPicData = {
 
     // ========== 第10组：原稿第 370 页，共 16 条 ==========
     {
-      groupNum: 10,华严会本悬谈会玄记
-第132册
+      groupNum: 10,
       image: "https://img.daxumi.top/erratum/10.png",
       originalPage: 370,
       items: [

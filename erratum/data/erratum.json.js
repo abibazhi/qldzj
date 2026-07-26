@@ -1631,7 +1631,7 @@ export const erratumPicData = {
           note: "",
           correctionHref: "../public/sutra.html?start=131315&end=131826&idx=131537&sutra=1555",
           locationHref: "http://img.daxumi.top/131/537.png",
-          verifyNote: "加提醒（<a href='https://www.shidianguji.com/zh/book/QLZ1555/chapter/1k5fjyos49jpm?page_from=bookshelf'>（<b>不明白，删除后上下文似乎不通？</b></a>"
+          verifyNote: "加提醒（应删除。<a href='https://www.shidianguji.com/zh/book/QLZ1555/chapter/1k5fjyos49jpm?page_from=bookshelf'><b>第三方参考</b></a>)"
         },
         {
           volume: 131,

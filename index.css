@@ -108,8 +108,7 @@ a.suspect::after {
 }
 
 
-
-/* ===== 底部信息栏 ===== */
+        /* ===== 底部信息栏 ===== */
         .footer-info {
             background: #ffffff;
             border-radius: 12px;
@@ -151,8 +150,8 @@ a.suspect::after {
             border: 1px solid transparent;
         }
 
-        .footer-icon-link iconify-icon {
-            font-size: 1.5rem;
+        .footer-icon-link i {
+            font-size: 1.4rem;
             transition: transform 0.25s ease;
         }
 
@@ -163,7 +162,7 @@ a.suspect::after {
             transform: translateY(-2px);
         }
 
-        .footer-icon-link:hover iconify-icon {
+        .footer-icon-link:hover i {
             transform: scale(1.12);
         }
 
@@ -225,8 +224,8 @@ a.suspect::after {
                 display: none;
             }
 
-            .footer-icon-link iconify-icon {
-                font-size: 1.4rem;
+            .footer-icon-link i {
+                font-size: 1.3rem;
             }
         }
 

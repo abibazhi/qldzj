@@ -98,7 +98,7 @@ a.suspect::after {
 /* ===== 底部信息栏 ===== */
 .footer-info {
     background: #ffffff;
-    padding: 28px 20px 22px;  /* ✅ 和 container 的 padding 一致 */
+    padding: 28px 20px 22px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border: 1px solid #ddd;
     max-width: 1000px;
@@ -120,6 +120,7 @@ a.suspect::after {
     align-items: center;
     flex-wrap: wrap;
     gap: 6px 10px;
+    padding: 0 15px;  /* ✅ 和表格单元格内边距一致 */
 }
 
 /* ---- 每个图标链接 ---- */
@@ -166,7 +167,7 @@ a.suspect::after {
 /* ---- 底部备注 ---- */
 .footer-note {
     margin-top: 16px;
-    padding-top: 16px;
+    padding: 16px 15px 0 15px;  /* ✅ 左右内边距和表格一致 */
     border-top: 1px solid #edf2f7;
     text-align: center;
     font-size: 0.82rem;
@@ -221,6 +222,14 @@ a.suspect::after {
         margin-top: 15px;
     }
 
+    .footer-links {
+        padding: 0 10px;
+    }
+
+    .footer-note {
+        padding: 12px 10px 0 10px;
+    }
+
     .footer-icon-link {
         padding: 6px 12px;
         font-size: 0.8rem;
@@ -252,6 +261,14 @@ a.suspect::after {
 
     .footer-info {
         padding: 14px 8px 12px;
+    }
+
+    .footer-links {
+        padding: 0 8px;
+    }
+
+    .footer-note {
+        padding: 10px 8px 0 8px;
     }
 
     .footer-icon-link {

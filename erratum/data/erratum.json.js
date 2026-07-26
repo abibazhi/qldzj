@@ -1660,9 +1660,9 @@ export const erratumPicData = {
           location: "缺第十一行",
           correction: "文封故言念念然念與劫皆有相即相入等",
           note: "",
-          correctionHref: "../public/sutra.html?start=132001&end=137196&idx=12097&sutra=1557",
+          correctionHref: "../public/sutra.html?start=132001&end=137196&idx=132097&sutra=1557",
           locationHref: "http://img.daxumi.top/133/92.png",
-          verifyNote: "加提醒（缺行）（不明白啊，十一行到底加哪里？）"
+          verifyNote: "加提醒（缺行）"
         },
         {
           volume: 133,

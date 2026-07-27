@@ -1923,7 +1923,7 @@ export const erratumPicData = {
           note: "見四一五上",
           correctionHref: "../public/sutra.html?start=144719&end=144798&idx=144798&sutra=1600",
           locationHref: "http://img.daxumi.top/144/798.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(两行小字算一行)"
         },
         {
           volume: 145,

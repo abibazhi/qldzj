@@ -1869,7 +1869,7 @@ export const erratumPicData = {
           note: "見四一四",
           correctionHref: "../public/sutra.html?start=140415&end=140488&idx=140417&sutra=1586",
           locationHref: "http://img.daxumi.top/140/417.png",
-          verifyNote: "加提醒（424和425不知在哪。414似亦有误,对齐'东吴沙门净善书'可行）"
+          verifyNote: "加提醒（424和425不知在哪。414上栏后六行和下栏前四行,和上栏第十行--即'明教曰圣贤之学'这行调换。）"
         },
         {
           volume: 140,

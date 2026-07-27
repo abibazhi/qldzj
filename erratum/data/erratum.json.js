@@ -1858,7 +1858,7 @@ export const erratumPicData = {
           note: "見四一三",
           correctionHref: "../public/sutra.html?start=139367&end=140282&idx=139650&sutra=1584",
           locationHref: "http://img.daxumi.top/139/650.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(原文650下半页和651上半页次序错)"
         },
         {
           volume: 140,

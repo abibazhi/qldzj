@@ -1869,7 +1869,7 @@ export const erratumPicData = {
           note: "見四一四",
           correctionHref: "../public/sutra.html?start=140415&end=140488&idx=140417&sutra=1586",
           locationHref: "http://img.daxumi.top/140/417.png",
-          verifyNote: "加提醒（缺行）"
+          verifyNote: "加提醒（424和425不知在哪。414似亦有误,对齐'东吴沙门净善书'可行）"
         },
         {
           volume: 140,

@@ -114,49 +114,6 @@
 </script>
 
 
-<footer>
-  <div class="footer-note">
-    <span class="heart">❤</span>
-    本目录仅供学习参考，如有错误欢迎提交
-    <a href="https://github.com/abibazhi/qldzj/issues" target="_blank">Issue</a>
-    或
-    <a href="https://github.com/abibazhi/qldzj/pulls" target="_blank">PR</a>
-    指正
-
-    <!-- 自定义的音乐控制按钮 -->
-    <button id="musicBtn" style="margin-left: 15px; cursor: pointer;">🔇</button>
-  </div>
-</footer>
-
-<!-- 移除了 controls 属性，音乐播放器被隐藏 -->
-<audio id="bgMusic" src="https://img.daxumi.top/%E5%8D%97%E6%97%A0%E8%8D%AF%E5%B8%88%E7%90%89%E7%92%83%E5%85%89%E5%A6%82%E6%9D%A5.mp3" preload="auto" loop muted fetchpriority="low"></audio>
-
-<script>
-  const audio = document.getElementById('bgMusic');
-  const btn = document.getElementById('musicBtn');
-
-  // 页面加载后，尝试静音自动播放（现代浏览器允许）
-  window.addEventListener('load', () => {
-    audio.play().catch(() => {
-      // 如果自动播放被阻止，可以忽略或做其他处理
-    });
-  });
-
-  // 点击按钮切换播放/暂停和图标
-  btn.addEventListener('click', () => {
-    if (audio.muted) {
-      audio.muted = false;
-      audio.play();
-      btn.textContent = '🔊'; // 有声状态
-    } else {
-      audio.muted = true;
-      btn.textContent = '🔇'; // 静音状态
-    }
-  });
-</script>
-
-
-
     <!-- ⭐ 所有逻辑都在这个 type="module" 脚本中 -->
     <script type="module">
     import { sutraLinks, categoryMap } from './data/sutra_links.js';

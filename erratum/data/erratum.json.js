@@ -2215,7 +2215,7 @@ export const erratumPicData = {
           note: "見四二〇下",
           correctionHref: "../public/sutra.html?start=154001&end=154240&idx=154174&sutra=1632",
           locationHref: "http://img.daxumi.top/154/174.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒（原文上栏5~9错，備註下栏对）"
         },
         {
           volume: 154,
@@ -2258,7 +2258,7 @@ export const erratumPicData = {
           note: "見四二一上",
           correctionHref: "../public/sutra.html?start=155197&end=156564&idx=156027&sutra=1634",
           locationHref: "http://img.daxumi.top/156/27.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒（原文下栏错，備註上栏对）"
         },
         {
           volume: 156,
@@ -2269,7 +2269,7 @@ export const erratumPicData = {
           note: "見四二一下",
           correctionHref: "../public/sutra.html?start=155197&end=156564&idx=156028&sutra=1634",
           locationHref: "http://img.daxumi.top/156/28.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒（原文上栏前二段错，備註下栏对。和上一条结合起来看。）"
         },
         {
           volume: 156,
@@ -2313,7 +2313,7 @@ export const erratumPicData = {
           note: "見四二二上",
           correctionHref: "../public/sutra.html?start=158695&end=159214&idx=159212&sutra=1644",
           locationHref: "http://img.daxumi.top/159/212.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒（原文上栏后二段错，備註上栏对）"
         },
         {
           volume: 159,
@@ -2372,7 +2372,7 @@ export const erratumPicData = {
         },
         {
           volume: 161,
-          page: 432,
+          page: 431,
           section: "上",
           location: "缺第五行多第十行",
           correction: "第十行應刪除",

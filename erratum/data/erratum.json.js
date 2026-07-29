@@ -2377,7 +2377,7 @@ export const erratumPicData = {
           location: "缺第五行多第十行",
           correction: "第十行應刪除",
           note: "見四二二下",
-          correctionHref: "../public/sutra.html?start=161425&end=161446&idx=161432&sutra=1651",
+          correctionHref: "../public/sutra.html?start=161425&end=161446&idx=161431&sutra=1651",
           locationHref: "http://img.daxumi.top/161/432.png",
           verifyNote: "加提醒（缺行）"
         },

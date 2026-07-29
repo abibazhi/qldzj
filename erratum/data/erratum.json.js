@@ -2379,7 +2379,7 @@ export const erratumPicData = {
           note: "見四二二下",
           correctionHref: "../public/sutra.html?start=161425&end=161446&idx=161431&sutra=1651",
           locationHref: "http://img.daxumi.top/161/432.png",
-          verifyNote: "加提醒（缺行）"
+          verifyNote: "加提醒（原文第十行重复。原文下栏缺第五行，備註下栏第五行对）"
         },
         {
           volume: 161,

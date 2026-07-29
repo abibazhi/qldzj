@@ -2373,7 +2373,7 @@ export const erratumPicData = {
         {
           volume: 161,
           page: 431,
-          section: "上",
+          section: "下",
           location: "缺第五行多第十行",
           correction: "第十行應刪除",
           note: "見四二二下",

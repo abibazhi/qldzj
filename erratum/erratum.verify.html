@@ -308,7 +308,8 @@ function generateRows(items) {
             const linkTitle = href === '#' ? 'title="图片缺失，无法查看"' : 'title="点击查看原文"';
 
             // 使用 &nbsp; 分隔文字和图标，防止紧贴
-            locationHtml = `${item.location}&nbsp;<a href="${href}" title="点击查看原文" style="text-decoration:none; color:#5f4f3f; font-size:0.85em;">${ICON_ORIG}</a>`;
+            locationHtml = `${item.location}&nbsp;<a href="${href}" ${linkTitle} style="text-decoration:none; color:#5f4f3f; font-size:0.85em;">${ICON_ORIG}</a>`;
+            // locationHtml = `${item.location}&nbsp;<a href="${href}" title="点击查看原文" style="text-decoration:none; color:#5f4f3f; font-size:0.85em;">${ICON_ORIG}</a>`;
         }
         
         // 2. 更正列

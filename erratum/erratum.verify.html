@@ -303,6 +303,10 @@ function generateRows(items) {
         // 安全检查：确保 item.locationHref 存在且不为空字符串
         if (item.locationHref) {
             const href = item.locationHref.split(' | ')[0]; // 取第一个链接
+            
+            // 有个原始图片缺失，需要特殊处理
+            const linkTitle = href === '#' ? 'title="图片缺失，无法查看"' : 'title="点击查看原文"';
+
             // 使用 &nbsp; 分隔文字和图标，防止紧贴
             locationHtml = `${item.location}&nbsp;<a href="${href}" title="点击查看原文" style="text-decoration:none; color:#5f4f3f; font-size:0.85em;">${ICON_ORIG}</a>`;
         }

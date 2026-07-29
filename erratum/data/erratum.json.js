@@ -21,7 +21,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "http://img.daxumi.top/002/460.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=001163&end=014082&idx=002460&sutra=1",
-          verifyNote: "加提醒。"
+          verifyNote: "加提醒"
         },
         {
           volume: 2,
@@ -32,7 +32,7 @@ export const erratumPicData = {
           note: "見三七四",
           correctionHref: "../public/sutra.html?start=001163&end=014082&idx=002482&sutra=1",
           locationHref: "http://img.daxumi.top/002/482.png",
-          verifyNote: "加提醒(374上正确，插入)"
+          verifyNote: "加提醒(備註上栏对，插入)"
         },
         {
           volume: 2,
@@ -43,7 +43,7 @@ export const erratumPicData = {
           note: "見三七五",
           correctionHref: "../public/sutra.html?start=001163&end=014082&idx=002491&sutra=1",
           locationHref: "http://img.daxumi.top/002/491.png",
-          verifyNote: "加提醒(375下正确，替换)"
+          verifyNote: "加提醒(備註下栏正确，替换)"
         },
         {
           volume: 2,
@@ -65,7 +65,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "http://img.daxumi.top/003/273.png",
           correctionHref: "../public/sutra.html?start=001163&end=014082&idx=003273&sutra=1",
-          verifyNote: "加提醒。"
+          verifyNote: "加提醒"
         },
         {
           volume: 6,
@@ -107,7 +107,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/016/C2.png",
           correctionHref: "https://qldzj.daxumi.top/desktop_sutra?start=016445&end=016486&idx=016445&sutra=10",
-          verifyNote: "已修改。见浏览器地址栏start=016445。"
+          verifyNote: "已修改。见浏览器地址栏start=016445"
         },
         {
           volume: 17,
@@ -118,7 +118,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "http://img.daxumi.top/017/242.png",
           correctionHref: "../public/sutra.html?start=017001&end=019464&idx=017242&sutra=20",
-          verifyNote: "加提醒。"
+          verifyNote: "加提醒"
         },
         {
           volume: 20,
@@ -129,7 +129,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/020/C1.png",
           correctionHref: "https://qldzj.daxumi.top/idx.html#sutra25",
-          verifyNote: "已修改。"
+          verifyNote: "已修改"
         },
         {
           volume: 20,
@@ -140,7 +140,7 @@ export const erratumPicData = {
           note: "",
           locationHref: "https://img.daxumi.top/020/C1.png",
           correctionHref: "https://qldzj.daxumi.top/idx.html#sutra31",
-          verifyNote: "已修改。"
+          verifyNote: "已修改"
         },
         {
           volume: 20,

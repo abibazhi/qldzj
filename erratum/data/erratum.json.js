@@ -2063,7 +2063,7 @@ export const erratumPicData = {
           note: "見四一八上",
           locationHref: "http://img.daxumi.top/149/756.png",
           correctionHref: "../public/sutra.html?start=149721&end=149868&idx=149756&sutra=1614",
-          verifyNote: "加提醒。見四一八上"
+          verifyNote: "加提醒（黑框中的字需要旋转180°）"
         },
         {
           volume: 150,
@@ -2096,7 +2096,7 @@ export const erratumPicData = {
           note: "見四一八下",
           locationHref: "http://img.daxumi.top/151/458.png",
           correctionHref: "../public/sutra.html?start=150519&end=151704&idx=151458&sutra=1621",
-          verifyNote: "見四一八下加提醒"
+          verifyNote: "加提醒（原文上栏第二段前三字错。備註下栏第二段对）"
         },
         {
           volume: 151,
@@ -2184,7 +2184,7 @@ export const erratumPicData = {
           note: "見四一九上",
           correctionHref: "../public/sutra.html?start=152749&end=153850&idx=153029&sutra=1631",
           locationHref: "http://img.daxumi.top/153/29.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒（原文下栏第三段错，但第二段似乎对的。備註上栏对）"
         },
         {
           volume: 153,
@@ -2195,7 +2195,7 @@ export const erratumPicData = {
           note: "見四一九下<br>見四二〇上",
           correctionHref: "../public/sutra.html?start=152749&end=153850&idx=153030&sutra=1631",
           locationHref: "http://img.daxumi.top/153/30.png",
-          verifyNote: "加提醒(有正确页)"
+          verifyNote: "加提醒(结合上一条：原文29整页+30上栏，用備註419整页+420上栏替换即可。)"
         }
       ]
     },

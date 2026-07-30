@@ -2253,7 +2253,7 @@ export const erratumPicData = {
           correction: "心正，心我",
           note: "",
           locationHref: "http://img.daxumi.top/156/4.png",
-          correctionHref: "../public/sutra.html?start=155197&end=156564&idx=156004&sutra=1634"
+          correctionHref: "../public/sutra.html?start=155197&end=156564&idx=156004&sutra=1634",
           verifyNote: "加提醒（错字，替换）"
         },
         {

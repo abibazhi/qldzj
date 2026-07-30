@@ -119,6 +119,19 @@
       z-index: 10000;
       display: none;
     }
+
+
+/* 新增：通用的图标徽章样式，无边框 */
+.icon-badge {
+    background: transparent !important; /* 背景透明 */
+    padding: 0 !important;              /* 去掉内边距 */
+    border-radius: 0 !important;        /* 去掉圆角 */
+    font-size: 1.5em;                   /* 调整图标大小 */
+    line-height: 1;                     /* 修正行高 */
+    cursor: pointer;                    /* 保持手型光标 */
+}
+
+
   </style>
 
   <script type="module" src="./js/utils.js"></script>
@@ -345,6 +358,7 @@ async function loadImage(vol, page) {
       // 这里必须使用 innerHTML，因为 textContent 会把 📌 当作纯文本处理，可能导致显示异常。
       sourceBadge.innerHTML = '📌'; 
       sourceBadge.classList.remove('erratum-warn', 'erratum-warn-missing');
+      sourceBadge.classList.add('icon-badge'); // 👈 替换为新的通用类名
       sourceBadge.classList.add(hasMissing ? 'erratum-warn-missing' : 'erratum-warn');
       sourceBadge.dataset.hoverText = '点击显示';
       sourceBadge.dataset.erratumText = formatErratumText(erratum);
@@ -352,7 +366,8 @@ async function loadImage(vol, page) {
     } else {
       sourceBadge.classList.remove('erratum-warn', 'erratum-warn-missing');
       // ✅ 将 textContent 改为 innerHTML，并设置一个默认图标，例如放大镜🔍
-      // 法轮 (Dharma Wheel)☸️☸️
+      // 法轮 (Dharma Wheel)☸️☸️a
+      sourceBadge.classList.add('icon-badge'); // 👈 替换为新的通用类名
       sourceBadge.innerHTML = '🪷';
       sourceBadge.dataset.hoverText = thanksMap[best?.key] || '';
       sourceBadge.dataset.erratumText = '';

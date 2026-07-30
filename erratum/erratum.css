@@ -431,5 +431,13 @@ a:hover {
 }
 
 
+/* ========== 表格行悬停高亮（修正版） ========== */
+.table-wrapper table tbody tr {
+    transition: background-color 0.2s ease;
+}
+/* ✅ 高亮作用在每一行的每个单元格上 */
+.table-wrapper table tbody tr:hover td {
+    background-color: #f5f1e6 !important;
+}
 
 

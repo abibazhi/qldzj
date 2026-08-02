@@ -273,14 +273,17 @@ const floatTip = document.getElementById('floatTip');
     }
 
 
-// 🆕 showTip - 移除 erratum-tip 类
+// 获取两个独立的元素
+const hoverTip = document.getElementById('hoverTip');
+const erratumTip = document.getElementById('erratumTip'); // 🆕
+const floatTip = document.getElementById('floatTip');
+
+// ========== 翻页/按钮提示（使用 hoverTip）==========
 function showTip(x, y, text) {
-  hoverTip.classList.remove('thanks-mode', 'erratum-tip');
+  hoverTip.classList.remove('thanks-mode');
   hoverTip.textContent = text;
   hoverTip.style.opacity = 1;
   
-  void hoverTip.offsetHeight; // 🆕 强制回流
-  
   requestAnimationFrame(() => {
     const rect = hoverTip.getBoundingClientRect();
     const vw = window.innerWidth;
@@ -308,17 +311,17 @@ function showTip(x, y, text) {
   });
 }
 
-// showErratumTip - 添加 erratum-tip 类（红色边框）
+function hideTip() {
+  hoverTip.style.opacity = 0;
+}
+
+// ========== 勘误提示（使用 erratumTip）==========
 function showErratumTip(x, y, text) {
-  hoverTip.classList.remove('thanks-mode');
-  hoverTip.classList.add('erratum-tip');
-  hoverTip.innerHTML = text;
-  hoverTip.style.opacity = 1;
-  
-  void hoverTip.offsetHeight; // 🆕 强制回流
+  erratumTip.innerHTML = text;
+  erratumTip.style.opacity = 1;
   
   requestAnimationFrame(() => {
-    const rect = hoverTip.getBoundingClientRect();
+    const rect = erratumTip.getBoundingClientRect();
     const vw = window.innerWidth;
     const vh = window.innerHeight;
     const padding = 10;
@@ -339,14 +342,17 @@ function showErratumTip(x, y, text) {
       top = vh - rect.height - padding;
     }
     
-    hoverTip.style.left = left + 'px';
-    hoverTip.style.top = top + 'px';
+    erratumTip.style.left = left + 'px';
+    erratumTip.style.top = top + 'px';
   });
 }
 
-// showThanksTip - 添加 thanks-mode 类（金色边框）
+function hideErratumTip() {
+  erratumTip.style.opacity = 0;
+}
+
+// ========== 感谢信息（使用 hoverTip）==========
 function showThanksTip(x, y, provider) {
-  hoverTip.classList.remove('erratum-tip');
   hoverTip.classList.add('thanks-mode');
   hoverTip.innerHTML = `
     <div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>
@@ -363,8 +369,6 @@ function showThanksTip(x, y, provider) {
   `;
   hoverTip.style.opacity = 1;
   
-  void hoverTip.offsetHeight; // 🆕 强制回流
-  
   requestAnimationFrame(() => {
     const rect = hoverTip.getBoundingClientRect();
     const vw = window.innerWidth;
@@ -391,6 +395,51 @@ function showThanksTip(x, y, provider) {
     hoverTip.style.top = top + 'px';
   });
 }
+
+// ========== 事件绑定 ==========
+
+// 翻页 hover
+container.addEventListener('mousemove', e => {
+  const scale = panzoom.getScale();
+  if (scale > 1) return hideTip();
+
+  if (e.target === sourceBadge || sourceBadge.contains(e.target)) return;
+
+  const r = container.getBoundingClientRect();
+  const x = e.clientX - r.left;
+  const w = r.width;
+
+  if (x < w * edgeThreshold) {
+    showTip(e.clientX, e.clientY - 30, "← 上一页");
+  } else if (x > w * (1 - edgeThreshold)) {
+    showTip(e.clientX, e.clientY - 30, "下一页 →");
+  } else {
+    hideTip();
+  }
+});
+container.addEventListener('mouseleave', hideTip);
+
+// 控制按钮 hover
+zoomInBtn.onmouseenter = () => showTip(zoomInBtn.getBoundingClientRect().x, zoomInBtn.getBoundingClientRect().y-40, "放大");
+zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zoomOutBtn.getBoundingClientRect().y-40, "缩小");
+resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
+zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
+
+// 🆕 勘误图标 hover - 使用 erratumTip
+sourceBadge.addEventListener('mouseenter', e => {
+  if (sourceBadge.dataset.erratumText) {
+    const r = sourceBadge.getBoundingClientRect();
+    showErratumTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
+  } else if (sourceBadge.dataset.hoverText) {
+    const r = sourceBadge.getBoundingClientRect();
+    showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
+  }
+});
+
+// 🆕 勘误图标 mouseleave - 隐藏 erratumTip
+sourceBadge.addEventListener('mouseleave', e => {
+  hideErratumTip();
+});
 
 
 // ========== 提示函数 ==========
@@ -480,26 +529,6 @@ async function changeImage(direction) {
   setCurrentPage(newVol, newPage);
 }
 
-container.addEventListener('mousemove', e => {
-  const scale = panzoom.getScale();
-  if (scale > 1) return hideTip();
-
-  if (e.target === sourceBadge || sourceBadge.contains(e.target)) return;
-
-  const r = container.getBoundingClientRect();
-  const x = e.clientX - r.left;
-  const w = r.width;
-
-  if (x < w * edgeThreshold) {
-    showTip(e.clientX, e.clientY - 30, "← 上一页");
-  } else if (x > w * (1 - edgeThreshold)) {
-    showTip(e.clientX, e.clientY - 30, "下一页 →");
-  } else {
-    hideTip();
-  }
-});
-container.addEventListener('mouseleave', hideTip);
-
 container.addEventListener('click', e => {
   const scale = panzoom.getScale();
   if (scale > 1) return;
@@ -513,25 +542,6 @@ container.addEventListener('click', e => {
 zoomInBtn.onclick = () => panzoom.zoomIn();
 zoomOutBtn.onclick = () => panzoom.zoomOut();
 resetBtn.onclick = () => panzoom.reset();
-
-zoomInBtn.onmouseenter = () => showTip(zoomInBtn.getBoundingClientRect().x, zoomInBtn.getBoundingClientRect().y-40, "放大");
-zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zoomOutBtn.getBoundingClientRect().y-40, "缩小");
-resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
-zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
-
-    sourceBadge.addEventListener('mouseenter', e => {
-      if (sourceBadge.dataset.erratumText) {
-        const r = sourceBadge.getBoundingClientRect();
-        showErratumTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
-      } else if (sourceBadge.dataset.hoverText) {
-        const r = sourceBadge.getBoundingClientRect();
-        showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
-      }
-    });
-
-
-
-sourceBadge.addEventListener('mouseleave', hideTip);
 
 sourceBadge.addEventListener('click', e => {
   if (sourceBadge.dataset.erratumText) {

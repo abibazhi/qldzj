@@ -548,7 +548,7 @@ zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zo
 resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
 zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
 
-sourceBadge.addEventListener1('mouseenter', e => {
+sourceBadge.addEventListener('mouseenter11', e => {
   if (sourceBadge.dataset.erratumText) {
     const r = sourceBadge.getBoundingClientRect();
     showTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);

@@ -79,69 +79,98 @@
       cursor: pointer;
     }
 
+    /* ========== 翻页提示（无边框） ========== */
+    .hover-tooltip {
+      position: fixed;
+      background: rgba(20, 20, 30, 0.85);
+      color: #f0f0f0;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      width: auto;
+      max-width: min(480px, calc(100vw - 20px));
+      white-space: normal;
+      line-height: 1.6;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      border: none;
+      word-break: break-word;
+      padding: 8px 16px;
+    }
 
-/* 基础样式 - 用于翻页提示 */
-.hover-tooltip {
-  position: fixed;
-  background: rgba(20, 20, 30, 0.85);
-  color: #f0f0f0;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 14px;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  width: auto;
-  max-width: min(480px, calc(100vw - 20px));
-  white-space: normal;
-  line-height: 1.6;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  border: none;
-  word-break: break-word;
-  padding: 8px 16px;
-}
+    /* ========== 索引信息提示（无边框，居中） ========== */
+    .hover-tooltip.index-tip {
+      border: none;
+      background: rgba(20, 20, 30, 0.88);
+      padding: 12px 20px;
+      line-height: 1.8;
+      text-align: center;
+      min-width: 180px;
+    }
 
-/* 🆕 勘误专用 - 独立样式 */
-#erratumTip {
-  position: fixed;
-  background: rgba(30, 10, 10, 0.92);
-  color: #f0f0f0;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 14px;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s ease;
-  width: auto;
-  max-width: min(480px, calc(100vw - 20px));
-  white-space: normal;
-  line-height: 1.8;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-  border: 2px solid #e74c3c;
-  word-break: break-word;
-  padding: 10px 18px;
-}
+    .hover-tooltip.index-tip .index-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: #f0e6d0;
+      letter-spacing: 1px;
+    }
 
-/* 每条勘误独立一行，长文本自动折行 */
-#erratumTip .err-item {
-  display: block;
-  word-break: break-word;
-  padding-left: 0;
-}
+    .hover-tooltip.index-tip .index-roll {
+      font-size: 14px;
+      color: #ccc;
+      margin-top: 2px;
+    }
 
-/* 感谢信息样式（可以保留在 hoverTip 中，或者也独立出来） */
-.hover-tooltip.thanks-mode {
-  padding: 0;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  min-width: 12em;
-  border: 2px solid #f39c12;
-  background: rgba(20, 20, 30, 0.92);
-}
+    .hover-tooltip.index-tip .index-page {
+      font-size: 13px;
+      color: #999;
+      margin-top: 4px;
+      font-family: monospace;
+      letter-spacing: 0.5px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 4px;
+    }
 
+    /* ========== 勘误专用（红色边框） ========== */
+    #erratumTip {
+      position: fixed;
+      background: rgba(30, 10, 10, 0.92);
+      color: #f0f0f0;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      width: auto;
+      max-width: min(480px, calc(100vw - 20px));
+      white-space: normal;
+      line-height: 1.8;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      border: 2px solid #e74c3c;
+      word-break: break-word;
+      padding: 10px 18px;
+    }
 
+    #erratumTip .err-item {
+      display: block;
+      word-break: break-word;
+      padding-left: 0;
+    }
+
+    /* ========== 感谢信息（金色边框） ========== */
+    .hover-tooltip.thanks-mode {
+      padding: 0;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      min-width: 12em;
+      border: 2px solid #f39c12;
+      background: rgba(20, 20, 30, 0.92);
+    }
 
     .thanks-row {
       line-height: 1.8;
@@ -154,6 +183,7 @@
       text-align: center;
     }
 
+    /* ========== 顶部浮动提示 ========== */
     #floatTip {
       position: fixed;
       top: 30px; left: 50%;
@@ -180,6 +210,7 @@
   <script type="module" src="./js/utils.js"></script>
   <script type="module" src="./js/pageNav.js" charset="UTF-8"></script>
   <script type="module" src="./js/imageLoader.js"></script>
+  <script type="module" src="./js/sutraInfo.js"></script>
 </head>
 <body>
 
@@ -195,10 +226,9 @@
   <button class="control-btn" id="zoomInBtn">+</button>
 </div>
 
-
 <!-- 翻页提示 -->
 <div id="hoverTip" class="hover-tooltip">提示</div>
-<!-- 🆕 勘误专用提示 -->
+<!-- 勘误专用提示 -->
 <div id="erratumTip" class="hover-tooltip erratum-tip">勘误</div>
 <!-- 顶部浮动提示 -->
 <div id="floatTip"></div>
@@ -207,6 +237,7 @@
 import { getBestImageUrl } from './js/imageLoader.js';
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
 import { erratumPicData } from './erratum/data/erratum.json.js';
+import { fetchSutraInfo, getRollTitle } from './js/sutraInfo.js';
 
 // ============================================================
 // 勘误提示功能
@@ -241,8 +272,68 @@ function checkErratum(vol, page) {
   return activeErrataMap.get(`${volNum}_${pageNum}`);
 }
 
+function formatErratumText(items) {
+  if (!items || items.length === 0) return '';
+  
+  const parts = items.map((item, i) => {
+    const correctionText = item.correction || item.verifyNote || '待确认';
+    const sectionText = item.section ? `（${item.section}栏）` : '';
+    return `<span class="err-item">${i + 1}. ${sectionText}「${item.location}」→ ${correctionText}</span>`;
+  });
+  
+  return `📌 勘误：<br>${parts.join('<br>')}`;
+}
 
+// ============================================================
+// 经卷信息功能
+// ============================================================
+let currentSutraInfo = null;
+let currentSutraTitle = '';
+let currentRollName = '';
 
+async function loadSutraInfo() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const sutraNum = urlParams.get('sutra');
+  const currentIdx = urlParams.get('idx');
+
+  if (!sutraNum) return;
+
+  const info = await fetchSutraInfo(sutraNum);
+  if (!info) return;
+
+  currentSutraInfo = info;
+  currentSutraTitle = info.title;
+  
+  if (!currentIdx && info.rollName) {
+    currentRollName = info.rollName;
+  } else {
+    currentRollName = getRollTitle(info.rolls, currentIdx) || '';
+  }
+}
+
+async function updateRollAfterPageChange(newVol, newPage) {
+  if (!currentSutraInfo || !currentSutraInfo.rolls || currentSutraInfo.rolls.length === 0) return;
+  
+  const pagePadded = String(newPage).padStart(3, '0');
+  const volPadded = String(newVol).padStart(3, '0');
+  const currentPageNum = parseInt(volPadded + pagePadded, 10);
+  
+  let currentRoll = null;
+  for (const roll of currentSutraInfo.rolls) {
+    const rollStartNum = parseInt(roll.idx, 10);
+    if (rollStartNum <= currentPageNum) {
+      currentRoll = roll;
+    } else {
+      break;
+    }
+  }
+  
+  currentRollName = currentRoll ? currentRoll.title : '';
+}
+
+// ============================================================
+// 提示函数
+// ============================================================
 let isLoading = false;
 let panzoom = null;
 const edgeThreshold = 0.05;
@@ -254,31 +345,13 @@ const sourceBadge = document.getElementById('sourceBadge');
 const zoomInBtn = document.getElementById('zoomInBtn');
 const zoomOutBtn = document.getElementById('zoomOutBtn');
 const resetBtn = document.getElementById('resetBtn');
-// 获取两个独立的元素
 const hoverTip = document.getElementById('hoverTip');
-const erratumTip = document.getElementById('erratumTip'); // 🆕
+const erratumTip = document.getElementById('erratumTip');
 const floatTip = document.getElementById('floatTip');
 
-
-
-    // 🆕 修改 formatErratumText - 用 innerHTML + 样式控制
-    function formatErratumText(items) {
-      if (!items || items.length === 0) return '';
-      
-      const parts = items.map((item, i) => {
-        const correctionText = item.correction || item.verifyNote || '待确认';
-        const sectionText = item.section ? `（${item.section}栏）` : '';
-        return `<span class="err-item">${i + 1}. ${sectionText}「${item.location}」→ ${correctionText}</span>`;
-      });
-      
-      return `📌 勘误：<br>${parts.join('<br>')}`;
-    }
-
-
-
-// ========== 翻页/按钮提示（使用 hoverTip）==========
+// 翻页/按钮提示
 function showTip(x, y, text) {
-  hoverTip.classList.remove('thanks-mode');
+  hoverTip.classList.remove('thanks-mode', 'index-tip');
   hoverTip.textContent = text;
   hoverTip.style.opacity = 1;
   
@@ -313,7 +386,51 @@ function hideTip() {
   hoverTip.style.opacity = 0;
 }
 
-// ========== 勘误提示（使用 erratumTip）==========
+// 索引信息提示（无边框）
+function showIndexTip(x, y, title, rollName, vol, page) {
+  hoverTip.classList.remove('thanks-mode');
+  hoverTip.classList.add('index-tip');
+  
+  let html = '';
+  if (title) {
+    html += `<div class="index-title">乾隆大藏经 · ${title}</div>`;
+  }
+  if (rollName) {
+    html += `<div class="index-roll">${rollName}</div>`;
+  }
+  html += `<div class="index-page">第 ${vol} 册 第 ${page} 页</div>`;
+  
+  hoverTip.innerHTML = html;
+  hoverTip.style.opacity = 1;
+  
+  requestAnimationFrame(() => {
+    const rect = hoverTip.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const padding = 10;
+    
+    let left = x;
+    let top = y - rect.height - 10;
+    
+    if (left + rect.width > vw - padding) {
+      left = vw - rect.width - padding;
+    }
+    if (left < padding) {
+      left = padding;
+    }
+    if (top < padding) {
+      top = y + 20;
+    }
+    if (top + rect.height > vh - padding) {
+      top = vh - rect.height - padding;
+    }
+    
+    hoverTip.style.left = left + 'px';
+    hoverTip.style.top = top + 'px';
+  });
+}
+
+// 勘误提示（红色边框）
 function showErratumTip(x, y, text) {
   erratumTip.innerHTML = text;
   erratumTip.style.opacity = 1;
@@ -349,8 +466,9 @@ function hideErratumTip() {
   erratumTip.style.opacity = 0;
 }
 
-// ========== 感谢信息（使用 hoverTip）==========
+// 感谢信息（金色边框）
 function showThanksTip(x, y, provider) {
+  hoverTip.classList.remove('index-tip');
   hoverTip.classList.add('thanks-mode');
   hoverTip.innerHTML = `
     <div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>
@@ -394,60 +512,16 @@ function showThanksTip(x, y, provider) {
   });
 }
 
-// ========== 事件绑定 ==========
-
-// 翻页 hover
-container.addEventListener('mousemove', e => {
-  const scale = panzoom.getScale();
-  if (scale > 1) return hideTip();
-
-  if (e.target === sourceBadge || sourceBadge.contains(e.target)) return;
-
-  const r = container.getBoundingClientRect();
-  const x = e.clientX - r.left;
-  const w = r.width;
-
-  if (x < w * edgeThreshold) {
-    showTip(e.clientX, e.clientY - 30, "← 上一页");
-  } else if (x > w * (1 - edgeThreshold)) {
-    showTip(e.clientX, e.clientY - 30, "下一页 →");
-  } else {
-    hideTip();
-  }
-});
-container.addEventListener('mouseleave', hideTip);
-
-// 控制按钮 hover
-zoomInBtn.onmouseenter = () => showTip(zoomInBtn.getBoundingClientRect().x, zoomInBtn.getBoundingClientRect().y-40, "放大");
-zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zoomOutBtn.getBoundingClientRect().y-40, "缩小");
-resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
-zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
-
-// 🆕 勘误图标 hover - 使用 erratumTip
-sourceBadge.addEventListener('mouseenter', e => {
-  if (sourceBadge.dataset.erratumText) {
-    const r = sourceBadge.getBoundingClientRect();
-    showErratumTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
-  } else if (sourceBadge.dataset.hoverText) {
-    const r = sourceBadge.getBoundingClientRect();
-    showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
-  }
-});
-
-// 🆕 勘误图标 mouseleave - 隐藏 erratumTip
-sourceBadge.addEventListener('mouseleave', e => {
-  hideErratumTip();
-});
-
-
-// ========== 提示函数 ==========
+// 顶部浮动提示
 function showTempTip(msg, duration = 2000) {
   floatTip.textContent = msg;
   floatTip.style.display = 'block';
   setTimeout(() => floatTip.style.display = 'none', duration);
 }
 
-
+// ============================================================
+// Panzoom & 图片加载
+// ============================================================
 function initPanzoom() {
   panzoom = Panzoom(img, {
     maxScale: 5,
@@ -497,17 +571,17 @@ async function loadImage(vol, page) {
       sourceBadge.classList.remove('erratum-warn', 'erratum-warn-missing');
       sourceBadge.classList.add('icon-badge');
       sourceBadge.classList.add(hasMissing ? 'erratum-warn-missing' : 'erratum-warn');
-      sourceBadge.dataset.hoverText = '点击显示';
+      sourceBadge.dataset.isErratum = 'true';
       sourceBadge.dataset.erratumText = formatErratumText(erratum);
       
       showTempTip('📌 本页有勘误信息', 2000);
-      
     } else {
       sourceBadge.classList.remove('erratum-warn', 'erratum-warn-missing');
       sourceBadge.classList.add('icon-badge');
       sourceBadge.innerHTML = '🪷';
-      sourceBadge.dataset.hoverText = thanksMap[best?.key] || '';
+      sourceBadge.dataset.isErratum = 'false';
       sourceBadge.dataset.erratumText = '';
+      sourceBadge.dataset.provider = thanksMap[best?.key] || '';
     }
   } catch (e) { console.error(e); }
   hideLoading();
@@ -521,8 +595,35 @@ async function changeImage(direction) {
   const { newVol, newPage } = res;
   await loadImage(newVol, newPage);
   setCurrentPage(newVol, newPage);
+  await updateRollAfterPageChange(newVol, newPage);
 }
 
+// ============================================================
+// 事件绑定
+// ============================================================
+
+// 翻页 hover
+container.addEventListener('mousemove', e => {
+  const scale = panzoom.getScale();
+  if (scale > 1) return hideTip();
+
+  if (e.target === sourceBadge || sourceBadge.contains(e.target)) return;
+
+  const r = container.getBoundingClientRect();
+  const x = e.clientX - r.left;
+  const w = r.width;
+
+  if (x < w * edgeThreshold) {
+    showTip(e.clientX, e.clientY - 30, "← 上一页");
+  } else if (x > w * (1 - edgeThreshold)) {
+    showTip(e.clientX, e.clientY - 30, "下一页 →");
+  } else {
+    hideTip();
+  }
+});
+container.addEventListener('mouseleave', hideTip);
+
+// 翻页点击
 container.addEventListener('click', e => {
   const scale = panzoom.getScale();
   if (scale > 1) return;
@@ -533,20 +634,54 @@ container.addEventListener('click', e => {
   else if (x > w * (1 - edgeThreshold)) changeImage(1);
 });
 
+// 控制按钮
 zoomInBtn.onclick = () => panzoom.zoomIn();
 zoomOutBtn.onclick = () => panzoom.zoomOut();
 resetBtn.onclick = () => panzoom.reset();
 
+zoomInBtn.onmouseenter = () => showTip(zoomInBtn.getBoundingClientRect().x, zoomInBtn.getBoundingClientRect().y-40, "放大");
+zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zoomOutBtn.getBoundingClientRect().y-40, "缩小");
+resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
+zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
+
+// ========== sourceBadge 事件 ==========
+sourceBadge.addEventListener('mouseenter', e => {
+  const isErratum = sourceBadge.dataset.isErratum === 'true';
+  const erratumText = sourceBadge.dataset.erratumText;
+  const provider = sourceBadge.dataset.provider;
+  const r = sourceBadge.getBoundingClientRect();
+  
+  if (isErratum && erratumText) {
+    // 有勘误：显示勘误信息（红色边框）
+    showErratumTip(r.left, r.top - 36, erratumText);
+  } else if (!isErratum && currentSutraTitle) {
+    // 无勘误且有经名：显示索引信息（无边框）
+    showIndexTip(r.left, r.top - 36, currentSutraTitle, currentRollName, currentVol, currentPage);
+  } else if (!isErratum && provider) {
+    // 无勘误且无经名：显示感谢信息（金色边框）
+    showThanksTip(r.left - 70, r.top - 140, provider);
+  }
+});
+
+sourceBadge.addEventListener('mouseleave', e => {
+  hideErratumTip();
+  hideTip();
+});
+
 sourceBadge.addEventListener('click', e => {
-  if (sourceBadge.dataset.erratumText) {
+  if (sourceBadge.dataset.isErratum === 'true' && sourceBadge.dataset.erratumText) {
     e.stopPropagation();
     showTempTip('📌 请悬停查看完整勘误详情', 1500);
   }
 });
 
-window.onload = () => {
+// ============================================================
+// 启动
+// ============================================================
+window.onload = async () => {
   initPanzoom();
-  loadImage(currentVol, currentPage);
+  await loadSutraInfo();
+  await loadImage(currentVol, currentPage);
 };
 </script>
 <script src="js/tongji.baidu.js"></script>

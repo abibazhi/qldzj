@@ -79,39 +79,50 @@
       cursor: pointer;
     }
 
-    /* 🆕 优化 hover 提示样式 */
+    /* 🆕 优化 hover 提示样式 - 方案一：深色 + 金色边框 */
     .hover-tooltip {
       position: fixed;
-      background: rgba(0,0,0,0.85);
-      color: white;
-      padding: 8px 16px;
-      border-radius: 6px;
+      background: rgba(20, 20, 30, 0.92);
+      color: #f0f0f0;
+      padding: 10px 16px;
+      border-radius: 8px;
       font-size: 14px;
       z-index: 9999;
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.15s ease;
       width: auto;
-      max-width: min(420px, calc(100vw - 20px)); /* 🆕 自适应视口宽度 */
-      white-space: nowrap;
-      line-height: 1.6;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      word-break: break-word; /* 🆕 长单词换行 */
+      max-width: min(480px, calc(100vw - 20px));
+      white-space: pre-wrap; /* 保留换行 */
+      line-height: 1.8;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      border: 2px solid #f39c12; /* 金色边框 */
+      word-break: break-word;
     }
 
+    /* 勘误专用：红色边框更醒目 */
+    .hover-tooltip.erratum-tip {
+      border-color: #e74c3c;
+      background: rgba(30, 10, 10, 0.92);
+    }
+
+    /* 多行模式（其实现在都用 pre-wrap 了） */
     .hover-tooltip.multiline {
-      white-space: normal;
-      max-width: min(420px, calc(100vw - 20px));
+      white-space: pre-wrap;
+      max-width: min(480px, calc(100vw - 20px));
       padding: 10px 18px;
     }
-
 
     .hover-tooltip.thanks-mode {
       padding: 0;
       display: grid;
       grid-template-columns: auto 1fr auto;
       min-width: 12em;
+      border-color: #f39c12; /* 感谢信息用金色边框 */
     }
+
+
+
     .thanks-row {
       line-height: 1.8;
     }
@@ -205,7 +216,7 @@ function checkErratum(vol, page) {
   return activeErrataMap.get(`${volNum}_${pageNum}`);
 }
 
-function formatErratumText(items) {
+function formatErratumText1(items) {
   if (!items || items.length === 0) return '';
   
   const allSameSection = items.every(item => item.section === items[0].section);
@@ -232,6 +243,40 @@ function formatErratumText(items) {
   });
   return `勘误：${parts.join(' ')}`;
 }
+
+  // 🆕 简化后的 formatErratumText
+  function formatErratumText(items) {
+    if (!items || items.length === 0) return '';
+    
+    // 每条勘误独立一行
+    const parts = items.map((item, i) => {
+      const correctionText = item.correction || item.verifyNote || '待确认';
+      const sectionText = item.section ? `（${item.section}栏）` : '';
+      return `${i + 1}. ${sectionText}「${item.location}」→ ${correctionText}`;
+    });
+    
+    return `📌 本页勘误信息：\n${parts.join('\n')}`;
+  }
+
+  // 🆕 显示勘误提示时加上特殊 class
+  function showErratumTip(x, y, text) {
+    hoverTip.classList.remove('thanks-mode');
+    hoverTip.classList.add('erratum-tip'); // 红色边框
+    hoverTip.style.left = x + 'px';
+    hoverTip.style.top = y + 'px';
+    hoverTip.textContent = text;
+    hoverTip.style.opacity = 1;
+  }
+
+  // 修改 showTip，根据内容决定样式
+  function showTip(x, y, text) {
+    hoverTip.classList.remove('thanks-mode', 'erratum-tip');
+    hoverTip.style.left = x + 'px';
+    hoverTip.style.top = y + 'px';
+    hoverTip.textContent = text;
+    hoverTip.style.opacity = 1;
+  }
+
 
 let isLoading = false;
 let panzoom = null;
@@ -321,7 +366,7 @@ function showTip1(x, y, text) {
 
 
 
-function showThanksTip1(x, y, provider) {
+function showThanksTip(x, y, provider) {
   hoverTip.classList.add('thanks-mode');
   hoverTip.style.left = x + 'px';
   hoverTip.style.top = y + 'px';
@@ -341,7 +386,7 @@ function showThanksTip1(x, y, provider) {
 }
 
   // showThanksTip 也稍作调整
-  function showThanksTip(x, y, provider) {
+  function showThanksTip1(x, y, provider) {
     hoverTip.classList.add('thanks-mode');
     hoverTip.style.left = '0px';
     hoverTip.style.top = '0px';
@@ -503,7 +548,7 @@ zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zo
 resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
 zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
 
-sourceBadge.addEventListener('mouseenter', e => {
+sourceBadge.addEventListener1('mouseenter', e => {
   if (sourceBadge.dataset.erratumText) {
     const r = sourceBadge.getBoundingClientRect();
     showTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
@@ -512,6 +557,20 @@ sourceBadge.addEventListener('mouseenter', e => {
     showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
   }
 });
+
+  // ... 在 sourceBadge hover 事件中调用 showErratumTip
+  sourceBadge.addEventListener('mouseenter', e => {
+    if (sourceBadge.dataset.erratumText) {
+      const r = sourceBadge.getBoundingClientRect();
+      // 🆕 使用专门的勘误显示函数
+      showErratumTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
+    } else if (sourceBadge.dataset.hoverText) {
+      const r = sourceBadge.getBoundingClientRect();
+      showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
+    }
+  });
+
+
 sourceBadge.addEventListener('mouseleave', hideTip);
 
 sourceBadge.addEventListener('click', e => {

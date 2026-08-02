@@ -257,119 +257,124 @@ const floatTip = document.getElementById('floatTip');
     }
 
 
-    // 🆕 showTip - 移除 erratum-tip 类
-    function showTip(x, y, text) {
-      hoverTip.classList.remove('thanks-mode', 'erratum-tip');
-      hoverTip.textContent = text;
-      hoverTip.style.opacity = 1;
-      
-      requestAnimationFrame(() => {
-        const rect = hoverTip.getBoundingClientRect();
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const padding = 10;
-        
-        let left = x;
-        let top = y - rect.height - 10;
-        
-        if (left + rect.width > vw - padding) {
-          left = vw - rect.width - padding;
-        }
-        if (left < padding) {
-          left = padding;
-        }
-        if (top < padding) {
-          top = y + 20;
-        }
-        if (top + rect.height > vh - padding) {
-          top = vh - rect.height - padding;
-        }
-        
-        hoverTip.style.left = left + 'px';
-        hoverTip.style.top = top + 'px';
-      });
+// 🆕 showTip - 移除 erratum-tip 类
+function showTip(x, y, text) {
+  hoverTip.classList.remove('thanks-mode', 'erratum-tip');
+  hoverTip.textContent = text;
+  hoverTip.style.opacity = 1;
+  
+  void hoverTip.offsetHeight; // 🆕 强制回流
+  
+  requestAnimationFrame(() => {
+    const rect = hoverTip.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const padding = 10;
+    
+    let left = x;
+    let top = y - rect.height - 10;
+    
+    if (left + rect.width > vw - padding) {
+      left = vw - rect.width - padding;
     }
-
-    // showErratumTip - 添加 erratum-tip 类（红色边框）
-    function showErratumTip(x, y, text) {
-      hoverTip.classList.remove('thanks-mode');
-      hoverTip.classList.add('erratum-tip');
-      hoverTip.innerHTML = text;
-      hoverTip.style.opacity = 1;
-      
-      requestAnimationFrame(() => {
-        const rect = hoverTip.getBoundingClientRect();
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const padding = 10;
-        
-        let left = x;
-        let top = y - rect.height - 10;
-        
-        if (left + rect.width > vw - padding) {
-          left = vw - rect.width - padding;
-        }
-        if (left < padding) {
-          left = padding;
-        }
-        if (top < padding) {
-          top = y + 20;
-        }
-        if (top + rect.height > vh - padding) {
-          top = vh - rect.height - padding;
-        }
-        
-        hoverTip.style.left = left + 'px';
-        hoverTip.style.top = top + 'px';
-      });
+    if (left < padding) {
+      left = padding;
     }
-
-    // showThanksTip - 添加 thanks-mode 类（金色边框）
-    function showThanksTip(x, y, provider) {
-      hoverTip.classList.remove('erratum-tip');
-      hoverTip.classList.add('thanks-mode');
-      hoverTip.innerHTML = `
-        <div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>
-        <div class="thanks-row middle">🌸</div>
-        <div class="thanks-row middle thanks-text">感谢</div>
-        <div class="thanks-row middle">🌸</div>
-        <div class="thanks-row middle">🌸</div>
-        <div class="thanks-row middle thanks-text">${provider}</div>
-        <div class="thanks-row middle">🌸</div>
-        <div class="thanks-row middle">🌸</div>
-        <div class="thanks-row middle thanks-text">提供免费存储</div>
-        <div class="thanks-row middle">🌸</div>
-        <div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>
-      `;
-      hoverTip.style.opacity = 1;
-      
-      requestAnimationFrame(() => {
-        const rect = hoverTip.getBoundingClientRect();
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const padding = 10;
-        
-        let left = x;
-        let top = y - rect.height - 10;
-        
-        if (left + rect.width > vw - padding) {
-          left = vw - rect.width - padding;
-        }
-        if (left < padding) {
-          left = padding;
-        }
-        if (top < padding) {
-          top = y + 20;
-        }
-        if (top + rect.height > vh - padding) {
-          top = vh - rect.height - padding;
-        }
-        
-        hoverTip.style.left = left + 'px';
-        hoverTip.style.top = top + 'px';
-      });
+    if (top < padding) {
+      top = y + 20;
     }
+    if (top + rect.height > vh - padding) {
+      top = vh - rect.height - padding;
+    }
+    
+    hoverTip.style.left = left + 'px';
+    hoverTip.style.top = top + 'px';
+  });
+}
 
+// showErratumTip - 添加 erratum-tip 类（红色边框）
+function showErratumTip(x, y, text) {
+  hoverTip.classList.remove('thanks-mode');
+  hoverTip.classList.add('erratum-tip');
+  hoverTip.innerHTML = text;
+  hoverTip.style.opacity = 1;
+  
+  void hoverTip.offsetHeight; // 🆕 强制回流
+  
+  requestAnimationFrame(() => {
+    const rect = hoverTip.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const padding = 10;
+    
+    let left = x;
+    let top = y - rect.height - 10;
+    
+    if (left + rect.width > vw - padding) {
+      left = vw - rect.width - padding;
+    }
+    if (left < padding) {
+      left = padding;
+    }
+    if (top < padding) {
+      top = y + 20;
+    }
+    if (top + rect.height > vh - padding) {
+      top = vh - rect.height - padding;
+    }
+    
+    hoverTip.style.left = left + 'px';
+    hoverTip.style.top = top + 'px';
+  });
+}
+
+// showThanksTip - 添加 thanks-mode 类（金色边框）
+function showThanksTip(x, y, provider) {
+  hoverTip.classList.remove('erratum-tip');
+  hoverTip.classList.add('thanks-mode');
+  hoverTip.innerHTML = `
+    <div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>
+    <div class="thanks-row middle">🌸</div>
+    <div class="thanks-row middle thanks-text">感谢</div>
+    <div class="thanks-row middle">🌸</div>
+    <div class="thanks-row middle">🌸</div>
+    <div class="thanks-row middle thanks-text">${provider}</div>
+    <div class="thanks-row middle">🌸</div>
+    <div class="thanks-row middle">🌸</div>
+    <div class="thanks-row middle thanks-text">提供免费存储</div>
+    <div class="thanks-row middle">🌸</div>
+    <div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>
+  `;
+  hoverTip.style.opacity = 1;
+  
+  void hoverTip.offsetHeight; // 🆕 强制回流
+  
+  requestAnimationFrame(() => {
+    const rect = hoverTip.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const padding = 10;
+    
+    let left = x;
+    let top = y - rect.height - 10;
+    
+    if (left + rect.width > vw - padding) {
+      left = vw - rect.width - padding;
+    }
+    if (left < padding) {
+      left = padding;
+    }
+    if (top < padding) {
+      top = y + 20;
+    }
+    if (top + rect.height > vh - padding) {
+      top = vh - rect.height - padding;
+    }
+    
+    hoverTip.style.left = left + 'px';
+    hoverTip.style.top = top + 'px';
+  });
+}
 
 
 // ========== 提示函数 ==========

@@ -80,57 +80,68 @@
     }
 
 
+/* 基础样式 - 用于翻页提示 */
+.hover-tooltip {
+  position: fixed;
+  background: rgba(20, 20, 30, 0.85);
+  color: #f0f0f0;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  width: auto;
+  max-width: min(480px, calc(100vw - 20px));
+  white-space: normal;
+  line-height: 1.6;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+  border: none;
+  word-break: break-word;
+  padding: 8px 16px;
+}
+
+/* 🆕 勘误专用 - 独立样式 */
+#erratumTip {
+  position: fixed;
+  background: rgba(30, 10, 10, 0.92);
+  color: #f0f0f0;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  width: auto;
+  max-width: min(480px, calc(100vw - 20px));
+  white-space: normal;
+  line-height: 1.8;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+  border: 2px solid #e74c3c;
+  word-break: break-word;
+  padding: 10px 18px;
+}
+
+/* 每条勘误独立一行，长文本自动折行 */
+#erratumTip .err-item {
+  display: block;
+  word-break: break-word;
+  padding-left: 0;
+}
+
+/* 感谢信息样式（可以保留在 hoverTip 中，或者也独立出来） */
+.hover-tooltip.thanks-mode {
+  padding: 0;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  min-width: 12em;
+  border: 2px solid #f39c12;
+  background: rgba(20, 20, 30, 0.92);
+}
 
 
-
-    /* 🆕 默认样式 - 无边框，用于普通提示 */
-    .hover-tooltip {
-      position: fixed;
-      background: rgba(20, 20, 30, 0.85);
-      color: #f0f0f0;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 14px;
-      z-index: 9999;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-      width: auto;
-      max-width: min(480px, calc(100vw - 20px));
-      white-space: normal;
-      line-height: 1.6;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-      /* 🆕 默认无边框 */
-      border: none;
-      word-break: break-word;
-      padding: 8px 16px;
-    }
-
-    /* 🆕 勘误专用 - 有红色边框 */
-    .hover-tooltip.erratum-tip {
-      border: 2px solid #e74c3c;
-      background: rgba(30, 10, 10, 0.92);
-      padding: 10px 18px;
-      line-height: 1.8;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-    }
-
-    /* 🆕 感谢专用 - 有金色边框 */
-    .hover-tooltip.thanks-mode {
-      padding: 0;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      min-width: 12em;
-      border: 2px solid #f39c12;
-      background: rgba(20, 20, 30, 0.92);
-    }
-
-    /* 每条勘误独立一行，长文本自动折行 */
-    .hover-tooltip.erratum-tip .err-item {
-      display: block;
-      word-break: break-word;
-      padding-left: 0;
-    }
 
     .thanks-row {
       line-height: 1.8;
@@ -184,7 +195,12 @@
   <button class="control-btn" id="zoomInBtn">+</button>
 </div>
 
+
+<!-- 翻页提示 -->
 <div id="hoverTip" class="hover-tooltip">提示</div>
+<!-- 🆕 勘误专用提示 -->
+<div id="erratumTip" class="hover-tooltip erratum-tip">勘误</div>
+<!-- 顶部浮动提示 -->
 <div id="floatTip"></div>
 
 <script type="module">

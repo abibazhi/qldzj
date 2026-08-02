@@ -254,7 +254,9 @@ const sourceBadge = document.getElementById('sourceBadge');
 const zoomInBtn = document.getElementById('zoomInBtn');
 const zoomOutBtn = document.getElementById('zoomOutBtn');
 const resetBtn = document.getElementById('resetBtn');
+// 获取两个独立的元素
 const hoverTip = document.getElementById('hoverTip');
+const erratumTip = document.getElementById('erratumTip'); // 🆕
 const floatTip = document.getElementById('floatTip');
 
 
@@ -273,10 +275,6 @@ const floatTip = document.getElementById('floatTip');
     }
 
 
-// 获取两个独立的元素
-const hoverTip = document.getElementById('hoverTip');
-const erratumTip = document.getElementById('erratumTip'); // 🆕
-const floatTip = document.getElementById('floatTip');
 
 // ========== 翻页/按钮提示（使用 hoverTip）==========
 function showTip(x, y, text) {

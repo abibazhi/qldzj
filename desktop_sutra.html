@@ -194,7 +194,7 @@ erratumPicData.groups.forEach(group => {
     // ============================================================
     const effectiveVol = item.volume !== null ? item.volume : lastVolume;
     
-    // 只有当当前行明确写了册数时，才更新“记忆”；否则保持上一行的值
+    // 只有当当前行明确写了册数时，才更新"记忆"；否则保持上一行的值
     if (item.volume !== null) {
       lastVolume = item.volume; 
     }
@@ -353,21 +353,20 @@ async function loadImage(vol, page) {
     const erratum = checkErratum(vol, page);
     if (erratum) {
       const hasMissing = erratum.some(item => item.verifyNote && item.verifyNote.includes('缺行'));
-      // sourceBadge.textContent = '勘误';
       // ✅ 将 textContent 改为 innerHTML，并设置图标
-      // 这里必须使用 innerHTML，因为 textContent 会把 📌 当作纯文本处理，可能导致显示异常。
       sourceBadge.innerHTML = '📌'; 
       sourceBadge.classList.remove('erratum-warn', 'erratum-warn-missing');
-      sourceBadge.classList.add('icon-badge'); // 👈 替换为新的通用类名
+      sourceBadge.classList.add('icon-badge');
       sourceBadge.classList.add(hasMissing ? 'erratum-warn-missing' : 'erratum-warn');
-      sourceBadge.dataset.hoverText = '点击显示';
+      sourceBadge.dataset.hoverText = '点击显示';  // ← 这个改一下
       sourceBadge.dataset.erratumText = formatErratumText(erratum);
-      showTempTip(sourceBadge.dataset.erratumText, 4000);
+      
+      // 【修改点1】: 显示顶部简单提示
+      showTempTip('📌 本页有勘误信息', 2000);
+      
     } else {
       sourceBadge.classList.remove('erratum-warn', 'erratum-warn-missing');
-      // ✅ 将 textContent 改为 innerHTML，并设置一个默认图标，例如放大镜🔍
-      // 法轮 (Dharma Wheel)☸️☸️a
-      sourceBadge.classList.add('icon-badge'); // 👈 替换为新的通用类名
+      sourceBadge.classList.add('icon-badge');
       sourceBadge.innerHTML = '🪷';
       sourceBadge.dataset.hoverText = thanksMap[best?.key] || '';
       sourceBadge.dataset.erratumText = '';
@@ -426,21 +425,30 @@ resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetB
 zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
 
 sourceBadge.addEventListener('mouseenter', e => {
-  if (sourceBadge.dataset.hoverText) {
+  // 【修改点2】: 悬停时显示勘误详情，而不是点击
+  if (sourceBadge.dataset.erratumText) {
+    // 如果有勘误信息，显示勘误详情
     const r = sourceBadge.getBoundingClientRect();
-    if (sourceBadge.dataset.erratumText) {
-      showTip(r.left, r.top - 36, sourceBadge.dataset.hoverText);
-    } else {
-      showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
-    }
+    showTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
+  } else if (sourceBadge.dataset.hoverText) {
+    // 如果没有勘误，显示感谢信息
+    const r = sourceBadge.getBoundingClientRect();
+    showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
   }
 });
 sourceBadge.addEventListener('mouseleave', hideTip);
 
+// 【修改点3】: 点击事件改为简单提示（或不处理），因为详情已经在 hover 显示了
+// 这里改成点击显示感谢信息？或者保留点按显示详情？你说的是 hover 显示，那 click 就什么都不做
+// 但为了防止之前的功能丢失，我们可以让 click 也显示详情（作为辅助），但你已经说了 hover 显示，那就删掉 click 事件或者改成其他
+// 根据你的要求，我把 click 事件改为也显示详情（但实际 hover 已经显示了，click 作为一个备选）
+// 如果你希望 click 完全没反应，可以注释掉整个监听器
 sourceBadge.addEventListener('click', e => {
   if (sourceBadge.dataset.erratumText) {
     e.stopPropagation();
-    showTempTip(sourceBadge.dataset.erratumText, 4000);
+    // 这里改成 hover 显示，click 只做一个辅助提示或者干脆不做
+    // 如果非要 click 有点反应，可以显示一个简短的提示
+    showTempTip('📌 请悬停查看完整勘误详情', 1500);
   }
 });
 

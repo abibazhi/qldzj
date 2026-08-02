@@ -290,6 +290,7 @@ function formatErratumText(items) {
 let currentSutraInfo = null;
 let currentSutraTitle = '';
 let currentRollName = '';
+let currentSutraNum = ''; // 🆕 新增：保存 sutra 参数
 
 async function loadSutraInfo() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -297,6 +298,8 @@ async function loadSutraInfo() {
   const currentIdx = urlParams.get('idx');
 
   if (!sutraNum) return;
+
+  currentSutraNum = sutraNum; // 🆕 保存序号
 
   const info = await fetchSutraInfo(sutraNum);
   if (!info) return;
@@ -310,6 +313,8 @@ async function loadSutraInfo() {
     currentRollName = getRollTitle(info.rolls, currentIdx) || '';
   }
 }
+
+
 
 async function updateRollAfterPageChange(newVol, newPage) {
   if (!currentSutraInfo || !currentSutraInfo.rolls || currentSutraInfo.rolls.length === 0) return;
@@ -386,23 +391,31 @@ function hideTip() {
   hoverTip.style.opacity = 0;
 }
 
+
 // 索引信息提示（无边框）
 function showIndexTip(x, y, title, rollName, vol, page) {
   hoverTip.classList.remove('thanks-mode');
   hoverTip.classList.add('index-tip');
   
   let html = '';
+  // 🆕 第一行：乾隆大藏经第X部
+  if (currentSutraNum) {
+    html += `<div class="index-title">乾隆大藏经第${currentSutraNum}部</div>`;
+  }
+  // 🆕 第二行：经名（另起一行）
   if (title) {
-    html += `<div class="index-title">乾隆大藏经 · ${title}</div>`;
+    html += `<div class="index-roll" style="font-size: 15px; color: #e0d5c0; margin-top: 4px;">${title}</div>`;
   }
+  // 第三行：卷名（如果有）
   if (rollName) {
-    html += `<div class="index-roll">${rollName}</div>`;
+    html += `<div class="index-roll" style="font-size: 14px; color: #bbb; margin-top: 2px;">${rollName}</div>`;
   }
+  // 第四行：册数页码
   html += `<div class="index-page">第 ${vol} 册 第 ${page} 页</div>`;
   
   hoverTip.innerHTML = html;
   hoverTip.style.opacity = 1;
-  
+
   requestAnimationFrame(() => {
     const rect = hoverTip.getBoundingClientRect();
     const vw = window.innerWidth;

@@ -90,20 +90,21 @@
       z-index: 9999;
       pointer-events: none;
       opacity: 0;
-      transition: opacity 0.2s;
+      transition: opacity 0.15s ease;
       width: auto;
-      max-width: 420px;
+      max-width: min(420px, calc(100vw - 20px)); /* 🆕 自适应视口宽度 */
       white-space: nowrap;
       line-height: 1.6;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      word-break: break-word; /* 🆕 长单词换行 */
     }
 
-    /* 🆕 多行模式 */
     .hover-tooltip.multiline {
       white-space: normal;
-      max-width: 420px;
+      max-width: min(420px, calc(100vw - 20px));
       padding: 10px 18px;
     }
+
 
     .hover-tooltip.thanks-mode {
       padding: 0;
@@ -252,8 +253,10 @@ function showTempTip(msg, duration = 2000) {
   setTimeout(() => floatTip.style.display = 'none', duration);
 }
 
+
+
 // 🆕 优化 showTip：自动判断单行/多行
-function showTip(x, y, text) {
+function showTip1(x, y, text) {
   hoverTip.classList.remove('thanks-mode', 'multiline');
   hoverTip.style.left = x + 'px';
   hoverTip.style.top = y + 'px';
@@ -267,7 +270,58 @@ function showTip(x, y, text) {
   hoverTip.style.opacity = 1;
 }
 
-function showThanksTip(x, y, provider) {
+
+  // 🆕 智能定位的 showTip 函数
+  function showTip(x, y, text) {
+    hoverTip.classList.remove('thanks-mode', 'multiline');
+    hoverTip.textContent = text;
+    
+    // 判断是否多行
+    if (text && text.length > 35) {
+      hoverTip.classList.add('multiline');
+    }
+    
+    // 先设置一个临时位置，让浏览器计算尺寸
+    hoverTip.style.left = '0px';
+    hoverTip.style.top = '0px';
+    hoverTip.style.opacity = 1;
+    
+    // 等布局完成后精确定位
+    requestAnimationFrame(() => {
+      const rect = hoverTip.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const padding = 10;
+      
+      // 默认在鼠标上方
+      let left = x;
+      let top = y - rect.height - 10;
+      
+      // 水平方向调整
+      if (left + rect.width > vw - padding) {
+        left = vw - rect.width - padding;
+      }
+      if (left < padding) {
+        left = padding;
+      }
+      
+      // 垂直方向调整
+      if (top < padding) {
+        top = y + 20; // 放到鼠标下方
+      }
+      if (top + rect.height > vh - padding) {
+        top = vh - rect.height - padding;
+      }
+      
+      hoverTip.style.left = left + 'px';
+      hoverTip.style.top = top + 'px';
+    });
+  }
+
+
+
+
+function showThanksTip1(x, y, provider) {
   hoverTip.classList.add('thanks-mode');
   hoverTip.style.left = x + 'px';
   hoverTip.style.top = y + 'px';
@@ -285,6 +339,54 @@ function showThanksTip(x, y, provider) {
     '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>';
   hoverTip.style.opacity = 1;
 }
+
+  // showThanksTip 也稍作调整
+  function showThanksTip(x, y, provider) {
+    hoverTip.classList.add('thanks-mode');
+    hoverTip.style.left = '0px';
+    hoverTip.style.top = '0px';
+    hoverTip.innerHTML =
+      '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>' +
+      '<div class="thanks-row middle">🌸</div>' +
+      '<div class="thanks-row middle thanks-text">感谢</div>' +
+      '<div class="thanks-row middle">🌸</div>' +
+      '<div class="thanks-row middle">🌸</div>' +
+      '<div class="thanks-row middle thanks-text">' + provider + '</div>' +
+      '<div class="thanks-row middle">🌸</div>' +
+      '<div class="thanks-row middle">🌸</div>' +
+      '<div class="thanks-row middle thanks-text">提供免费存储</div>' +
+      '<div class="thanks-row middle">🌸</div>' +
+      '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>';
+    
+    // 同样做智能定位
+    requestAnimationFrame(() => {
+      const rect = hoverTip.getBoundingClientRect();
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const padding = 10;
+      
+      let left = x;
+      let top = y - rect.height - 10;
+      
+      if (left + rect.width > vw - padding) {
+        left = vw - rect.width - padding;
+      }
+      if (left < padding) {
+        left = padding;
+      }
+      if (top < padding) {
+        top = y + 20;
+      }
+      if (top + rect.height > vh - padding) {
+        top = vh - rect.height - padding;
+      }
+      
+      hoverTip.style.left = left + 'px';
+      hoverTip.style.top = top + 'px';
+    });
+  }
+
+
 function hideTip() { hoverTip.style.opacity = 0; }
 
 function initPanzoom() {

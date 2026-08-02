@@ -132,14 +132,6 @@
       padding-left: 0;
     }
 
-
-
-
-
-
-
-
-
     .thanks-row {
       line-height: 1.8;
     }
@@ -264,41 +256,8 @@ const floatTip = document.getElementById('floatTip');
       return `📌 勘误：<br>${parts.join('<br>')}`;
     }
 
-    // 🆕 showErratumTip 改为 innerHTML
-    function showErratumTip(x, y, text) {
-      hoverTip.classList.remove('thanks-mode');
-      hoverTip.classList.add('erratum-tip');
-      hoverTip.innerHTML = text;          // 🆕 用 innerHTML 而不是 textContent
-      hoverTip.style.opacity = 1;
-      
-      requestAnimationFrame(() => {
-        const rect = hoverTip.getBoundingClientRect();
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
-        const padding = 10;
-        
-        let left = x;
-        let top = y - rect.height - 10;
-        
-        if (left + rect.width > vw - padding) {
-          left = vw - rect.width - padding;
-        }
-        if (left < padding) {
-          left = padding;
-        }
-        if (top < padding) {
-          top = y + 20;
-        }
-        if (top + rect.height > vh - padding) {
-          top = vh - rect.height - padding;
-        }
-        
-        hoverTip.style.left = left + 'px';
-        hoverTip.style.top = top + 'px';
-      });
-    }
 
-    // showTip 保持 textContent（普通文本）
+    // 🆕 showTip - 移除 erratum-tip 类
     function showTip(x, y, text) {
       hoverTip.classList.remove('thanks-mode', 'erratum-tip');
       hoverTip.textContent = text;
@@ -331,7 +290,41 @@ const floatTip = document.getElementById('floatTip');
       });
     }
 
-    // showThanksTip 保持 innerHTML
+    // showErratumTip - 添加 erratum-tip 类（红色边框）
+    function showErratumTip(x, y, text) {
+      hoverTip.classList.remove('thanks-mode');
+      hoverTip.classList.add('erratum-tip');
+      hoverTip.innerHTML = text;
+      hoverTip.style.opacity = 1;
+      
+      requestAnimationFrame(() => {
+        const rect = hoverTip.getBoundingClientRect();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const padding = 10;
+        
+        let left = x;
+        let top = y - rect.height - 10;
+        
+        if (left + rect.width > vw - padding) {
+          left = vw - rect.width - padding;
+        }
+        if (left < padding) {
+          left = padding;
+        }
+        if (top < padding) {
+          top = y + 20;
+        }
+        if (top + rect.height > vh - padding) {
+          top = vh - rect.height - padding;
+        }
+        
+        hoverTip.style.left = left + 'px';
+        hoverTip.style.top = top + 'px';
+      });
+    }
+
+    // showThanksTip - 添加 thanks-mode 类（金色边框）
     function showThanksTip(x, y, provider) {
       hoverTip.classList.remove('erratum-tip');
       hoverTip.classList.add('thanks-mode');
@@ -376,7 +369,6 @@ const floatTip = document.getElementById('floatTip');
         hoverTip.style.top = top + 'px';
       });
     }
-
 
 
 
@@ -506,27 +498,16 @@ zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zo
 resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetBtn.getBoundingClientRect().y-40, "重置 1:1");
 zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
 
-sourceBadge.addEventListener('mouseenter11', e => {
-  if (sourceBadge.dataset.erratumText) {
-    const r = sourceBadge.getBoundingClientRect();
-    showTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
-  } else if (sourceBadge.dataset.hoverText) {
-    const r = sourceBadge.getBoundingClientRect();
-    showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
-  }
-});
+    sourceBadge.addEventListener('mouseenter', e => {
+      if (sourceBadge.dataset.erratumText) {
+        const r = sourceBadge.getBoundingClientRect();
+        showErratumTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
+      } else if (sourceBadge.dataset.hoverText) {
+        const r = sourceBadge.getBoundingClientRect();
+        showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
+      }
+    });
 
-  // ... 在 sourceBadge hover 事件中调用 showErratumTip
-  sourceBadge.addEventListener('mouseenter', e => {
-    if (sourceBadge.dataset.erratumText) {
-      const r = sourceBadge.getBoundingClientRect();
-      // 🆕 使用专门的勘误显示函数
-      showErratumTip(r.left, r.top - 36, sourceBadge.dataset.erratumText);
-    } else if (sourceBadge.dataset.hoverText) {
-      const r = sourceBadge.getBoundingClientRect();
-      showThanksTip(r.left - 70, r.top - 140, sourceBadge.dataset.hoverText);
-    }
-  });
 
 
 sourceBadge.addEventListener('mouseleave', hideTip);

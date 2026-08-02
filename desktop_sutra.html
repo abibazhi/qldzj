@@ -79,12 +79,14 @@
       cursor: pointer;
     }
 
-    /* 🆕 优化 hover 提示样式 - 方案一：深色 + 金色边框 */
+
+
+
     .hover-tooltip {
       position: fixed;
       background: rgba(20, 20, 30, 0.92);
       color: #f0f0f0;
-      padding: 10px 16px;
+      padding: 10px 18px;
       border-radius: 8px;
       font-size: 14px;
       z-index: 9999;
@@ -93,24 +95,24 @@
       transition: opacity 0.15s ease;
       width: auto;
       max-width: min(480px, calc(100vw - 20px));
-      white-space: pre-wrap; /* 保留换行 */
+      white-space: normal;        /* 自动换行 */
       line-height: 1.8;
       box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-      border: 2px solid #f39c12; /* 金色边框 */
+      border: 2px solid #f39c12;
       word-break: break-word;
+      padding: 10px 18px;
     }
 
-    /* 勘误专用：红色边框更醒目 */
     .hover-tooltip.erratum-tip {
       border-color: #e74c3c;
       background: rgba(30, 10, 10, 0.92);
     }
 
-    /* 多行模式（其实现在都用 pre-wrap 了） */
-    .hover-tooltip.multiline {
-      white-space: pre-wrap;
-      max-width: min(480px, calc(100vw - 20px));
-      padding: 10px 18px;
+    /* 🆕 每条勘误独立一行，长文本自动折行 */
+    .hover-tooltip.erratum-tip .err-item {
+      display: block;
+      word-break: break-word;
+      padding-left: 0;
     }
 
     .hover-tooltip.thanks-mode {
@@ -118,8 +120,11 @@
       display: grid;
       grid-template-columns: auto 1fr auto;
       min-width: 12em;
-      border-color: #f39c12; /* 感谢信息用金色边框 */
+      border-color: #f39c12;
     }
+
+
+
 
 
 
@@ -216,66 +221,6 @@ function checkErratum(vol, page) {
   return activeErrataMap.get(`${volNum}_${pageNum}`);
 }
 
-function formatErratumText1(items) {
-  if (!items || items.length === 0) return '';
-  
-  const allSameSection = items.every(item => item.section === items[0].section);
-  
-  function formatItem(item) {
-    return `${item.location} → ${item.correction}`;
-  }
-  
-  if (items.length === 1) {
-    const item = items[0];
-    const sectionText = item.section ? `（${item.section}栏）` : '';
-    return `勘误${sectionText}：${formatItem(item)}`;
-  }
-  
-  if (allSameSection) {
-    const sectionText = items[0].section ? `（${items[0].section}栏）` : '';
-    const parts = items.map((item, i) => `${i + 1}. ${formatItem(item)}`);
-    return `勘误${sectionText}：${parts.join(' ')}`;
-  }
-  
-  const parts = items.map((item, i) => {
-    const sectionText = item.section ? `（${item.section}栏）` : '';
-    return `${i + 1}. ${sectionText}${formatItem(item)}`;
-  });
-  return `勘误：${parts.join(' ')}`;
-}
-
-  // 🆕 简化后的 formatErratumText
-  function formatErratumText(items) {
-    if (!items || items.length === 0) return '';
-    
-    // 每条勘误独立一行
-    const parts = items.map((item, i) => {
-      const correctionText = item.correction || item.verifyNote || '待确认';
-      const sectionText = item.section ? `（${item.section}栏）` : '';
-      return `${i + 1}. ${sectionText}「${item.location}」→ ${correctionText}`;
-    });
-    
-    return `📌 本页勘误信息：\n${parts.join('\n')}`;
-  }
-
-  // 🆕 显示勘误提示时加上特殊 class
-  function showErratumTip123(x, y, text) {
-    hoverTip.classList.remove('thanks-mode');
-    hoverTip.classList.add('erratum-tip'); // 红色边框
-    hoverTip.style.left = x + 'px';
-    hoverTip.style.top = y + 'px';
-    hoverTip.textContent = text;
-    hoverTip.style.opacity = 1;
-  }
-
-  // 修改 showTip，根据内容决定样式
-  function showTip2(x, y, text) {
-    hoverTip.classList.remove('thanks-mode', 'erratum-tip');
-    hoverTip.style.left = x + 'px';
-    hoverTip.style.top = y + 'px';
-    hoverTip.textContent = text;
-    hoverTip.style.opacity = 1;
-  }
 
 
 let isLoading = false;
@@ -294,146 +239,135 @@ const floatTip = document.getElementById('floatTip');
 
 
 
-
-
-function showTempTip1(msg, duration = 2000) {
-  floatTip.textContent = msg;
-  floatTip.style.display = 'block';
-  setTimeout(() => floatTip.style.display = 'none', duration);
-}
-
-
-
-// 🆕 优化 showTip：自动判断单行/多行
-function showTip12(x, y, text) {
-  hoverTip.classList.remove('thanks-mode', 'multiline');
-  hoverTip.style.left = x + 'px';
-  hoverTip.style.top = y + 'px';
-  hoverTip.textContent = text;
-  
-  // 如果文字超过 35 个字符，允许换行（多行显示）
-  if (text && text.length > 35) {
-    hoverTip.classList.add('multiline');
-  }
-  
-  hoverTip.style.opacity = 1;
-}
-
-
-  // 🆕 智能定位的 showTip 函数
-  function showTip1(x, y, text) {
-    hoverTip.classList.remove('thanks-mode', 'multiline');
-    hoverTip.textContent = text;
-    
-    // 判断是否多行
-    if (text && text.length > 35) {
-      hoverTip.classList.add('multiline');
+    // 🆕 修改 formatErratumText - 用 innerHTML + 样式控制
+    function formatErratumText(items) {
+      if (!items || items.length === 0) return '';
+      
+      const parts = items.map((item, i) => {
+        const correctionText = item.correction || item.verifyNote || '待确认';
+        const sectionText = item.section ? `（${item.section}栏）` : '';
+        return `<span class="err-item">${i + 1}. ${sectionText}「${item.location}」→ ${correctionText}</span>`;
+      });
+      
+      return `📌 勘误：<br>${parts.join('<br>')}`;
     }
-    
-    // 先设置一个临时位置，让浏览器计算尺寸
-    hoverTip.style.left = '0px';
-    hoverTip.style.top = '0px';
-    hoverTip.style.opacity = 1;
-    
-    // 等布局完成后精确定位
-    requestAnimationFrame(() => {
-      const rect = hoverTip.getBoundingClientRect();
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const padding = 10;
+
+    // 🆕 showErratumTip 改为 innerHTML
+    function showErratumTip(x, y, text) {
+      hoverTip.classList.remove('thanks-mode');
+      hoverTip.classList.add('erratum-tip');
+      hoverTip.innerHTML = text;          // 🆕 用 innerHTML 而不是 textContent
+      hoverTip.style.opacity = 1;
       
-      // 默认在鼠标上方
-      let left = x;
-      let top = y - rect.height - 10;
+      requestAnimationFrame(() => {
+        const rect = hoverTip.getBoundingClientRect();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const padding = 10;
+        
+        let left = x;
+        let top = y - rect.height - 10;
+        
+        if (left + rect.width > vw - padding) {
+          left = vw - rect.width - padding;
+        }
+        if (left < padding) {
+          left = padding;
+        }
+        if (top < padding) {
+          top = y + 20;
+        }
+        if (top + rect.height > vh - padding) {
+          top = vh - rect.height - padding;
+        }
+        
+        hoverTip.style.left = left + 'px';
+        hoverTip.style.top = top + 'px';
+      });
+    }
+
+    // showTip 保持 textContent（普通文本）
+    function showTip(x, y, text) {
+      hoverTip.classList.remove('thanks-mode', 'erratum-tip');
+      hoverTip.textContent = text;
+      hoverTip.style.opacity = 1;
       
-      // 水平方向调整
-      if (left + rect.width > vw - padding) {
-        left = vw - rect.width - padding;
-      }
-      if (left < padding) {
-        left = padding;
-      }
+      requestAnimationFrame(() => {
+        const rect = hoverTip.getBoundingClientRect();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const padding = 10;
+        
+        let left = x;
+        let top = y - rect.height - 10;
+        
+        if (left + rect.width > vw - padding) {
+          left = vw - rect.width - padding;
+        }
+        if (left < padding) {
+          left = padding;
+        }
+        if (top < padding) {
+          top = y + 20;
+        }
+        if (top + rect.height > vh - padding) {
+          top = vh - rect.height - padding;
+        }
+        
+        hoverTip.style.left = left + 'px';
+        hoverTip.style.top = top + 'px';
+      });
+    }
+
+    // showThanksTip 保持 innerHTML
+    function showThanksTip(x, y, provider) {
+      hoverTip.classList.remove('erratum-tip');
+      hoverTip.classList.add('thanks-mode');
+      hoverTip.innerHTML = `
+        <div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>
+        <div class="thanks-row middle">🌸</div>
+        <div class="thanks-row middle thanks-text">感谢</div>
+        <div class="thanks-row middle">🌸</div>
+        <div class="thanks-row middle">🌸</div>
+        <div class="thanks-row middle thanks-text">${provider}</div>
+        <div class="thanks-row middle">🌸</div>
+        <div class="thanks-row middle">🌸</div>
+        <div class="thanks-row middle thanks-text">提供免费存储</div>
+        <div class="thanks-row middle">🌸</div>
+        <div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>
+      `;
+      hoverTip.style.opacity = 1;
       
-      // 垂直方向调整
-      if (top < padding) {
-        top = y + 20; // 放到鼠标下方
-      }
-      if (top + rect.height > vh - padding) {
-        top = vh - rect.height - padding;
-      }
-      
-      hoverTip.style.left = left + 'px';
-      hoverTip.style.top = top + 'px';
-    });
-  }
+      requestAnimationFrame(() => {
+        const rect = hoverTip.getBoundingClientRect();
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const padding = 10;
+        
+        let left = x;
+        let top = y - rect.height - 10;
+        
+        if (left + rect.width > vw - padding) {
+          left = vw - rect.width - padding;
+        }
+        if (left < padding) {
+          left = padding;
+        }
+        if (top < padding) {
+          top = y + 20;
+        }
+        if (top + rect.height > vh - padding) {
+          top = vh - rect.height - padding;
+        }
+        
+        hoverTip.style.left = left + 'px';
+        hoverTip.style.top = top + 'px';
+      });
+    }
 
 
 
 
-function showThanksTip2(x, y, provider) {
-  hoverTip.classList.add('thanks-mode');
-  hoverTip.style.left = x + 'px';
-  hoverTip.style.top = y + 'px';
-  hoverTip.innerHTML =
-    '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>' +
-    '<div class="thanks-row middle">🌸</div>' +
-    '<div class="thanks-row middle thanks-text">感谢</div>' +
-    '<div class="thanks-row middle">🌸</div>' +
-    '<div class="thanks-row middle">🌸</div>' +
-    '<div class="thanks-row middle thanks-text">' + provider + '</div>' +
-    '<div class="thanks-row middle">🌸</div>' +
-    '<div class="thanks-row middle">🌸</div>' +
-    '<div class="thanks-row middle thanks-text">提供免费存储</div>' +
-    '<div class="thanks-row middle">🌸</div>' +
-    '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>';
-  hoverTip.style.opacity = 1;
-}
-
-  // showThanksTip 也稍作调整
-  function showThanksTip12(x, y, provider) {
-    hoverTip.classList.add('thanks-mode');
-    hoverTip.style.left = '0px';
-    hoverTip.style.top = '0px';
-    hoverTip.innerHTML =
-      '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>' +
-      '<div class="thanks-row middle">🌸</div>' +
-      '<div class="thanks-row middle thanks-text">感谢</div>' +
-      '<div class="thanks-row middle">🌸</div>' +
-      '<div class="thanks-row middle">🌸</div>' +
-      '<div class="thanks-row middle thanks-text">' + provider + '</div>' +
-      '<div class="thanks-row middle">🌸</div>' +
-      '<div class="thanks-row middle">🌸</div>' +
-      '<div class="thanks-row middle thanks-text">提供免费存储</div>' +
-      '<div class="thanks-row middle">🌸</div>' +
-      '<div class="thanks-row full">🌸🌸🌸🌸🌸🌸🌸🌸🌸</div>';
-    
-    // 同样做智能定位
-    requestAnimationFrame(() => {
-      const rect = hoverTip.getBoundingClientRect();
-      const vw = window.innerWidth;
-      const vh = window.innerHeight;
-      const padding = 10;
-      
-      let left = x;
-      let top = y - rect.height - 10;
-      
-      if (left + rect.width > vw - padding) {
-        left = vw - rect.width - padding;
-      }
-      if (left < padding) {
-        left = padding;
-      }
-      if (top < padding) {
-        top = y + 20;
-      }
-      if (top + rect.height > vh - padding) {
-        top = vh - rect.height - padding;
-      }
-      
-      hoverTip.style.left = left + 'px';
-      hoverTip.style.top = top + 'px';
-    });
-  }
 // ========== 提示函数 ==========
 function showTempTip(msg, duration = 2000) {
   floatTip.textContent = msg;

@@ -658,6 +658,23 @@ resetBtn.onmouseenter = () => showTip(resetBtn.getBoundingClientRect().x, resetB
 zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideTip;
 
 // ========== sourceBadge 事件 ==========
+
+sourceBadge.addEventListener('click', e => {
+    if (sourceBadge.dataset.isErratum === 'true' && sourceBadge.dataset.erratumText) {
+        e.stopPropagation();
+        const vol = currentVol;
+        const page = currentPage;
+        const anchorId = `vol-${vol}-page-${page}`;
+        const targetUrl = `./erratum/erratum.verify.html#${anchorId}`;
+        
+        // 不指定窗口名，会在当前窗口打开
+        window.open(targetUrl, '_self');
+        // 或者直接使用 location.href
+        // window.location.href = targetUrl;
+    }
+});
+
+
 sourceBadge.addEventListener('mouseenter', e => {
   const isErratum = sourceBadge.dataset.isErratum === 'true';
   const erratumText = sourceBadge.dataset.erratumText;

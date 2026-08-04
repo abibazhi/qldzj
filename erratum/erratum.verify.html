@@ -278,7 +278,54 @@ function generateContent() {
 // ============================================================
 // 生成表格行（带链接版本）
 // ============================================================
+
 function generateRows(items) {
+    return items.map(item => {
+
+        const volumeStr = item.volume !== null ? volumeToChinese(item.volume) : '';
+        
+        // 特殊处理：V=36, P=13 显示为"十三"，非"一三"
+        let pageStr;
+        if (item.volume === 36 && String(item.page) === "13") {
+            pageStr = "十三";
+        } else {
+            pageStr = item.page === '目錄' ? '目錄' : (item.page !== null ? toChineseNumber(item.page) : '');
+        }
+        
+        const section = item.section || '';
+
+        // ========== 生成锚点 ID ==========
+        let anchorId = '';
+        if (item.volume !== null && item.page !== null && item.page !== '') {
+            const pageStrForId = item.page === '目錄' ? 'catalog' : item.page;
+            anchorId = `vol-${item.volume}-page-${pageStrForId}`;
+        }
+
+        // 1. 原文列
+        let locationHtml = item.location || '';
+        if (item.locationHref) {
+            const href = item.locationHref.split(' | ')[0];
+            const linkTitle = href === '#' ? 'title="图片缺失，无法查看"' : 'title="点击查看原文"';
+            locationHtml = `${item.location}&nbsp;<a href="${href}" ${linkTitle} style="text-decoration:none; color:#5f4f3f; font-size:0.85em;">${ICON_ORIG}</a>`;
+        }
+        
+        // 2. 更正列
+        let correctionHtml = item.correction || '';
+        if (item.correctionHref) {
+            const href = item.correctionHref.split(' | ')[0];
+            correctionHtml = `${item.correction}&nbsp;<a href="${href}" title="点击查看更正" style="text-decoration:none; color:#0066cc; font-size:0.85em;">${ICON_COR}</a>`;
+        }
+
+        // 備註列
+        const noteHtml = processNoteToLink(item.note);
+        const verifyNoteHtml = item.verifyNote ? `<span class="verify-note">${item.verifyNote}</span>` : '';
+
+        return `<tr id="${anchorId}"><td>${volumeStr}</td><td>${pageStr}</td><td>${section}</td><td>${locationHtml}</td><td>${correctionHtml}</td><td>${noteHtml}</td><td>${verifyNoteHtml}</td></tr>`;
+    }).join('\n              ');
+}
+
+
+function generateRows1(items) {
     return items.map(item => {
 
         const volumeStr = item.volume !== null ? volumeToChinese(item.volume) : '';

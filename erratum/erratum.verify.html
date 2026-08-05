@@ -398,6 +398,7 @@ generateContent();
 
 <script src="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.js"></script>
 <script>
+/*
   document.addEventListener('DOMContentLoaded', function() {
     new SimpleLightbox('.lightbox', {
       captionsData: 'title',
@@ -406,6 +407,42 @@ generateContent();
       disableRightClick: false,
     });
   });
+*/
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    new SimpleLightbox('.lightbox', {
+      captionsData: 'title',
+      captionDelay: 250,
+      scaleImageToRatio: true,
+      disableRightClick: false,
+    });
+
+    // 处理锚点跳转
+    if (window.location.hash) {
+      setTimeout(() => {
+        const target = document.querySelector(window.location.hash);
+        if (target) {
+          // 滚动到屏幕上方（留出边距）
+          const rect = target.getBoundingClientRect();
+          window.scrollTo({
+            top: rect.top + window.pageYOffset - 80,
+            behavior: 'smooth'
+          });
+
+          // 短暂高亮
+          target.style.backgroundColor = '#fef3e2';
+          target.style.borderLeft = '4px solid #e67e22';
+          setTimeout(() => {
+            target.style.backgroundColor = '';
+            target.style.borderLeft = '';
+          }, 2000);
+        }
+      }, 500);
+    }
+  });
+</script>
+
 </script>
 
 </body>

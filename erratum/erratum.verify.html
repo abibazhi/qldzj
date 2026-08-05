@@ -408,6 +408,7 @@ generateContent();
     });
   });
 */
+/*
   document.addEventListener('DOMContentLoaded', function() {
     new SimpleLightbox('.lightbox', {
       captionsData: 'title',
@@ -442,6 +443,27 @@ generateContent();
     }
 
   });
+*/
+
+// 处理锚点跳转 - 使用浏览器默认滚动，只加高亮
+if (window.location.hash) {
+  // 清除之前所有的高亮
+  document.querySelectorAll('.highlight-row').forEach(el => {
+    el.style.backgroundColor = '';
+    el.style.borderLeft = '';
+  });
+
+  setTimeout(() => {
+    const target = document.querySelector(window.location.hash);
+    if (target) {
+      // 不手动控制滚动位置，让浏览器自己处理
+      // 只添加高亮
+      target.classList.add('highlight-row');
+      target.style.backgroundColor = '#fef3e2';
+      target.style.borderLeft = '4px solid #e67e22';
+    }
+  }, 500);
+}
 
 
 </script>

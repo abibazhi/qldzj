@@ -360,12 +360,26 @@ function generateRows1(items) {
         }
         
         // 2. 更正列
-        let correctionHtml = item.correction || '';
+        // let correctionHtml = item.correction || '';
         // 安全检查：确保 item.correctionHref 存在且不为空字符串
+        // if (item.correctionHref) {
+        //    const href = item.correctionHref.split(' | ')[0]; // 取第一个链接
+        //    correctionHtml = `${item.correction}&nbsp;<a href="${href}" title="点击查看更正" style="text-decoration:none; color:#0066cc; font-size:0.85em;">${ICON_COR}</a>`;
+        // }
+
+        // 2. 更正列
+        let correctionHtml = item.correction || '';
         if (item.correctionHref) {
-            const href = item.correctionHref.split(' | ')[0]; // 取第一个链接
-            correctionHtml = `${item.correction}&nbsp;<a href="${href}" title="点击查看更正" style="text-decoration:none; color:#0066cc; font-size:0.85em;">${ICON_COR}</a>`;
+            const href = item.correctionHref.split(' | ')[0];
+            // 如果 href 是 "#" 或空，则不生成链接
+            if (href && href !== '#') {
+                correctionHtml = `${item.correction}&nbsp;<a href="${href}" title="点击查看更正" style="text-decoration:none; color:#0066cc; font-size:0.85em;">${ICON_COR}</a>`;
+            } else {
+                // 只显示文字，不显示图标
+                correctionHtml = item.correction;
+            }
         }
+
 
         
         //// 備註列：原始勘误表备注

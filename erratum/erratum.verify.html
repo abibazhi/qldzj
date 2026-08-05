@@ -416,28 +416,31 @@ generateContent();
       disableRightClick: false,
     });
 
-    // 处理锚点跳转
+    // 处理锚点跳转 - 持续高亮，跳转前清除旧高亮
     if (window.location.hash) {
+      // 清除之前所有的高亮
+      document.querySelectorAll('.highlight-row').forEach(el => {
+        el.style.backgroundColor = '';
+        el.style.borderLeft = '';
+      });
+
       setTimeout(() => {
         const target = document.querySelector(window.location.hash);
         if (target) {
-          // 滚动到屏幕上方（留出边距）
           const rect = target.getBoundingClientRect();
           window.scrollTo({
             top: rect.top + window.pageYOffset - 80,
             behavior: 'smooth'
           });
 
-          // 短暂高亮
+          // 持续高亮
+          target.classList.add('highlight-row');
           target.style.backgroundColor = '#fef3e2';
           target.style.borderLeft = '4px solid #e67e22';
-          setTimeout(() => {
-            target.style.backgroundColor = '';
-            target.style.borderLeft = '';
-          }, 2000);
         }
       }, 500);
     }
+
   });
 
 

@@ -662,8 +662,8 @@ zoomInBtn.onmouseleave = zoomOutBtn.onmouseleave = resetBtn.onmouseleave = hideT
 sourceBadge.addEventListener('click', e => {
     if (sourceBadge.dataset.isErratum === 'true' && sourceBadge.dataset.erratumText) {
         e.stopPropagation();
-        const vol = currentVol;
-        const page = currentPage;
+        const vol = parseInt(currentVol, 10);  // 转成数字，去掉前导零
+        const page = parseInt(currentPage, 10); // 转成数字，去掉前导零
         const anchorId = `vol-${vol}-page-${page}`;
         const targetUrl = `./erratum/erratum.verify.html#${anchorId}`;
         
@@ -698,12 +698,14 @@ sourceBadge.addEventListener('mouseleave', e => {
   hideTip();
 });
 
+/**
 sourceBadge.addEventListener('click', e => {
   if (sourceBadge.dataset.isErratum === 'true' && sourceBadge.dataset.erratumText) {
     e.stopPropagation();
     showTempTip('📌 请悬停查看完整勘误详情', 1500);
   }
 });
+*/
 
 // ============================================================
 // 启动

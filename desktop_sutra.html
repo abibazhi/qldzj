@@ -587,7 +587,7 @@ async function loadImage(vol, page) {
       sourceBadge.dataset.isErratum = 'true';
       sourceBadge.dataset.erratumText = formatErratumText(erratum);
       
-      showTempTip('📌 本页有勘误信息', 2000);
+      showTempTip('本页有勘误信息', 2000);
     } else {
       sourceBadge.classList.remove('erratum-warn', 'erratum-warn-missing');
       sourceBadge.classList.add('icon-badge');

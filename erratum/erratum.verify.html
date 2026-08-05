@@ -408,7 +408,7 @@ generateContent();
     });
   });
 */
-
+/*
   document.addEventListener('DOMContentLoaded', function() {
     new SimpleLightbox('.lightbox', {
       captionsData: 'title',
@@ -439,6 +439,74 @@ generateContent();
         }
       }, 500);
     }
+  });
+*/
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // 初始化 SimpleLightbox
+    new SimpleLightbox('.lightbox', {
+      captionsData: 'title',
+      captionDelay: 250,
+      scaleImageToRoot: true,
+      disableRightClick: false,
+    });
+
+    // ============================================================
+    // 处理锚点跳转 - 持续高亮，颜色柔和
+    // ============================================================
+    function handleAnchorJump() {
+      // 清除所有之前的高亮
+      document.querySelectorAll('.highlight-row').forEach(el => {
+        el.classList.remove('highlight-row');
+        el.style.backgroundColor = '';
+        el.style.borderLeft = '';
+        // 移除标记图标
+        const marker = el.querySelector('.anchor-marker');
+        if (marker) marker.remove();
+      });
+
+      if (window.location.hash) {
+        // 延迟执行，确保页面已完全渲染
+        setTimeout(() => {
+          const target = document.querySelector(window.location.hash);
+          if (target) {
+            // 1. 滚动到屏幕上方（留出边距 80px）
+            const rect = target.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            window.scrollTo({
+              top: rect.top + scrollTop - 80,
+              behavior: 'smooth'
+            });
+
+            // 2. 添加持续高亮（柔和的颜色）
+            target.classList.add('highlight-row');
+            target.style.backgroundColor = '#f5f0eb';  // 柔和的米灰色
+            target.style.borderLeft = '3px solid #b8a48c';  // 柔和的棕色边框
+            target.style.transition = 'background-color 0.3s ease';
+
+            // 3. 添加标记图标
+            const firstCell = target.querySelector('td');
+            if (firstCell && !firstCell.querySelector('.anchor-marker')) {
+              const marker = document.createElement('span');
+              marker.className = 'anchor-marker';
+              marker.textContent = '📍 ';
+              marker.style.fontSize = '1.1em';
+              marker.style.marginRight = '4px';
+              firstCell.prepend(marker);
+            }
+          }
+        }, 500);
+      }
+    }
+
+    // 执行锚点跳转
+    handleAnchorJump();
+
+    // 监听 hash 变化（用户手动点击锚点链接时）
+    window.addEventListener('hashchange', function() {
+      handleAnchorJump();
+    });
   });
 
 </script>

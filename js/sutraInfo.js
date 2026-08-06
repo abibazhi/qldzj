@@ -18,7 +18,7 @@ export async function fetchSutraInfo(sutraNum) {
 
     // 有 idx 参数 = 多卷经，尝试加载 idx 文件
     try {
-        const response = await fetch(`./public/sutra${sutraNum}.idx`);
+        const response = await fetch(`./public/sutra${sutraNum}.idx.html`);
         if (response.ok) {
             const htmlText = await response.text();
             return parseIdxHtml(htmlText);

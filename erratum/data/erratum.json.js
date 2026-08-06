@@ -218,7 +218,7 @@ export const erratumPicData = {
           correction: "（一至四〇）",
           note: "",
           locationHref: "https://img.daxumi.top/024/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra83.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra83.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -240,7 +240,7 @@ export const erratumPicData = {
           correction: "（一至四〇）",
           note: "",
           locationHref: "https://img.daxumi.top/027/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra85.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra85.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -306,7 +306,7 @@ export const erratumPicData = {
           correction: "（七至一〇）",
           note: "",
           locationHref: "https://img.daxumi.top/033/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra134.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra134.idx.html",
           verifyNote: "未修改（冗余信息，应该是'（六至一〇）'）"
         },
         {
@@ -350,7 +350,7 @@ export const erratumPicData = {
           correction: "（一至六）",
           note: "",
           locationHref: "https://img.daxumi.top/034/C3.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra155.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra155.idx.html",
           verifyNote: "未修改（冗余信息）"
         }
       ]
@@ -762,7 +762,7 @@ export const erratumPicData = {
           correction: "（二六至五〇）",
           note: "",
           locationHref: "https://img.daxumi.top/051/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra539.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra539.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -872,7 +872,7 @@ export const erratumPicData = {
           correction: "（六至十）",
           note: "",
           locationHref: "https://img.daxumi.top/063/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra999.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra999.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -883,7 +883,7 @@ export const erratumPicData = {
           correction: "（一至十九）",
           note: "",
           locationHref: "https://img.daxumi.top/063/C4.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1012.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1012.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -936,7 +936,7 @@ export const erratumPicData = {
           correction: "「（一至七）」",
           note: "",
           locationHref: "https://img.daxumi.top/064/C3.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1022.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1022.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -947,7 +947,7 @@ export const erratumPicData = {
           correction: "（淵一 — 淵四）",
           note: "",
           locationHref: "https://img.daxumi.top/064/C4.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1024.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1024.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -991,7 +991,7 @@ export const erratumPicData = {
           correction: "（一至五）",
           note: "",
           locationHref: "https://img.daxumi.top/069/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1111.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1111.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -1110,7 +1110,7 @@ export const erratumPicData = {
           correction: "八二冊千字文「友」與八三冊「枝」應對調",
           note: "",
           locationHref: "https://img.daxumi.top/082/C2.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1165.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1165.idx.html",
           verifyNote: "未修改（因为正文和索引一样）"
         },
         {
@@ -1132,7 +1132,7 @@ export const erratumPicData = {
           correction: "（節三 — 節九）",
           note: "",
           locationHref: "https://img.daxumi.top/086/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1188.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1188.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -1143,7 +1143,7 @@ export const erratumPicData = {
           correction: "（沛一 — 沛四）",
           note: "",
           locationHref: "https://img.daxumi.top/087/C3.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1203.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1203.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -1154,7 +1154,7 @@ export const erratumPicData = {
           correction: "（廉六 — 廉十）",
           note: "",
           locationHref: "https://img.daxumi.top/087/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1191.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1191.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -1165,7 +1165,7 @@ export const erratumPicData = {
           correction: "（退一 — 退七）",
           note: "",
           locationHref: "https://img.daxumi.top/087/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1192.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1192.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -1220,7 +1220,7 @@ export const erratumPicData = {
           correction: "（一〇一至一六〇）",
           note: "",
           locationHref: "https://img.daxumi.top/091/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1256.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1256.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -1264,7 +1264,7 @@ export const erratumPicData = {
           correction: "（一至十二）",
           note: "",
           locationHref: "https://img.daxumi.top/101/C2.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1272.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1272.idx.html",
           verifyNote: "未修改（冗余信息。（一至十二）指千字文编号共12卷）"
         },
         {
@@ -1295,7 +1295,7 @@ export const erratumPicData = {
           correction: "（一三至一八）",
           note: "",
           locationHref: "https://img.daxumi.top/102/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1272.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1272.idx.html",
           verifyNote: "未修改（冗余信息。（一三至一八）指千字文编号共6卷）"
         },
         {
@@ -1753,7 +1753,7 @@ export const erratumPicData = {
           correction: "（四八之1至七三）",
           note: "",
           locationHref: "https://img.daxumi.top/136/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1557.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1557.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {
@@ -1971,7 +1971,7 @@ export const erratumPicData = {
           correction: "（一至二十）",
           note: "",
           locationHref: "https://img.daxumi.top/147/C2.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1609.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1609.idx.html",
           verifyNote: "未修改（冗余信息。（一至二十）包括科文和序，经文19卷）"
         },
         {
@@ -2341,7 +2341,7 @@ export const erratumPicData = {
           correction: "（五至二十）",
           note: "",
           locationHref: "https://img.daxumi.top/160/C1.png",
-          correctionHref: "https://qldzj.daxumi.top/public/sutra1646.idx",
+          correctionHref: "https://qldzj.daxumi.top/public/sutra1646.idx.html",
           verifyNote: "未修改（冗余信息）"
         },
         {

@@ -18,26 +18,10 @@
 <body>
     <h1>乾隆大藏经目录</h1>
     <div class="container">
-        <!-- 快速跳转链接 -->
+        <!-- 快速跳转链接（由 categoryMap 数据生成，见底部脚本） -->
         <div class="special-anchor">
             快速跳转:
-            <a href="#anchor_0">大乘般若部</a> |
-            <a href="#anchor_20">大乘宝积部</a> |
-            <a href="#anchor_57">大乘大集部</a> |
-            <a href="#anchor_83">大乘华严部</a> |
-            <a href="#anchor_109">大乘经涅槃部</a> |
-            <a href="#anchor_122">大乘经五大部</a> |
-            <a href="#anchor_372">大乘经单译经</a> |
-            <a href="#anchor_538">小乘经阿含部</a> |
-            <a href="#anchor_675">小乘经单译经</a> |
-            <a href="#anchor_777">宋元入藏诸大小乘经</a> |
-            <a href="#anchor_1077">大乘律</a> |
-            <a href="#anchor_1102">小乘律</a> |
-            <a href="#anchor_1161">大乘论</a> |
-            <a href="#anchor_1254">小乘论</a> |
-            <a href="#anchor_1291">宋元续入藏</a> |
-            <a href="#anchor_1314">西土圣贤撰集</a> |
-            <a href="#anchor_1461">此土著述</a>
+            <span id="quickJumpLinks"></span>
         </div>
 
         <table border="1" class="dataframe" id="sutraTable">
@@ -121,6 +105,16 @@
     import { sutraLinks, categoryMap } from './data/sutra_links.js';
 
     'use strict';
+
+    /**
+     * 生成快速跳转链接（数据来自 categoryMap）
+     */
+    const quickJumpLinks = document.getElementById('quickJumpLinks');
+    if (quickJumpLinks) {
+        quickJumpLinks.innerHTML = Object.entries(categoryMap)
+            .map(([num, name]) => `<a href="#anchor_${num}">${name}</a>`)
+            .join(' | ');
+    }
 
     /**
      * 将 "册-页" 格式转为6位数字 (册3位+页3位)

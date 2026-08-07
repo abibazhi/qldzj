@@ -8,3 +8,10 @@
 
 # backup files
 back/
+
+# vim swap/backup files
+*.swp
+*.swo
+*.swx
+*~
+.~*

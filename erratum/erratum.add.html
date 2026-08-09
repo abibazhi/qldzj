@@ -86,6 +86,7 @@
 
 <script type="module">
 import { erratumAddData } from './data/erratum.add.json.js';
+import { resolveImage } from './data/erratum_images.js';
 
 // ============================================================
 // 工具函数：数字转中文数字（逐位转换）
@@ -117,10 +118,14 @@ function generateTable() {
         const pageStr = item.page === '目录' ? '目录' : (item.page !== null ? toChineseNumber(item.page) : '');
         const section = item.section || '';
         
-        // 原文列：有链接则显示链接
+        // 原文列：有链接则显示链接（C 图链接带 data-r2，点击时自动降级）
         let locationHtml = item.location || '';
         if (item.locationHref) {
-            locationHtml = `<a href="${item.locationHref}">${item.location}</a>`;
+            if (/img\.daxumi\.top\/\d{3}\/C\d+\.png$/.test(item.locationHref)) {
+                locationHtml = `<a href="${item.locationHref}" data-r2="${item.locationHref}">${item.location}</a>`;
+            } else {
+                locationHtml = `<a href="${item.locationHref}">${item.location}</a>`;
+            }
         }
         
         // 更正列：有链接则显示链接
@@ -136,6 +141,20 @@ function generateTable() {
     });
 
     tbody.innerHTML = htmlRows.join('\n');
+
+    // C 图链接点击降级：先探测 R2，失败自动跳 ImgBB
+    tbody.querySelectorAll('a[data-r2]').forEach(a => {
+        a.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const resolved = await resolveImage(a.dataset.r2);
+            if (resolved) {
+                window.open(resolved, '_blank', 'noopener');
+            } else {
+                window.open(a.dataset.r2, '_blank', 'noopener');
+            }
+        });
+    });
+
     console.log(`✅ 增补表生成完成，共 ${items.length} 条记录`);
 }
 

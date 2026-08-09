@@ -1,5 +1,5 @@
 // imageLoader.js
-import { ALWAYS_RELOAD_MAPPING, IMG_TIMEOUT, R2_BASE, GITHUB_BASE } from './config.js';
+import { ALWAYS_RELOAD_MAPPING, IMG_TIMEOUT, FIRST_TIMEOUT, R2_BASE, GITHUB_BASE } from './config.js';
 import { log, getCurrentEnv } from './utils.js';
 
 // ==============================
@@ -113,7 +113,7 @@ function createImage(url) {
 // ==============================
 // 测试图片是否能加载：成功返回true，失败返回false
 // ==============================
-export async function testImage(url) {
+export async function testImage(url, timeout = IMG_TIMEOUT) {
   return new Promise(resolve => {
     const img = createImage(url);
     let done = false;
@@ -121,9 +121,9 @@ export async function testImage(url) {
     // 超时保护：太久没加载也算失败
     const timer = setTimeout(() => {
       done = true;
-      console.log(`【测试】⏱️ 超时: ${url}`);
+      console.log(`【测试】⏱️ 超时(${timeout}ms): ${url}`);
       resolve(false);
-    }, IMG_TIMEOUT);
+    }, timeout);
 
     // 图片加载成功
     img.onload = () => {
@@ -160,7 +160,8 @@ export async function getBestImageUrl(vol, page) {
   console.log("【图源】可用源:", sources.map(s => s.key));
 
   // --------------------------------------------------------------------
-  // 【快速通道】如果上次有成功的源，优先用同一种源（速度最快）
+  // 【快速通道】如果上次有成功的自有源，优先用同一种源（速度最快）
+  // 注意：只记忆 R2/GitHub 自有源，ImgBB 备胎不参与记忆，避免粘住
   // --------------------------------------------------------------------
   if (lastWorkingSource) {
     console.log("【快速通道】上次使用的源:", lastWorkingSource.key);
@@ -171,8 +172,8 @@ export async function getBestImageUrl(vol, page) {
     if (target) {
       console.log("【快速通道】尝试加载:", target.key, target.url);
 
-      // 测试能不能加载
-      const ok = await testImage(target.url);
+      // 测试能不能加载（快速通道用短超时，快速确认）
+      const ok = await testImage(target.url, FIRST_TIMEOUT);
 
       if (ok) {
         console.log("【快速通道】✅ 成功！直接使用，不切换");
@@ -190,15 +191,20 @@ export async function getBestImageUrl(vol, page) {
 
   // --------------------------------------------------------------------
   // 【自动降级】一个一个试，直到成功，绝不空白！
+  // 分层超时：第 1 个源用短超时（自有源挂了快速切走），其余用正常超时
   // --------------------------------------------------------------------
   console.log("【自动重试】开始遍历所有可用源...");
-  for (const s of sources) {
-    console.log("【重试】尝试:", s.key, s.url);
+  for (let i = 0; i < sources.length; i++) {
+    const s = sources[i];
+    const timeout = i === 0 ? FIRST_TIMEOUT : IMG_TIMEOUT;
+    console.log(`【重试】尝试(超时${timeout}ms):`, s.key, s.url);
 
-    const ok = await testImage(s.url);
+    const ok = await testImage(s.url, timeout);
     if (ok) {
       console.log("【重试】✅ 找到可用源:", s.key);
-      lastWorkingSource = s; // 缓存这个源，下次快速通道
+      if (isOwnSource(s.key)) {
+        lastWorkingSource = s; // 只缓存自有源，ImgBB 不参与记忆
+      }
       return s;
     }
   }
@@ -206,4 +212,9 @@ export async function getBestImageUrl(vol, page) {
   // 所有源都挂了（极少出现）
   console.log("【错误】所有源都加载失败");
   return null;
+}
+
+// 是否为自有源（R2/GitHub）：自有源参与快速通道记忆，ImgBB 备胎不参与
+function isOwnSource(key) {
+  return key === 'R2' || key === 'GitHub';
 }

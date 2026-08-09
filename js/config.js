@@ -17,6 +17,12 @@ export const ALWAYS_RELOAD_MAPPING = false;
 export const IMG_TIMEOUT = 10000;
 
 /**
+ * 首个自有源（R2/GitHub）的快速超时（单位：毫秒）
+ * 4000 = 4秒：源挂了快速切走，避免干等 10 秒
+ */
+export const FIRST_TIMEOUT = 4000;
+
+/**
  * Cloudflare R2 公共地址
  */
 // export const R2_BASE = "https://pub-a0fc4de2782d448f916244913768fb78.r2.dev";

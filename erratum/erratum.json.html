@@ -85,6 +85,7 @@
 
 <script type="module">
 import { erratumPicData } from './data/erratum.json.js';
+import './data/erratum_images.js';
 
 // ============================================================
 // 工具函数：数字转中文数字（逐位转换）
@@ -166,9 +167,10 @@ function generateContent() {
         <a href="${group.image}" class="lightbox" data-lightbox="erratum" data-title="影像${groupChinese}">
           <img
             src="${group.image}"
+            data-r2="${group.image}"
             alt="勘误表来源影像${groupChinese}"
             title="点击放大查看原图 (1696x2362)"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+            onerror="window.__erratumFallback(this)"
           >
         </a>
         <div style="display:none; color:#a48d7a; font-size:0.85rem; text-align:center; margin-top:0.3rem;">

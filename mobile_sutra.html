@@ -273,7 +273,7 @@ async function changeImage(direction) {
     showTempTip(direction > 0 ? "已经是最后一页" : "已经是第一页");
     
     // 重置缩放和位置到初始状态
-    panzoom.reset();  // 回到 1:1 和居中位置
+    if (panzoom) panzoom.reset();  // 回到 1:1 和居中位置
     
     return;
   }  
@@ -282,7 +282,7 @@ async function changeImage(direction) {
   await loadImage(newVol, newPage);
   setCurrentPage(newVol, newPage);
   updatePageInfo();
-  panzoom.reset();
+  if (panzoom) panzoom.reset();
 
   // 传入新的册和页
   await updateRollAfterPageChange(newVol, newPage);
@@ -290,21 +290,22 @@ async function changeImage(direction) {
 }
 
 // 按钮
-document.getElementById('zoomInBtn').onclick = () => panzoom.zoomIn();
-document.getElementById('zoomOutBtn').onclick = () => panzoom.zoomOut();
-document.getElementById('resetBtn').onclick = () => panzoom.reset();
+document.getElementById('zoomInBtn').onclick = () => { if (panzoom) panzoom.zoomIn(); };
+document.getElementById('zoomOutBtn').onclick = () => { if (panzoom) panzoom.zoomOut(); };
+document.getElementById('resetBtn').onclick = () => { if (panzoom) panzoom.reset(); };
 
 // --------------------------
 // ✅ 【完美翻页逻辑】
 // 只有 1:1 才能翻页，放大时绝不翻页
 // --------------------------
 imageWrapper.addEventListener('touchstart', e => {
-  if (panzoom.getScale() === 1) {
+  if (!panzoom || panzoom.getScale() === 1) {
     startX = e.touches[0].clientX;
   }
 });
 
 imageWrapper.addEventListener('touchend', e => {
+  if (!panzoom) return;
   const scale = panzoom.getScale();
   if (scale !== 1) return;
 
@@ -315,9 +316,9 @@ imageWrapper.addEventListener('touchend', e => {
 });
 
 window.onload = async () => {
-  initPanzoom();
+  try { initPanzoom(); } catch (e) { console.warn('Panzoom 初始化失败:', e); }
   updatePageInfo();
-  await loadSutraInfo();
+  try { await loadSutraInfo(); } catch (e) { console.warn('经卷信息加载失败:', e); }
   await loadImage(currentVol, currentPage);
 };
 </script>

@@ -598,11 +598,11 @@ async function loadImage(vol, page) {
     }
   } catch (e) { console.error(e); }
   hideLoading();
-  panzoom.reset();
+  if (panzoom) panzoom.reset();
 }
 
 async function changeImage(direction) {
-  if (isLoading || panzoom.getScale() > 1) return;
+  if (isLoading || (panzoom && panzoom.getScale() > 1)) return;
   const res = calcNextPage(direction);
   if (!res.ok) return showTempTip(direction > 0 ? "最后一页" : "第一页");
   const { newVol, newPage } = res;
@@ -617,6 +617,7 @@ async function changeImage(direction) {
 
 // 翻页 hover
 container.addEventListener('mousemove', e => {
+  if (!panzoom) return; // panzoom 尚未初始化（onload 前）
   const scale = panzoom.getScale();
   if (scale > 1) return hideTip();
 
@@ -638,6 +639,7 @@ container.addEventListener('mouseleave', hideTip);
 
 // 翻页点击
 container.addEventListener('click', e => {
+  if (!panzoom) return; // panzoom 尚未初始化
   const scale = panzoom.getScale();
   if (scale > 1) return;
   const r = container.getBoundingClientRect();
@@ -648,9 +650,9 @@ container.addEventListener('click', e => {
 });
 
 // 控制按钮
-zoomInBtn.onclick = () => panzoom.zoomIn();
-zoomOutBtn.onclick = () => panzoom.zoomOut();
-resetBtn.onclick = () => panzoom.reset();
+zoomInBtn.onclick = () => { if (panzoom) panzoom.zoomIn(); };
+zoomOutBtn.onclick = () => { if (panzoom) panzoom.zoomOut(); };
+resetBtn.onclick = () => { if (panzoom) panzoom.reset(); };
 
 zoomInBtn.onmouseenter = () => showTip(zoomInBtn.getBoundingClientRect().x, zoomInBtn.getBoundingClientRect().y-40, "放大");
 zoomOutBtn.onmouseenter = () => showTip(zoomOutBtn.getBoundingClientRect().x, zoomOutBtn.getBoundingClientRect().y-40, "缩小");
@@ -711,8 +713,8 @@ sourceBadge.addEventListener('click', e => {
 // 启动
 // ============================================================
 window.onload = async () => {
-  initPanzoom();
-  await loadSutraInfo();
+  try { initPanzoom(); } catch (e) { console.warn('Panzoom 初始化失败:', e); }
+  try { await loadSutraInfo(); } catch (e) { console.warn('经卷信息加载失败:', e); }
   await loadImage(currentVol, currentPage);
 };
 </script>

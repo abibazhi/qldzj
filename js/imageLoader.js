@@ -7,15 +7,15 @@ import { log, getCurrentEnv } from './utils.js';
 // ==============================
 let currentVol = null;
 export let mappingData = null;
+let mappingAll = null;
 let lastWorkingSource = null;
 
 // ==============================
-// 加载册 mapping.js
+// 加载映射数据（全量单文件 data/mapping.json）
 // ==============================
 export async function loadMapping(vol) {
   const volStr = String(vol);
-  const isSpecial = (volStr === 'erratum');
-  const targetVol = isSpecial ? volStr : volStr.padStart(3, '0');
+  const targetVol = volStr.padStart(3, '0');
 
   if (currentVol === targetVol && mappingData) {
     log(`✅ ${targetVol} 已缓存`);
@@ -27,33 +27,24 @@ export async function loadMapping(vol) {
   mappingData = null;
 
   try {
-    const env = getCurrentEnv();
-    let url;
+    if (!mappingAll) {
+      let url = './data/mapping.json';
+      if (ALWAYS_RELOAD_MAPPING) {
+        url += "?t=" + Date.now();
+      }
+      log("📥 加载: " + url);
 
-    // 🔥 关键改动：根据环境决定从哪里加载 mapping.js
-    if (env === "cloudflare") {
-      // Cloudflare 环境：从 R2 加载
-      url = `${R2_BASE}/${targetVol}/mapping.js`;
-    } else {
-      // GitHub Pages 或本地环境：从当前站点加载
-      // 注意：这里用的是相对路径，会从当前域名加载
-      url = `/${targetVol}/mapping.js`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      mappingAll = await res.json();
+      log(`✅ mapping 加载完成，共 ${Object.keys(mappingAll).length} 卷`);
     }
 
-    if (ALWAYS_RELOAD_MAPPING) {
-      url += "?t=" + Date.now();
+    mappingData = mappingAll[targetVol];
+    if (!Array.isArray(mappingData)) {
+      throw new Error(`卷 ${targetVol} 无映射数据`);
     }
-    log("📥 加载: " + url);
-
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
-
-    const match = text.match(/const\s+mappingData\s*=\s*(\[[\s\S]*?\]);/);
-    if (!match) throw new Error("解析失败");
-
-    mappingData = JSON.parse(match[1]);
-    log(`✅ 解析成功，共 ${mappingData.length} 条`);
+    log(`✅ ${targetVol} 就绪，共 ${mappingData.length} 条`);
     return true;
   } catch (e) {
     log("❌ mapping 加载失败: " + e.message);
@@ -65,24 +56,16 @@ export async function loadMapping(vol) {
 
 
 // ==============================
-// 生成图片优先级（支持 erratum）
+// 生成图片优先级
 // ==============================
 export function buildSources(vol, page) {
   const volStr = String(vol);
   const pageNum = parseInt(page, 10);
   const env = getCurrentEnv();
 
-  // 🔥 判断是否是特殊目录
-  const isSpecial = (volStr === 'erratum');
-  
-  // 构建路径：数字册用 001/ 格式，erratum 用 erratum/ 格式
-  let path;
-  if (isSpecial) {
-    path = `erratum/${pageNum}.png`;
-  } else {
-    const vol3 = volStr.padStart(3, '0');
-    path = `${vol3}/${pageNum}.png`;
-  }
+  // 统一路径：000~168 全部用三位卷号 + 页号格式
+  const vol3 = volStr.padStart(3, '0');
+  const path = `${vol3}/${pageNum}.png`;
 
   const githubRel = `/${path}`;
   const githubAbs = `${GITHUB_BASE}/${path}`;
@@ -94,22 +77,13 @@ export function buildSources(vol, page) {
     imgbb: null
   };
 
-  // 🔥 ImgBB 支持数字册和 erratum
+  // ImgBB：https://i.ibb.co/{id}/{vol3}-{page}-png.png
   if (mappingData && Array.isArray(mappingData)) {
     const idx = pageNum - 1;
     if (idx >= 0 && idx < mappingData.length && mappingData[idx]) {
-      let imgbbUrl;
-      if (isSpecial) {
-        // erratum 格式：https://i.ibb.co/{id}/erratum-{page}-png.png
-        imgbbUrl = `https://i.ibb.co/${mappingData[idx]}/erratum-${pageNum}-png.png`;
-      } else {
-        // 数字册格式：https://i.ibb.co/{id}/{vol3}-{page}-png.png
-        const vol3 = volStr.padStart(3, '0');
-        imgbbUrl = `https://i.ibb.co/${mappingData[idx]}/${vol3}-${pageNum}-png.png`;
-      }
       base.imgbb = {
         key: "ImgBB",
-        url: imgbbUrl
+        url: `https://i.ibb.co/${mappingData[idx]}/${vol3}-${pageNum}-png.png`
       };
     }
   }

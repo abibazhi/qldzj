@@ -5,19 +5,13 @@ import { VOLUME_PAGE_COUNTS } from '../data/sutra_links.js';
 // ====================== 工具方法 ======================
 /**
  * 拆分参数为册、页
- * @param {string} param 6位/7位数字串 或 erratum+数字
+ * @param {string} param 6位/7位数字串
  * @returns {{volume: string, page: string}}
  */
 export function splitVolumeAndPage(param) {
   const str = String(param);
   
-  // 🔥 只针对 erratum 做特殊处理
-  if (str.startsWith('erratum')) {
-    const num = str.replace('erratum', '');
-    return { volume: 'erratum', page: num || '1' };
-  }
-  
-  // 原有数字逻辑
+  // 统一数字逻辑：000~168 全部按三位卷号处理
   const len = str.length;
   let volume, page;
   if (len === 6) {
@@ -42,8 +36,8 @@ export function splitVolumeAndPage(param) {
 function getVolumePageCount(volumeNum) {
   const volStr = String(volumeNum);
   
-  // 🔥 erratum 固定 20 页
-  if (volStr === 'erratum') return 62;
+  // 🔥 校勘卷 000 固定 62 页
+  if (volStr === '000') return 62;
   
   const num = parseInt(volStr, 10);
   if (num < 1 || num >= VOLUME_PAGE_COUNTS.length) return 999;
@@ -70,30 +64,12 @@ export const RANGE = {
 let currentStartInfo;
 if (idxParam) {
   currentStartInfo = splitVolumeAndPage(idxParam);
-  // 简单比较：转成字符串比较（数字册和 erratum 都能用）
-  const idxStr = String(idxParam);
-  const startStr = String(startParam);
-  const endStr = String(endParam);
-  
-  // 只在同为数字或同为 erratum 时校验
-  const isIdxNum = /^\d+$/.test(idxStr);
-  const isStartNum = /^\d+$/.test(startStr);
-  const isEndNum = /^\d+$/.test(endStr);
-  
-  let inRange = true;
-  if (isIdxNum && isStartNum && isEndNum) {
-    // 都是数字，按数字比较
-    const idxNum = parseInt(idxStr, 10);
-    const startNum = parseInt(startStr, 10);
-    const endNum = parseInt(endStr, 10);
-    inRange = idxNum >= startNum && idxNum <= endNum;
-  } else if (idxStr === startStr || idxStr === endStr) {
-    // 完全相同
-    inRange = true;
-  } else {
-    // 混合情况（如数字和 erratum 混用），简单处理：只要不是 erratum 都允许
-    inRange = true;
-  }
+  // 数字比较：000001~168xxx 全部按数值校验
+  const idxNum = parseInt(String(idxParam), 10);
+  const startNum = parseInt(String(startParam), 10);
+  const endNum = parseInt(String(endParam), 10);
+
+  const inRange = idxNum >= startNum && idxNum <= endNum;
 
   if (!inRange) {
     console.warn(`idx ${idxParam} 超出范围，使用 start ${startParam}`);
@@ -134,20 +110,10 @@ export function calcNextPage(direction) {
     // 下一页：超出当前册范围则进入下一册第1页
     if (newPage > currVolMaxPage) {
       newPage = 1;
-      // 🔥 如果当前是 erratum，没有下一页
-      if (currentVol === 'erratum') {
-        return { ok: false, newVol: '', newPage: '' };
-      }
       newVol = String(currVolNum + 1).padStart(3, '0');
-      // 🔥 如果下一页是 169，检查是否有 erratum
+      // 🔥 超过 168 册，没有下一册
       if (parseInt(newVol, 10) === 169) {
-        // 如果 end 包含 erratum，则跳到 erratum
-        const endStr = String(endParam);
-        if (endStr.startsWith('erratum')) {
-          newVol = 'erratum';
-        } else {
-          return { ok: false, newVol: '', newPage: '' };
-        }
+        return { ok: false, newVol: '', newPage: '' };
       }
     }
   } else {
@@ -158,13 +124,8 @@ export function calcNextPage(direction) {
         return { ok: false, newVol: '', newPage: '' };
       }
 
-      // 🔥 如果当前是 erratum，上一册是 168
-      if (currentVol === 'erratum') {
-        newVol = '168';
-      } else {
-        newVol = String(currVolNum - 1).padStart(3, '0');
-      }
-      
+      newVol = String(currVolNum - 1).padStart(3, '0');
+
       // 获取上一册的总页数
       const prevVolMaxPage = getVolumePageCount(newVol);
       newPage = prevVolMaxPage;
@@ -175,24 +136,16 @@ export function calcNextPage(direction) {
   const newVolStr = String(newVol);
   const newPageStr = String(newPage).padStart(pageLen, '0');
 
-  // 范围越界判断（简化：数字册直接比较，erratum 单独判断）
+  // 范围越界判断（统一按数字比较）
   let outOfRange = false;
-  
-  if (/^\d+$/.test(newVolStr) && /^\d+$/.test(RANGE.startVol) && /^\d+$/.test(RANGE.endVol)) {
-    // 都是数字
-    const newVolNum = parseInt(newVolStr, 10);
-    const newPageNum = parseInt(newPageStr, 10);
-    outOfRange =
-      newVolNum < startVolNum ||
-      (newVolNum === startVolNum && newPageNum < startPageNum) ||
-      newVolNum > endVolNum ||
-      (newVolNum === endVolNum && newPageNum > endPageNum);
-  } else if (newVolStr === 'erratum') {
-    // erratum 必须在 end 范围内
-    if (!String(endParam).startsWith('erratum')) {
-      outOfRange = true;
-    }
-  }
+
+  const newVolNum = parseInt(newVolStr, 10);
+  const newPageNum = parseInt(newPageStr, 10);
+  outOfRange =
+    newVolNum < startVolNum ||
+    (newVolNum === startVolNum && newPageNum < startPageNum) ||
+    newVolNum > endVolNum ||
+    (newVolNum === endVolNum && newPageNum > endPageNum);
 
   if (outOfRange) {
     return { ok: false, newVol: '', newPage: '' };

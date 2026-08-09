@@ -156,7 +156,7 @@ function volumeToChinese(num) {
 // ============================================================
 // 工具函数：处理 note 列，自动添加勘误表链接
 // 规则：取第一个“見XXX”页码计算 erratumNum = pageNum - 360
-// 格式：https://qldzj.daxumi.top/public/sutra.html?start=erratum{N}&end=erratum{N}&sutra=
+// 格式：https://qldzj.daxumi.top/public/sutra.html?start=000{三位}&end=000{三位}&sutra=
 // 注意：即使有多个页码参考，也只取第一个生成链接，但包裹整个 note 文本
 // 注意：文字链接换成在文字后面加一个图标链接。
 // ============================================================
@@ -175,7 +175,8 @@ function processNoteToLink(note) {
   }
 
   const erratumNum = pageNum - 360;
-  const url = `https://qldzj.daxumi.top/public/sutra.html?start=erratum${erratumNum}&end=erratum${erratumNum}&sutra=`;
+  const pagePadded = String(erratumNum).padStart(3, '0');
+  const url = `https://qldzj.daxumi.top/public/sutra.html?start=000${pagePadded}&end=000${pagePadded}&sutra=`;
 
   // 【关键修改】：不再包裹整个 note，而是只替换第一个匹配的“見XXX”为带图标的链接
   // 这样其他文字（如换行后的第二行）保持普通样式，更清晰

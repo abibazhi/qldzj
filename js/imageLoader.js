@@ -1,5 +1,5 @@
 // imageLoader.js —— 全站唯一图片入口（正文 / 目录 C 图 / 勘误表共用）
-import { ALWAYS_RELOAD_MAPPING, IMG_TIMEOUT, FIRST_TIMEOUT, R2_BASE, GITHUB_BASE } from './config.js';
+import { ALWAYS_RELOAD_MAPPING, IMG_TIMEOUT, FIRST_TIMEOUT, COLOR_IMG_TIMEOUT, COLOR_FIRST_TIMEOUT, COLOR_IMAGE_RANGES, R2_BASE, GITHUB_BASE } from './config.js';
 import { log, getCurrentEnv } from './utils.js';
 
 // ==============================
@@ -203,6 +203,15 @@ function isOwnSource(key) {
   return key === 'R2' || key === 'GitHub';
 }
 
+// 是否为彩色大图（命中 COLOR_IMAGE_RANGES）：放宽超时 + 更友好提示
+export function isColorImage(vol, page) {
+  const vol3 = String(vol).padStart(3, '0');
+  const pageNum = parseInt(page, 10);
+  return COLOR_IMAGE_RANGES.some(r =>
+    r.vol === vol3 && pageNum >= r.pageStart && pageNum <= r.pageEnd
+  );
+}
+
 // ==============================
 // 🔥 主阅读页核心：智能获取最优图片
 // ==============================
@@ -215,12 +224,17 @@ export async function getBestImageUrl(vol, page) {
   const sources = buildSources(vol, page);
   console.log("【图源】可用源:", sources.map(s => s.key));
 
+  const color = isColorImage(vol, page);
+  const firstTimeout = color ? COLOR_FIRST_TIMEOUT : FIRST_TIMEOUT;
+  const normalTimeout = color ? COLOR_IMG_TIMEOUT : IMG_TIMEOUT;
+  console.log(color ? "【大图】彩色图，放宽超时" : "【小图】黑白图，标准超时");
+
   // 快速通道：上次成功的自有源优先复用
   if (lastWorkingSource) {
     console.log("【快速通道】上次使用的源:", lastWorkingSource.key);
     const target = sources.find(s => s.key === lastWorkingSource.key);
     if (target) {
-      const ok = await testImage(target.url, FIRST_TIMEOUT);
+      const ok = await testImage(target.url, firstTimeout);
       if (ok) {
         console.log("【快速通道】✅ 成功！直接使用");
         return target;
@@ -234,7 +248,7 @@ export async function getBestImageUrl(vol, page) {
   console.log("【自动重试】开始遍历所有可用源...");
   for (let i = 0; i < sources.length; i++) {
     const s = sources[i];
-    const timeout = i === 0 ? FIRST_TIMEOUT : IMG_TIMEOUT;
+    const timeout = i === 0 ? firstTimeout : normalTimeout;
     console.log(`【重试】尝试(超时${timeout}ms):`, s.key, s.url);
     const ok = await testImage(s.url, timeout);
     if (ok) {

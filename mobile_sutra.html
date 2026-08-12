@@ -79,6 +79,42 @@ body {
   display: block;
   margin: 4px auto 0;
 }
+
+/* 三源全部失败时的重试浮层 */
+.retry-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9000;
+}
+.retry-overlay.show { display: flex; }
+.retry-box {
+  background: #fff;
+  border-radius: 10px;
+  padding: 22px 28px;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  max-width: 78vw;
+}
+.retry-msg {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+.retry-btn {
+  background: #2d7dd2;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 36px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.retry-btn:active { opacity: 0.85; }
   </style>
 </head>
 <body>
@@ -99,6 +135,13 @@ body {
   <div class="page-info" id="pageInfo"></div>
   <div class="source-badge" id="sourceBadge">---</div>
 
+  <div class="retry-overlay" id="retryOverlay">
+    <div class="retry-box">
+      <div class="retry-msg" id="retryMsg">图片加载失败</div>
+      <button class="retry-btn" id="retryBtn">重试</button>
+    </div>
+  </div>
+
   <div class="controls">
     <button class="control-btn" id="zoomOutBtn">-</button>
     <button class="control-btn" id="resetBtn">1:1</button>
@@ -110,7 +153,7 @@ body {
 
 <script type="module">
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
-import { getBestImageUrl } from './js/imageLoader.js';
+import { getBestImageUrl, isColorImage } from './js/imageLoader.js';
 import { fetchSutraInfo, getRollTitle } from './js/sutraInfo.js';
 
 let isLoading = false;
@@ -126,6 +169,22 @@ const sourceBadge = document.getElementById('sourceBadge');
 const floatTip = document.getElementById('floatTip');
 const sutraTitleElem = document.getElementById('sutraTitle');
 const rollTitleElem = document.getElementById('rollTitle');
+const retryOverlay = document.getElementById('retryOverlay');
+const retryMsg = document.getElementById('retryMsg');
+const retryBtn = document.getElementById('retryBtn');
+
+function showRetry(msg) {
+  retryMsg.textContent = msg;
+  retryOverlay.classList.add('show');
+}
+function hideRetry() {
+  retryOverlay.classList.remove('show');
+}
+
+retryBtn.onclick = () => {
+  if (isLoading) return;
+  loadImage(currentVol, currentPage);
+};
 
 function showTempTip(msg) {
   floatTip.textContent = msg;
@@ -146,7 +205,15 @@ function initPanzoom() {
 }
 
 // 加载 & 翻页
-function showLoading() { isLoading = true; loadingIndicator.style.display = 'block'; }
+function showLoading(vol, page) {
+  isLoading = true;
+  const color = isColorImage(vol, page);
+  loadingIndicator.textContent = color
+    ? '⏳ 彩色大图加载中（约1~3MB），请稍候…'
+    : '加载中...';
+  loadingIndicator.style.display = 'block';
+  hideRetry();
+}
 function hideLoading() { isLoading = false; loadingIndicator.style.display = 'none'; }
 function updatePageInfo() { pageInfo.textContent = `第 ${currentVol} 册 第 ${currentPage} 页`; }
 
@@ -231,7 +298,7 @@ async function updateRollAfterPageChange(newVol, newPage) {
 
 
 async function loadImage(vol, page) {
-  showLoading();
+  showLoading(vol, page);
   try {
     const best = await getBestImageUrl(vol, page);
     if (best) {
@@ -254,10 +321,11 @@ async function loadImage(vol, page) {
       
       sourceBadge.textContent = best.key;
     } else {
-      showTempTip("加载失败");
+      showRetry('图片加载失败：三个图源均不可用，请检查网络后重试。');
     }
-  } catch (e) { 
-    showTempTip("加载异常"); 
+  } catch (e) {
+    console.error(e);
+    showRetry('加载异常，请点击重试。');
   }
   hideLoading();
 }

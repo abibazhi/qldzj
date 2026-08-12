@@ -49,7 +49,7 @@ import { resolveImage } from './js/imageLoader.js';
 const R2_BASE = 'https://img.daxumi.top';
 
 async function render() {
-    const res = await fetch(new URL('./data/mapping.json', import.meta.url), { cache: 'force-cache' });
+    const res = await fetch(new URL('./js/mapping.json', import.meta.url), { cache: 'force-cache' });
     if (!res.ok) {
         document.getElementById('volsTable').textContent = '⚠️ mapping.json 加载失败';
         return;

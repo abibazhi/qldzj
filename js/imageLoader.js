@@ -17,7 +17,7 @@ let lastWorkingSource = null;
 export async function loadMappingAll() {
   if (mappingAll) return mappingAll;
   try {
-    const baseUrl = new URL('../data/mapping.json', import.meta.url);
+    const baseUrl = new URL('./mapping.json', import.meta.url);
     let url = baseUrl.href;
     if (ALWAYS_RELOAD_MAPPING) url += (url.includes('?') ? '&' : '?') + 't=' + Date.now();
     log("📥 加载: " + url);

@@ -85,7 +85,8 @@
 
 <script type="module">
 import { erratumPicData } from './data/erratum.json.js';
-import './data/erratum_images.js';
+import { initImageFallback } from '../js/imageLoader.js';
+initImageFallback();
 
 // ============================================================
 // 工具函数：数字转中文数字（逐位转换）

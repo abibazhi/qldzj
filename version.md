@@ -217,6 +217,10 @@
 0. "勘误表核对"页面和浏览页面，在有勘误信息时，可以互相跳转，方便核对确认。
 
 
+## release1.4.8（2026.8.12）统一图片映射为单一入口
+0. mapping 由三份（正文 mapping.json / 目录 catalog_imgbb.js / 勘误表 erratum_images.js）统一为一份 `data/mapping.json`（`pages + catalog` 结构）。
+0. 全站图片加载统一走 `js/imageLoader.js` 一个入口；删除 `erratum/data/catalog_imgbb.js` 与 `erratum/data/erratum_images.js`。
+0. `vols.idx.html` 改为从 mapping.json 生成目录 C 图链接，点击自动多源降级（不再写死 469 个 i.ibb.co 链接）。
 
 
 ---

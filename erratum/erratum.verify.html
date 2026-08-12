@@ -111,7 +111,8 @@
 
 <script type="module">
 import { erratumPicData } from './data/erratum.json.js';
-import './data/erratum_images.js';
+import { initImageFallback } from '../js/imageLoader.js';
+initImageFallback();
 
 // 定义链接图标，可根据喜好替换为 🔗, ↗, 📖 等
 const ICON_ORIG = '🔗'; // 🔗表示附件，就是原始文件。

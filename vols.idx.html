@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📜</text></svg>">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.css">
     <title>乾隆大藏经 · 168册目录</title>
 <style>
 h1 {
@@ -64,7 +65,7 @@ async function render() {
         const links = catalog.map((id, idx) => {
             const name = `C${idx + 1}`;
             const r2 = `${R2_BASE}/${vol}/${name}.png`;
-            return `<a href="${r2}" data-r2="${r2}" data-vol="${vol}" data-c="${name}">${name}</a>`;
+            return `<a href="${r2}" data-r2="${r2}" data-vol="${vol}" data-c="${name}" class="lightbox" data-lightbox="vols" data-title="第${vol}册 · ${name}">${name}</a>`;
         }).join(' ');
         html += `<td>第${vol}册</td><td>${links}</td>`;
         if ((i + 1) % cols === 0 && (i + 1) < vols.length) html += '</tr><tr>';
@@ -72,17 +73,32 @@ async function render() {
     html += '</tr></table>';
     document.getElementById('volsTable').innerHTML = html;
 
-    // 点击降级：先探测 R2，失败自动切 ImgBB / 其它源
-    document.querySelectorAll('a[data-r2]').forEach(a => {
-        a.addEventListener('click', async (e) => {
-            e.preventDefault();
+    // 加载时预解析：后台逐个探测可用源并更新 href（不阻塞渲染）
+    const links = document.querySelectorAll('a[data-r2]');
+    links.forEach(a => {
+        Promise.resolve().then(async () => {
             const resolved = await resolveImage(a.dataset.r2);
-            window.open(resolved || a.dataset.r2, '_blank', 'noopener');
+            if (resolved) a.href = resolved;
         });
+    });
+
+    // 渲染完成后再起 Lightbox 画廊（异步 fetch 结束、链接已存在）
+    initLightbox();
+}
+
+function initLightbox() {
+    if (typeof SimpleLightbox === 'undefined') return;
+    new SimpleLightbox('.lightbox', {
+        captionsData: 'title',
+        captionDelay: 250,
+        scaleImageToRatio: true,
+        disableRightClick: false,
     });
 }
 
 render();
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.js"></script>
 </body>
 </html>

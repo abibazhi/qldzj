@@ -275,7 +275,7 @@
 <div id="floatTip"></div>
 
 <script type="module">
-import { getBestImageUrl, isColorImage } from './js/imageLoader.js';
+import { getBestImageUrl, isColorImage, onMappingLoading } from './js/imageLoader.js';
 import { currentVol, currentPage, calcNextPage, setCurrentPage } from './js/pageNav.js';
 import { erratumPicData } from './erratum/data/erratum.json.js';
 import { fetchSutraInfo, getRollTitle } from './js/sutraInfo.js';
@@ -785,6 +785,17 @@ sourceBadge.addEventListener('click', e => {
 // ============================================================
 window.onload = async () => {
   try { initPanzoom(); } catch (e) { console.warn('Panzoom 初始化失败:', e); }
+
+  // mapping 加载期间提示初始化数据（getBestImageUrl 内部会 await mapping，
+  // 因此 loadImage 完成前该提示自然覆盖初始化阶段）
+  onMappingLoading(loading => {
+    if (loading) {
+      const el = document.getElementById('loadingIndicator');
+      el.textContent = '⏳ 正在加载初始化数据，请稍后...';
+      el.style.display = 'block';
+    }
+  });
+
   try { await loadSutraInfo(); } catch (e) { console.warn('经卷信息加载失败:', e); }
   await loadImage(currentVol, currentPage);
 };

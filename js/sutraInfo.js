@@ -1,5 +1,7 @@
 // js/sutraInfo.js
 
+let sutraInfoCachePromise = null; // 共享加载 Promise：全站只 fetch 一次
+
 /**
  * 根据 sutra 编号获取卷信息
  * @param {string} sutraNum - 经号，如 '424'
@@ -16,19 +18,52 @@ export async function fetchSutraInfo(sutraNum) {
         return fetchSutraInfoFromOneVolJson(sutraNum);
     }
 
-    // 有 idx 参数 = 多卷经，尝试加载 idx 文件
-    try {
-        const response = await fetch(`./public/sutra${sutraNum}.idx.html`);
-        if (response.ok) {
-            const htmlText = await response.text();
-            return parseIdxHtml(htmlText);
-        }
-    } catch (e) {
-        console.log(`sutra${sutraNum}.idx 加载失败，尝试从 index.html 获取`);
-    }
+    // 有 idx 参数 = 多卷经，优先从统一 JSON 获取（657 个 idx.html 保留作核对数据源）
+    const info = await fetchSutraInfoFromVolsJson(sutraNum);
+    if (info) return info;
 
     // 降级：从 index.html 获取
     return fetchSutraInfoFromIndex(sutraNum);
+}
+
+/**
+ * 从 data/vols/sutraInfo.json 获取经卷信息（全量 JSON 只加载一次）
+ * @param {string} sutraNum
+ * @returns {Promise<object|null>}
+ */
+async function fetchSutraInfoFromVolsJson(sutraNum) {
+    try {
+        if (!sutraInfoCachePromise) {
+            sutraInfoCachePromise = fetch('./data/vols/sutraInfo.json').then(async (res) => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const arr = await res.json();
+                const map = {};
+                for (const item of arr) map[item.n] = item;
+                return map;
+            }).catch(e => {
+                console.error('加载 data/vols/sutraInfo.json 失败:', e);
+                sutraInfoCachePromise = null; // 允许重试
+                return null;
+            });
+        }
+        const map = await sutraInfoCachePromise;
+        if (!map) return null;
+
+        const key = parseInt(sutraNum, 10);
+        const item = map[key];
+        if (!item) return null;
+
+        return {
+            title: item.t,
+            start: item.s,
+            end: item.e,
+            rollName: '',
+            rolls: item.r
+        };
+    } catch (e) {
+        console.error('从 data/vols/sutraInfo.json 获取经卷信息失败:', e);
+        return null;
+    }
 }
 
 /**
@@ -100,6 +135,8 @@ async function fetchSutraTitleFromIndex(sutraNum) {
 
 /**
  * 解析 idx.html 内容
+ * 说明：现已改为优先加载 data/vols/sutraInfo.json（657 个 idx.html 保留作核对数据源），
+ * 本函数保留但不主动调用，供核对/恢复时使用。
  * @param {string} htmlText
  * @returns {object}
  */

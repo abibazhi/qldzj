@@ -57,7 +57,7 @@ async function render() {
     }
     const mapping = await res.json();
 
-    const vols = Object.keys(mapping).filter(v => v !== '000').sort();
+    const vols = Object.keys(mapping).filter(v => v !== '169').sort();
     const cols = 4;
     let html = '<table><tr>';
     vols.forEach((vol, i) => {

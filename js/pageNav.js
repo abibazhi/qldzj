@@ -11,7 +11,7 @@ import { VOLUME_PAGE_COUNTS } from '../data/sutra_links.js';
 export function splitVolumeAndPage(param) {
   const str = String(param);
   
-  // 统一数字逻辑：000~168 全部按三位卷号处理
+  // 统一数字逻辑：001~169 全部按三位卷号处理
   const len = str.length;
   let volume, page;
   if (len === 6) {
@@ -36,8 +36,8 @@ export function splitVolumeAndPage(param) {
 function getVolumePageCount(volumeNum) {
   const volStr = String(volumeNum);
   
-  // 🔥 校勘卷 000 固定 62 页
-  if (volStr === '000') return 62;
+  // 🔥 校勘卷 169 固定 62 页
+  if (volStr === '169') return 62;
   
   const num = parseInt(volStr, 10);
   if (num < 1 || num >= VOLUME_PAGE_COUNTS.length) return 999;
@@ -64,7 +64,7 @@ export const RANGE = {
 let currentStartInfo;
 if (idxParam) {
   currentStartInfo = splitVolumeAndPage(idxParam);
-  // 数字比较：000001~168xxx 全部按数值校验
+  // 数字比较：001001~169xxx 全部按数值校验
   const idxNum = parseInt(String(idxParam), 10);
   const startNum = parseInt(String(startParam), 10);
   const endNum = parseInt(String(endParam), 10);
@@ -111,8 +111,8 @@ export function calcNextPage(direction) {
     if (newPage > currVolMaxPage) {
       newPage = 1;
       newVol = String(currVolNum + 1).padStart(3, '0');
-      // 🔥 超过 168 册，没有下一册
-      if (parseInt(newVol, 10) === 169) {
+      // 🔥 超过 169 册，没有下一册
+      if (parseInt(newVol, 10) > 169) {
         return { ok: false, newVol: '', newPage: '' };
       }
     }

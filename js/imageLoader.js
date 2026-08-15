@@ -9,6 +9,40 @@ let currentVol = null;
 export let mappingData = null;   // 当前卷 pages 数组（兼容 buildSources 取数）
 let mappingAll = null;           // 全量 { vol3: { pages:[], catalog:[] } }
 let lastWorkingSource = null;
+let mappingLoadPromise = null;   // 共享加载 Promise：全站只发起一次 fetch
+const mappingLoadListeners = new Set(); // 加载状态监听器（true=加载中, false=完成/失败）
+const MAPPING_HINT_DELAY = 300;  // 提示延迟阈值：fetch 快于此值（缓存命中）则不提示
+let mappingHintTimer = null;     // 延迟提示定时器
+
+// ==============================
+// 监听 mapping 加载状态（用于"正在加载初始化数据"提示）
+// ==============================
+export function onMappingLoading(cb) {
+  mappingLoadListeners.add(cb);
+  // 立即回放当前状态：加载中=true，已完成或尚未开始=false
+  const currentlyLoading = mappingLoadPromise !== null && mappingAll === null;
+  cb(currentlyLoading);
+  return () => mappingLoadListeners.delete(cb);
+}
+
+function notifyMappingLoading(loading) {
+  if (loading) {
+    // 延迟触发：缓存命中时 fetch 极快，300ms 内完成则提示从未显示
+    if (mappingHintTimer) return;
+    mappingHintTimer = setTimeout(() => {
+      mappingHintTimer = null;
+      mappingLoadListeners.forEach(cb => {
+        try { cb(true); } catch (e) { log('⚠️ onMappingLoading 回调异常: ' + e.message); }
+      });
+    }, MAPPING_HINT_DELAY);
+  } else {
+    // 完成/失败：取消待触发提示，并立即广播 false
+    if (mappingHintTimer) { clearTimeout(mappingHintTimer); mappingHintTimer = null; }
+    mappingLoadListeners.forEach(cb => {
+      try { cb(false); } catch (e) { log('⚠️ onMappingLoading 回调异常: ' + e.message); }
+    });
+  }
+}
 
 // ==============================
 // 加载全量映射（幂等：整个站点只 fetch 一次）
@@ -16,21 +50,28 @@ let lastWorkingSource = null;
 // ==============================
 export async function loadMappingAll() {
   if (mappingAll) return mappingAll;
-  try {
-    const baseUrl = new URL('./mapping.json', import.meta.url);
-    let url = baseUrl.href;
-    if (ALWAYS_RELOAD_MAPPING) url += (url.includes('?') ? '&' : '?') + 't=' + Date.now();
-    log("📥 加载: " + url);
+  if (mappingLoadPromise) return mappingLoadPromise;
+  notifyMappingLoading(true);
+  mappingLoadPromise = (async () => {
+    try {
+      const baseUrl = new URL('./mapping.json', import.meta.url);
+      let url = baseUrl.href;
+      if (ALWAYS_RELOAD_MAPPING) url += (url.includes('?') ? '&' : '?') + 't=' + Date.now();
+      log("📥 加载: " + url);
 
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    mappingAll = await res.json();
-    log(`✅ mapping 加载完成，共 ${Object.keys(mappingAll).length} 卷`);
-  } catch (e) {
-    log("❌ mapping 加载失败: " + e.message);
-    mappingAll = null;
-  }
-  return mappingAll;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      mappingAll = await res.json();
+      log(`✅ mapping 加载完成，共 ${Object.keys(mappingAll).length} 卷`);
+    } catch (e) {
+      log("❌ mapping 加载失败: " + e.message);
+      mappingAll = null;
+      mappingLoadPromise = null; // 允许下次重试
+    }
+    notifyMappingLoading(false);
+    return mappingAll;
+  })();
+  return mappingLoadPromise;
 }
 
 // ==============================

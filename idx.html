@@ -142,8 +142,11 @@
         // 译者：分号转 <br>
         const translatorHtml = translator.replace(/；/g, '<br>');
 
+        // 经号 0（首条大清三藏圣教目录）与空经号（末条勘误表）不显示编号，保留空白
+        const numText = (sutra === 0 || sutra === '') ? '' : sutra;
+
         return '<tr>\n' +
-            '            <td>' + sutra + '</td>\n' +
+            '            <td>' + numText + '</td>\n' +
             '            <td><a href="' + href + '">' + title + '</a></td>\n' +
             '            <td>' + translatorHtml + '</td>\n' +
             '        </tr>';

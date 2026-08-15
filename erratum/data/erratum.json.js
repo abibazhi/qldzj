@@ -9,7 +9,7 @@ export const erratumPicData = {
     // ========== 第1组：原稿第 361 页，共 14 条 ==========
     {
       groupNum: 1,
-      image: "https://img.daxumi.top/000/1.png",
+      image: "https://img.daxumi.top/169/1.png",
       originalPage: 361,
       items: [
         {
@@ -174,7 +174,7 @@ export const erratumPicData = {
     // ========== 第2组：原稿第 362 页，共 16 条 ==========
     {
       groupNum: 2,
-      image: "https://img.daxumi.top/000/2.png",
+      image: "https://img.daxumi.top/169/2.png",
       originalPage: 362,
       items: [
         {
@@ -359,7 +359,7 @@ export const erratumPicData = {
     // ========== 第3组：原稿第 363 页，共 16 条 ==========
     {
       groupNum: 3,
-      image: "https://img.daxumi.top/000/3.png",
+      image: "https://img.daxumi.top/169/3.png",
       originalPage: 363,
       items: [
         {
@@ -544,7 +544,7 @@ export const erratumPicData = {
     // ========== 第4组：原稿第 364 页，共 16 条 ==========
     {
       groupNum: 4,
-      image: "https://img.daxumi.top/000/4.png",
+      image: "https://img.daxumi.top/169/4.png",
       originalPage: 364,
       items: [
         {
@@ -729,7 +729,7 @@ export const erratumPicData = {
     // ========== 第5组：原稿第 365 页，共 16 条 ==========
     {
       groupNum: 5,
-      image: "https://img.daxumi.top/000/5.png",
+      image: "https://img.daxumi.top/169/5.png",
       originalPage: 365,
       items: [
         {
@@ -914,7 +914,7 @@ export const erratumPicData = {
     // ========== 第6组：原稿第 366 页，共 16 条 ==========
     {
       groupNum: 6,
-      image: "https://img.daxumi.top/000/6.png",
+      image: "https://img.daxumi.top/169/6.png",
       originalPage: 366,
       items: [
         {
@@ -1099,7 +1099,7 @@ export const erratumPicData = {
     // ========== 第7组：原稿第 367 页，共 16 条 ==========
     {
       groupNum: 7,
-      image: "https://img.daxumi.top/000/7.png",
+      image: "https://img.daxumi.top/169/7.png",
       originalPage: 367,
       items: [
         {
@@ -1284,7 +1284,7 @@ export const erratumPicData = {
     // ========== 第8组：原稿第 368 页，共 16 条 ==========
     {
       groupNum: 8,
-      image: "https://img.daxumi.top/000/8.png",
+      image: "https://img.daxumi.top/169/8.png",
       originalPage: 368,
       items: [
         {
@@ -1469,7 +1469,7 @@ export const erratumPicData = {
     // ========== 第9组：原稿第 369 页，共 16 条 ==========
     {
       groupNum: 9,
-      image: "https://img.daxumi.top/000/9.png",
+      image: "https://img.daxumi.top/169/9.png",
       originalPage: 369,
       items: [
         {
@@ -1654,7 +1654,7 @@ export const erratumPicData = {
     // ========== 第10组：原稿第 370 页，共 16 条 ==========
     {
       groupNum: 10,
-      image: "https://img.daxumi.top/000/10.png",
+      image: "https://img.daxumi.top/169/10.png",
       originalPage: 370,
       items: [
         {
@@ -1839,7 +1839,7 @@ export const erratumPicData = {
     // ========== 第11组：原稿第 371 页，共 16 条 ==========
     {
       groupNum: 11,
-      image: "https://img.daxumi.top/000/11.png",
+      image: "https://img.daxumi.top/169/11.png",
       originalPage: 371,
       items: [
         {
@@ -2024,7 +2024,7 @@ export const erratumPicData = {
     // ========== 第12组：原稿第 372 页，共 16 条 ==========
     {
       groupNum: 12,
-      image: "https://img.daxumi.top/000/12.png",
+      image: "https://img.daxumi.top/169/12.png",
       originalPage: 372,
       items: [
         {
@@ -2209,7 +2209,7 @@ export const erratumPicData = {
     // ========== 第13组：原稿第 373 页，共 19 条 ==========
     {
       groupNum: 13,
-      image: "https://img.daxumi.top/000/13.png",
+      image: "https://img.daxumi.top/169/13.png",
       originalPage: 373,
       items: [
         {

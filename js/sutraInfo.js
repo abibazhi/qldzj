@@ -1,6 +1,19 @@
 // js/sutraInfo.js
 
+import { sutraLinks } from '../data/sutra_links.js';
+
 let sutraInfoCachePromise = null; // 共享加载 Promise：全站只 fetch 一次
+
+// 经号 → 经名（经名来源统一为 sutra_links.js：优先繁体经名，回退简体 title）
+// sutra_links.js 结构：[经号,start,end,title,translator,mv,alias?,tradTitle?]
+// tradTitle 恒为最后一个字段（7字段=[...,trad]，8字段=[...,alias,trad]）
+const titleByN = new Map();
+for (const s of sutraLinks) {
+    if (typeof s[0] !== 'number') continue;
+    const last = s[s.length - 1];
+    const title = typeof last === 'string' && last ? last : s[3];
+    titleByN.set(s[0], title);
+}
 
 /**
  * 根据 sutra 编号获取卷信息
@@ -54,7 +67,7 @@ async function fetchSutraInfoFromVolsJson(sutraNum) {
         if (!item) return null;
 
         return {
-            title: item.t,
+            title: titleByN.get(key) || '',
             start: item.s,
             end: item.e,
             rollName: '',

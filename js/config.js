@@ -4,6 +4,13 @@
  */
 
 /**
+ * 【卷目排版阈值】标题超过此字数（按 UTF-16 码元计）时占整行（colspan=2），否则左右半列。
+ * 仅影响由 sutraInfo.json 生成的 sutra{N}.idx.html 的排版，不影响数据本身。
+ * 24 = 依据 C 图视觉效果确定的默认值，可随时调整。
+ */
+export const ROLL_FULL_ROW_CHAR_LIMIT = 24;
+
+/**
  * 【仅控制 mapping.js】
  * true  = 调试：每次强制重新加载 mapping.js，不使用浏览器缓存
  * false = 上线：允许浏览器缓存 mapping.js，速度更快

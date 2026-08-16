@@ -974,6 +974,16 @@ export const erratumAddData = {
       locationHref: "https://img.daxumi.top/130/C1.png",
       correction: "卷一（乂一）",
       correctionHref: "https://qldzj.daxumi.top/public/sutra1545.idx.html",
+      note: "卷编号错误"
+    },
+    {
+      volume: 131,
+      page: "目录",
+      section: "",
+      location: "大方广佛华严经悬谈疏钞会本",
+      locationHref: "https://img.daxumi.top/130/C2.png",
+      correction: "大方广佛华严经悬谈疏钞会本二十九卷",
+      correctionHref: "https://qldzj.daxumi.top/public/sutra1555.idx.html",
       note: "卷数错误"
     },
     {

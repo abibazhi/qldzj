@@ -8555,7 +8555,7 @@ rows.forEach(function(row) {
 // 异步预加载全量映射数据（仅入 HTTP 缓存，不解析，避免阻塞渲染）
 const preloadMapping = () => {
     fetch('./js/mapping.json').catch(() => {});
-    fetch('./data/vols/sutraInfo.json').catch(() => {});
+    fetch('./data/vols/sutraVols.json').catch(() => {});
 };
 if ('requestIdleCallback' in window) requestIdleCallback(preloadMapping);
 else setTimeout(preloadMapping, 3000);

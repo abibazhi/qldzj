@@ -1,7 +1,11 @@
-# data/vols/sutraInfo.json 数据结构说明
+# data/vols/sutraVols.json 数据结构说明
 
-全站经卷信息统一 JSON（657 经 / 7473 卷条目 / 约 360KB），
-由 `back/tools/extract_sutra_info.mjs` 从 `public/sutra{N}.idx.html` 抽取生成。
+全站**统一卷表**（1670 经 = 657 多卷 + 1013 单卷 / 7473 卷条目 / 约 367KB），
+由 `back/tools/build_sutra_vols.mjs` 构建。
+
+> 经/卷两表思维：
+> - **经表** `data/sutra_links.js` —— 经号/经名/译者/起止页/别名/繁体经名（首页目录）
+> - **卷表** `data/vols/sutraVols.json` —— 本文件，仅卷信息（卷列表/函号卷名），不含经名/起止页
 
 ## 顶层结构
 
@@ -9,29 +13,36 @@
 [
   {
     "n": 70,
-    "s": "023051",
-    "e": "023138",
     "r": [
       { "t": "卷一（伐四）", "i": "023052" }
+    ]
+  },
+  {
+    "n": 12,
+    "r": [
+      { "t": "翔三", "i": "016517" }
     ]
   }
 ]
 ```
 
-- 顶层为**数组**，按经号升序排列。
+- 顶层为**数组**，按经号升序排列，覆盖全部 1670 部经（勘误表非经，不入卷表）。
 - 每条对应一部经（sutra）。
-- 本文件只存**卷信息**（起止页 + 卷列表），**经名已移除**，统一由 `data/sutra_links.js` 提供（见下方"经名来源"）。
+- **多卷经**（657 部，有 `sutra{N}.idx.html`）：`r` 为完整卷列表，卷名如"卷一（伐四）"。
+- **单卷经**（1013 部，直接跳转阅读页）：`r` 只有 1 条，`t` 为千字文函号（如"翔三"），`i` 为该卷 idx（= start 转 6 位）。
 
 ## 字段含义（单字母缩写）
 
 | 键 | 含义 | 说明 |
 |---|---|---|
-| `n` | 经号 (number) | 与 `sutra{N}.idx.html` 对应，如 70 |
-| `s` | 起始页 (start) | 封面页，6 位字符串 |
-| `e` | 结束页 (end) | 6 位字符串 |
+| `n` | 经号 (number) | 与经表 sutra_links.js 的经号对应 |
 | `r` | 卷列表 (rolls) | 本经所有卷的数组 |
+| `t` | 卷名 (roll title) | 多卷经=卷名；单卷经=千字文函号 |
 | `i` | 起始页序号 (idx) | 该卷正文第一页，6 位字符串 |
-| `t` | 卷名 (roll title) | 仅存在于 `r[]` 卷条目内；顶层不再有经题 |
+
+> 经级字段 `s`（起始页）/`e`（结束页）**不存放在本文件**——它们属于**经表**
+> `data/sutra_links.js`（"册-页"格式）。阅读页从 URL 参数读取，`gen_sutra_idx.mjs`
+> 生成 idx.html 时由经表转换而来。
 
 ## 经名来源（data/sutra_links.js）
 
@@ -41,33 +52,33 @@
 （7 字段 = 有 tradTitle 无 alias；8 字段 = 两者都有）。
 
 消费者 `js/sutraInfo.js` 的 `fetchSutraInfoFromVolsJson()` 从 `sutra_links.js`
-构建经号→经名映射（优先繁体），其余字段（起止页/卷列表）仍来自本文件。
+构建经号→经名映射（优先繁体），卷列表来自本文件；单卷经 `rollName = rolls[0].t`。
 
 ### 关于"6 位字符串"
 页码/序号格式：前 3 位 = 册号，后 3 位 = 页号。
-例：`023051` = 第 23 册第 51 页；`s="023051"` 即本经封面在 23 册 51 页起。
+例：`023051` = 第 23 册第 51 页；经表 start `16-517` → 卷表 idx `016517`。
 
 ### 关于卷名中的千字文序号
 卷名 `卷一（伐四）` 括号内为乾隆大藏经的千字文函号（本相分离的"天-地-玄-黄..."千字文字序），
-用于标识该卷在经帙中的排列位置，非页码。
+用于标识该卷在经帙中的排列位置，非页码。单卷经的 `t` 即该函号（如"翔三"）。
 
 ## 使用约定
 
 - 消费者：`js/sutraInfo.js` 的 `fetchSutraInfoFromVolsJson()`，共享缓存 Promise 只 fetch 一次，按 `parseInt(sutraNum)` 查 `n`。
-- 单卷经（无 `idx` URL 参数）不走本文件，走 `data/oneVolSutra.json`。
+- 多卷经与单卷经统一从本文件获取，**一次 fetch 覆盖全部**（不再有 oneVolSutra.json）。
 - 657 个 `public/sutra*.idx.html` 原文件**保留**，作为核对数据源；`parseIdxHtml()` 保留不调用。
 - 重新生成 / 核对：
   ```bash
-  node back/tools/extract_sutra_info.mjs            # 生成 JSON
-  node back/tools/extract_sutra_info.mjs --verify   # 生成并逐卷核对条目数
+  node back/tools/build_sutra_vols.mjs            # 构建卷表
+  node back/tools/build_sutra_vols.mjs --verify   # 构建并核对条数/idx
   ```
 
 ---
 
 ## 目录页生成（gen_sutra_idx.mjs）
 
-`sutra{N}.idx.html` 由 `back/tools/gen_sutra_idx.mjs` **从本 JSON 反向生成**（657 个文件），
-而非手工维护。JSON 是唯一数据源；改排版 → 改 `js/config.js` 阈值 → 重新生成即可。
+`sutra{N}.idx.html` 由 `back/tools/gen_sutra_idx.mjs` **从卷表 + 经表反向生成**（657 个多卷经文件），
+而非手工维护。卷表是卷数据源，经表提供经名/起止页；改排版 → 改 `js/config.js` 阈值 → 重新生成即可。
 
 ```bash
 node back/tools/gen_sutra_idx.mjs --dry   # 生成到临时目录（不写 public），用于审查
@@ -120,7 +131,7 @@ node back/tools/gen_sutra_idx.mjs         # 直接写 public/
 
 ### 变更流程
 
-1. 改源 HTML（如修 h1 / 加黑 / 括号）→ 跑 `extract_sutra_info.mjs --verify` 同步 JSON。
-2. 调排版阈值或特殊标记（`gs`/`f`）→ 直接改 JSON。
+1. 改源 HTML（如修 h1 / 加黑 / 括号）→ 跑 `extract_sutra_info.mjs --verify` 同步到卷表（该脚本输出已改名为 sutraVols.json）。
+2. 调排版阈值或特殊标记（`gs`/`f`）→ 直接改卷表 `sutraVols.json`。
 3. 跑 `gen_sutra_idx.mjs --dry` 审查 → 落盘 → 再跑 `extract --verify` 复核（幂等）。
-4. 提交前核对：卷条目数一致（extract verify）、scroll-link 内容/页码与 JSON 一致。
+4. 提交前核对：卷条目数一致（extract verify）、scroll-link 内容/页码与卷表一致。

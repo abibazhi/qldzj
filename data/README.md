@@ -20,7 +20,7 @@ data/
 记录结构（每条为一个数组，数字经号固定位置）：
 
 ```
-[经号, start, end, title, translator, multiVolume, alias, tradTitle, rolls, gs?]
+[经号, start, end, title, translator, alias, tradTitle, rolls, gs?]
 ```
 
 | 索引 | 字段 | 说明 |
@@ -30,15 +30,15 @@ data/
 | 2 | `end` | 结束页码 `"册-页"` |
 | 3 | `title` | 经名（含卷数，简体为主） |
 | 4 | `translator` | 译者 |
-| 5 | `multiVolume` | 1=多卷（有 idx.html），0=单卷 |
-| 6 | `alias` | 别名（亦名/一名，无则 `''`） |
-| 7 | `tradTitle` | 繁体经名（无则 `''`） |
-| 8 | `rolls` | 卷列表 `[{t,i,title?,b?,f?}]` |
-| 9 | `gs` | 多表分组标记（仅经1165，可选） |
+| 5 | `alias` | 别名（亦名/一名，无则 `''`） |
+| 6 | `tradTitle` | 繁体经名（无则 `''`） |
+| 7 | `rolls` | 卷列表 `[{t,i,title?,b?,f?}]` |
+| 8 | `gs` | 多表分组标记（仅经1165，可选） |
 
 卷对象字段：`t`=卷名（单卷经=千字文函号）、`i`=起始页序号（6位）、`title`=会界标记、`b`=加黑子串、`f`=强制整行。
 
-> 多卷经 657 部（有 `sutra{N}.idx.html`），单卷经 1013 部（直接跳转阅读页，`rolls` 只有 1 条，`t` 为函号）。
+> **导航统一（2026-08-18）**：不再区分多卷/单卷导航形态。全部经（含单卷）都生成
+> `sutra{N}.idx.html` 卷索引页；目录页每行提供**两个入口**——标题链接进阅读页、`☰` 链接进卷索引页。
 
 ## 派生切片 data/cache/
 
@@ -48,7 +48,7 @@ data/
 |---|---|---|
 | `rolls.json` | `[{n, r:[{t,i}]}]` 全量卷表 | `js/sutraInfo.js`（阅读页卷名） |
 | `titles.json` | `{ "经号": 繁体经名 }` | `js/sutraInfo.js`（阅读页标题） |
-| `sutras.json` | 经表（真源前 8 字段，不含 rolls） | `idx.html`（目录页） |
+| `sutras.json` | 经表（真源前 7 字段，不含 rolls） | `idx.html`（目录页） |
 | `category_map.json` | 分类映射 | `idx.html` |
 | `page_counts.json` | 168 册每册页数 | `js/pageNav.js`（翻页跨册） |
 
@@ -57,7 +57,7 @@ data/
 ```bash
 node back/tools/gen_cache.mjs        # 重新生成 data/cache/ 切片
 node back/tools/gen_index.mjs        # 生成首页 index.html
-node back/tools/gen_sutra_idx.mjs    # 生成 public/sutra{N}.idx.html（657 个）
+node back/tools/gen_sutra_idx.mjs    # 生成 public/sutra{N}.idx.html（全部 1670 部经，含单卷）
 ```
 
 ---
@@ -85,6 +85,21 @@ node back/tools/gen_sutra_idx.mjs    # 生成 public/sutra{N}.idx.html（657 个
 | 3 | 经674 的 `<font>`+`<br>`、经1027 的 `<br>` | 取消特殊标签，内容变纯文本 |
 | 4 | 经1165 多余括号 | 修正为"卷一（友一）"，同步入真源 |
 | 5 | 经1571 空页码 | 补齐为 214 |
+
+### 待核实：4 部单卷经的卷信息异常（2026-08-18 记录）
+
+这 4 部经**标题为"一卷"（单卷经），但真源 `rolls` 只有 1 条，且是"序/记"而非正文卷**。
+导航统一（单卷也有卷索引页）后，它们统一为"单卷经 + 序"结构。**尚需人工核对原影印版确认**：
+
+| 经号 | 经名 | rolls（唯一一条） |
+|---|---|---|
+| 127 | 入定不定印经一卷 | `三藏圣教序（被九）唐武则天制` |
+| 128 | 不必定入定入印经一卷 | `前附翻译记（被十）` |
+| 206 | 佛说第一义法胜经一卷 | `第一义法胜经翻译记（貞八）` |
+| 401 | 过去庄严劫千佛名经一卷 | `三劫三千佛缘起（長三）宋畺良耶舍译` |
+
+> 核实要点：① 正文卷是否确实只有 1 卷；② 序/记是否应作为独立卷条目收录（目前如此）；
+> ③ 是否存在正文卷缺失。若数据有误，修正真源 `rolls` 后重跑构建命令即可。
 
 ### 变更流程
 

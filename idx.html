@@ -131,17 +131,13 @@
     }
 
     /**
-     * 生成单行 HTML
+     * 生成单行 HTML（导航统一：标题链接进阅读页，其后图形链接进卷索引页）
      */
-    function buildRow(sutra, start, end, title, translator, multiVolume) {
-        let href;
-        if (multiVolume === 1) {
-            href = 'public/sutra' + sutra + '.idx.html';
-        } else {
-            const startPadded = padStartEnd(start);
-            const endPadded = padStartEnd(end);
-            href = 'public/sutra.html?start=' + startPadded + '&end=' + endPadded + '&sutra=' + sutra;
-        }
+    function buildRow(sutra, start, end, title, translator) {
+        const startPadded = padStartEnd(start);
+        const endPadded = padStartEnd(end);
+        const readHref = 'public/sutra.html?start=' + startPadded + '&end=' + endPadded + '&sutra=' + sutra;
+        const idxHref = 'public/sutra' + sutra + '.idx.html';
 
         // 译者：分号转 <br>
         const translatorHtml = translator.replace(/；/g, '<br>');
@@ -149,9 +145,13 @@
         // 经号 0（首条大清三藏圣教目录）与空经号（末条勘误表）不显示编号，保留空白
         const numText = (sutra === 0 || sutra === '') ? '' : sutra;
 
+        // 非数字经号（勘误表）无卷信息，只给阅读链接；其余经统一双链接
+        const idxLink = (sutra === '') ? '' :
+            '<a href="' + idxHref + '" class="idx-link" title="卷索引">☰</a>';
+
         return '<tr>\n' +
             '            <td>' + numText + '</td>\n' +
-            '            <td><a href="' + href + '">' + title + '</a></td>\n' +
+            '            <td><a href="' + readHref + '">' + title + '</a>' + idxLink + '</td>\n' +
             '            <td>' + translatorHtml + '</td>\n' +
             '        </tr>';
     }
@@ -184,10 +184,9 @@
         const sutra = row[0];
         const start = row[1];
         const end = row[2];
-        // 经名 = 简体经名 + 别名（row[6]=alias，与首页 gen_index.mjs 一致；勘误表等无 alias 时兜底 ''）
-        const title = row[3] + (row[6] || '');
+        // 经名 = 简体经名 + 别名（row[5]=alias，与首页 gen_index.mjs 一致；勘误表等无 alias 时兜底 ''）
+        const title = row[3] + (row[5] || '');
         const translator = row[4];
-        const multiVolume = row[5];
 
         // 检查是否应该插入分类标题
         if (categoryMap[sutra] !== undefined && !insertedCategories[sutra]) {
@@ -196,7 +195,7 @@
         }
 
         // 生成数据行
-        htmlRows.push(buildRow(sutra, start, end, title, translator, multiVolume));
+        htmlRows.push(buildRow(sutra, start, end, title, translator));
     }
 
     // 填入表格

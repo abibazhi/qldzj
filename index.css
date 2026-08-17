@@ -57,6 +57,18 @@ a:hover {
     text-decoration: underline;
 }
 
+/* 目录行卷索引入口：标题链接后的图形链接（☰） */
+a.idx-link {
+    margin-left: 6px;
+    color: #888;
+    font-size: 0.85em;
+    text-decoration: none;
+}
+a.idx-link:hover {
+    color: #0066cc;
+    text-decoration: none;
+}
+
 /* ===== 警示图标 ===== */
 .scroll-link, .preface-link {
     display: inline-block;

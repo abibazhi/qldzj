@@ -104,7 +104,7 @@
     <script type="module">
     // 数据来源：data/cache/（gen_cache.mjs 从真源生成，浏览器不加载真源主表）
     const [sutraLinks, categoryMap] = await Promise.all([
-        fetch('./data/cache/sutra_table.json').then(r => r.json()),
+        fetch('./data/cache/sutras.json').then(r => r.json()),
         fetch('./data/cache/category_map.json').then(r => r.json())
     ]);
 
@@ -184,7 +184,8 @@
         const sutra = row[0];
         const start = row[1];
         const end = row[2];
-        const title = row[3];
+        // 经名 = 简体经名 + 别名（row[6]=alias，与首页 gen_index.mjs 一致；勘误表等无 alias 时兜底 ''）
+        const title = row[3] + (row[6] || '');
         const translator = row[4];
         const multiVolume = row[5];
 

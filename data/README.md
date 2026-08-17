@@ -8,7 +8,7 @@ data/
 └── cache/               派生切片（构建生成，浏览器运行时 fetch）
     ├── rolls.json        卷表（阅读页卷名）
     ├── titles.json       经号→经名（阅读页标题）
-    ├── sutra_table.json  经表（目录页 idx.html）
+    ├── sutras.json      经表（目录页 idx.html）
     ├── category_map.json 分类映射（目录页）
     └── page_counts.json  册页数（翻页）
 ```
@@ -48,7 +48,7 @@ data/
 |---|---|---|
 | `rolls.json` | `[{n, r:[{t,i}]}]` 全量卷表 | `js/sutraInfo.js`（阅读页卷名） |
 | `titles.json` | `{ "经号": 繁体经名 }` | `js/sutraInfo.js`（阅读页标题） |
-| `sutra_table.json` | 经表（真源前 8 字段，不含 rolls） | `idx.html`（目录页） |
+| `sutras.json` | 经表（真源前 8 字段，不含 rolls） | `idx.html`（目录页） |
 | `category_map.json` | 分类映射 | `idx.html` |
 | `page_counts.json` | 168 册每册页数 | `js/pageNav.js`（翻页跨册） |
 

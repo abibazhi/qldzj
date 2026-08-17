@@ -1,6 +1,34 @@
 // pageNav.js
 import { getQueryVariable } from './utils.js';
-import { VOLUME_PAGE_COUNTS } from '../data/sutra_links.js';
+
+// 册页数：懒加载自 data/cache/page_counts.json（gen_cache.mjs 生成，168册）
+let pageCounts = null;
+let pageCountsPromise = null;
+
+/**
+ * 加载册页数（首次翻页时懒加载，之后缓存）
+ * @returns {Promise<Array>}
+ */
+function loadPageCounts() {
+  if (pageCounts) return Promise.resolve(pageCounts);
+  if (!pageCountsPromise) {
+    pageCountsPromise = fetch('./data/cache/page_counts.json')
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(arr => {
+        pageCounts = arr;
+        return arr;
+      })
+      .catch(e => {
+        console.error('加载 data/cache/page_counts.json 失败:', e);
+        pageCountsPromise = null; // 允许重试
+        return null;
+      });
+  }
+  return pageCountsPromise;
+}
 
 // ====================== 工具方法 ======================
 /**
@@ -28,20 +56,20 @@ export function splitVolumeAndPage(param) {
 }
 
 // ====================== 全局状态 & 168册每册的图片数 ======================
-//const pageCount = [0, 660, 820, 766, 757, 766, 768, 706, 718, 730, 716, 742, 764, 732, 730, 710, 650, 641, 820, 662, 700, 778, 820, 812, 692, 766, 790, 728, 688, 692, 564, 598, 762, 786, 778, 760, 734, 750, 768, 786, 784, 682, 770, 760, 704, 838, 694, 769, 756, 730, 742, 794, 716, 752, 734, 720, 900, 908, 836, 796, 802, 742, 766, 778, 730, 772, 714, 990, 862, 872, 856, 870, 888, 860, 880, 898, 874, 850, 818, 826, 824, 824, 852, 796, 836, 828, 738, 808, 812, 764, 814, 834, 704, 730, 708, 796, 744, 714, 664, 694, 706, 738, 770, 756, 710, 686, 750, 774, 754, 714, 766, 818, 792, 820, 816, 830, 784, 772, 814, 744, 814, 810, 786, 752, 782, 822, 834, 854, 766, 820, 802, 826, 864, 856, 862, 856, 838, 820, 784, 832, 822, 824, 838, 812, 798, 824, 834, 868, 838, 868, 844, 842, 864, 850, 792, 824, 760, 770, 796, 754, 772, 776, 1085, 666, 868, 792, 646, 878, 746];
-
 /**
- * 获取指定册的总页数
+ * 获取指定册的总页数（异步：首次需加载 page_counts.json）
  */
-function getVolumePageCount(volumeNum) {
+async function getVolumePageCount(volumeNum) {
   const volStr = String(volumeNum);
-  
+
   // 🔥 校勘卷 169 固定 62 页
   if (volStr === '169') return 62;
-  
+
   const num = parseInt(volStr, 10);
-  if (num < 1 || num >= VOLUME_PAGE_COUNTS.length) return 999;
-  return VOLUME_PAGE_COUNTS[num];
+  const counts = await loadPageCounts();
+  if (!counts) return 999;
+  if (num < 1 || num >= counts.length) return 999;
+  return counts[num];
 }
 
 // ====================== 解析URL参数 ======================
@@ -90,7 +118,7 @@ export function setCurrentPage(vol, page) {
 }
 
 // ====================== 核心翻页逻辑（支持跨册） ======================
-export function calcNextPage(direction) {
+export async function calcNextPage(direction) {
   const currPageNum = parseInt(currentPage, 10);
   const currVolNum = parseInt(currentVol, 10);
   const startVolNum = parseInt(RANGE.startVol, 10);
@@ -99,7 +127,7 @@ export function calcNextPage(direction) {
   const endPageNum = parseInt(RANGE.endPage, 10);
 
   // 当前册的总页数
-  const currVolMaxPage = getVolumePageCount(currentVol);
+  const currVolMaxPage = await getVolumePageCount(currentVol);
   const pageLen = currentPage.length;
 
   let newPage = currPageNum + direction;
@@ -127,7 +155,7 @@ export function calcNextPage(direction) {
       newVol = String(currVolNum - 1).padStart(3, '0');
 
       // 获取上一册的总页数
-      const prevVolMaxPage = getVolumePageCount(newVol);
+      const prevVolMaxPage = await getVolumePageCount(newVol);
       newPage = prevVolMaxPage;
     }
   }

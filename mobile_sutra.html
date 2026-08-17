@@ -280,7 +280,7 @@ async function updateRollAfterPageChange(newVol, newPage) {
     // 卷列表按 idx 升序排列，找到最后一个起始页 小于等于 当前页码的卷
     let currentRoll = null;
     for (const roll of currentSutraInfo.rolls) {
-        const rollStartNum = parseInt(roll.idx, 10);
+        const rollStartNum = parseInt(roll.i, 10);
         if (rollStartNum <= currentPageNum) {
             currentRoll = roll;
         } else {
@@ -289,7 +289,7 @@ async function updateRollAfterPageChange(newVol, newPage) {
     }
     
     if (currentRoll) {
-        rollTitleElem.textContent = currentRoll.title;
+        rollTitleElem.textContent = currentRoll.t;
     } else {
         rollTitleElem.textContent = '';
     }
@@ -333,7 +333,7 @@ async function loadImage(vol, page) {
 
 async function changeImage(direction) {
   if (isLoading) return;
-  const res = calcNextPage(direction);
+  const res = await calcNextPage(direction);
 
   //if (!res.ok) return showTempTip(direction > 0 ? "已经是最后一页" : "已经是第一页");
   if (!res.ok) {

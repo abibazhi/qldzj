@@ -102,7 +102,11 @@
 
     <!-- ⭐ 所有逻辑都在这个 type="module" 脚本中 -->
     <script type="module">
-    import { sutraLinks, categoryMap } from './data/sutra_links.js';
+    // 数据来源：data/cache/（gen_cache.mjs 从真源生成，浏览器不加载真源主表）
+    const [sutraLinks, categoryMap] = await Promise.all([
+        fetch('./data/cache/sutra_table.json').then(r => r.json()),
+        fetch('./data/cache/category_map.json').then(r => r.json())
+    ]);
 
     'use strict';
 

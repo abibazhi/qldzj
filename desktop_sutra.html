@@ -366,7 +366,7 @@ async function updateRollAfterPageChange(newVol, newPage) {
   
   let currentRoll = null;
   for (const roll of currentSutraInfo.rolls) {
-    const rollStartNum = parseInt(roll.idx, 10);
+    const rollStartNum = parseInt(roll.i, 10);
     if (rollStartNum <= currentPageNum) {
       currentRoll = roll;
     } else {
@@ -374,7 +374,7 @@ async function updateRollAfterPageChange(newVol, newPage) {
     }
   }
   
-  currentRollName = currentRoll ? currentRoll.title : '';
+  currentRollName = currentRoll ? currentRoll.t : '';
 }
 
 // ============================================================
@@ -674,7 +674,7 @@ async function loadImage(vol, page) {
 
 async function changeImage(direction) {
   if (isLoading || (panzoom && panzoom.getScale() > 1)) return;
-  const res = calcNextPage(direction);
+  const res = await calcNextPage(direction);
   if (!res.ok) return showTempTip(direction > 0 ? "最后一页" : "第一页");
   const { newVol, newPage } = res;
   await loadImage(newVol, newPage);

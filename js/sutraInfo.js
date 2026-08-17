@@ -1,18 +1,48 @@
 // js/sutraInfo.js
 
-import { sutraLinks } from '../data/sutra_links.js';
+let titlesCachePromise = null;   // 共享 titles.json 加载 Promise
+let rollsCachePromise = null;    // 共享 rolls.json 加载 Promise
 
-let sutraInfoCachePromise = null; // 共享加载 Promise：全站只 fetch 一次
+// 经名来源：data/cache/titles.json（gen_cache.mjs 从真源生成，经号→繁体经名）
+// 卷表来源：data/cache/rolls.json（gen_cache.mjs 从真源生成，[{ n, r:[{t,i}] }]）
 
-// 经号 → 经名（经名来源统一为 sutra_links.js：优先繁体经名，回退简体 title）
-// sutra_links.js 结构：[经号,start,end,title,translator,mv,alias?,tradTitle?]
-// tradTitle 恒为最后一个字段（7字段=[...,trad]，8字段=[...,alias,trad]）
-const titleByN = new Map();
-for (const s of sutraLinks) {
-    if (typeof s[0] !== 'number') continue;
-    const last = s[s.length - 1];
-    const title = typeof last === 'string' && last ? last : s[3];
-    titleByN.set(s[0], title);
+/**
+ * 加载经号→经名映射（全站只 fetch 一次）
+ * @returns {Promise<Record<string,string>>}
+ */
+function loadTitles() {
+    if (!titlesCachePromise) {
+        titlesCachePromise = fetch('./data/cache/titles.json').then(async (res) => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+        }).catch(e => {
+            console.error('加载 data/cache/titles.json 失败:', e);
+            titlesCachePromise = null; // 允许重试
+            return {};
+        });
+    }
+    return titlesCachePromise;
+}
+
+/**
+ * 加载卷表（全站只 fetch 一次）
+ * @returns {Promise<Record<number, Array>>} 经号 → rolls
+ */
+function loadRolls() {
+    if (!rollsCachePromise) {
+        rollsCachePromise = fetch('./data/cache/rolls.json').then(async (res) => {
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const arr = await res.json();
+            const map = {};
+            for (const item of arr) map[item.n] = item.r;
+            return map;
+        }).catch(e => {
+            console.error('加载 data/cache/rolls.json 失败:', e);
+            rollsCachePromise = null; // 允许重试
+            return {};
+        });
+    }
+    return rollsCachePromise;
 }
 
 /**
@@ -23,63 +53,30 @@ for (const s of sutraLinks) {
 export async function fetchSutraInfo(sutraNum) {
     if (!sutraNum) return null;
 
-    // 统一从卷表 sutraVols.json 获取（覆盖多卷+单卷全部经，一次 fetch）
-    return fetchSutraInfoFromVolsJson(sutraNum);
-}
+    const key = parseInt(sutraNum, 10);
+    const [titles, rollsMap] = await Promise.all([loadTitles(), loadRolls()]);
 
-/**
- * 从 data/vols/sutraVols.json 获取经卷信息（全量 JSON 只加载一次）
- * 卷表结构：[{ n, r:[{t,i}] }]，多卷经 r=卷列表，单卷经 r=[{t:函号,i:start}]
- * @param {string} sutraNum
- * @returns {Promise<object|null>}
- */
-async function fetchSutraInfoFromVolsJson(sutraNum) {
-    try {
-        if (!sutraInfoCachePromise) {
-            sutraInfoCachePromise = fetch('./data/vols/sutraVols.json').then(async (res) => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const arr = await res.json();
-                const map = {};
-                for (const item of arr) map[item.n] = item;
-                return map;
-            }).catch(e => {
-                console.error('加载 data/vols/sutraVols.json 失败:', e);
-                sutraInfoCachePromise = null; // 允许重试
-                return null;
-            });
-        }
-        const map = await sutraInfoCachePromise;
-        if (!map) return null;
+    const rolls = rollsMap[key] || [];
+    // 单卷经 r 只有 1 条（函号卷名），阅读页需展示 rollName
+    const rollName = rolls.length === 1 ? rolls[0].t : '';
 
-        const key = parseInt(sutraNum, 10);
-        const item = map[key];
-        if (!item) return null;
-
-        // 单卷经 r 只有 1 条（函号卷名），阅读页需展示 rollName
-        const rolls = item.r || [];
-        const rollName = rolls.length === 1 ? rolls[0].t : '';
-
-        return {
-            title: titleByN.get(key) || '',
-            rollName,
-            rolls
-        };
-    } catch (e) {
-        console.error('从 data/vols/sutraVols.json 获取经卷信息失败:', e);
-        return null;
-    }
+    return {
+        title: titles[String(key)] || '',
+        rollName,
+        rolls
+    };
 }
 
 /**
  * 根据 idx 获取卷名
- * @param {Array} rolls - 卷列表
+ * @param {Array} rolls - 卷列表 [{t,i}]（t=卷名，i=起始idx）
  * @param {string} idx - 当前 idx
  * @returns {string}
  */
 export function getRollTitle(rolls, idx) {
     if (!rolls || rolls.length === 0) return '';
-    const roll = rolls.find(r => r.idx === idx);
-    return roll ? roll.title : '';
+    const roll = rolls.find(r => r.i === idx);
+    return roll ? roll.t : '';
 }
 
 /**

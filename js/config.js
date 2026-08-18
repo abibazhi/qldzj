@@ -41,7 +41,7 @@ export const COLOR_IMG_TIMEOUT = 20000;
  * 命中范围的图片按大图处理：放宽超时 + 更友好的加载提示
  */
 export const COLOR_IMAGE_RANGES = [
-  { vol: '001', pageStart: 1, pageEnd: 162 },
+  { vol: '001', pageStart: 0, pageEnd: 162 },
 ];
 
 /**

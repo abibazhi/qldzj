@@ -126,6 +126,7 @@ export function getImgBBId(vol3, name) {
     return entry.catalog && entry.catalog[seq - 1] || null;
   }
   const page = parseInt(name, 10);
+  if (name === '0') return entry.page0 || null;
   if (!page) return null;
   return entry.pages && entry.pages[page - 1] || null;
 }

@@ -9,7 +9,7 @@
 ```json
 {
   "000": { "pages": ["ImgBB图片ID", ...], "catalog": [] },
-  "001": { "pages": ["ImgBB图片ID", ...], "catalog": ["C1图ID", "C2图ID"] },
+  "001": { "pages": ["ImgBB图片ID", ...], "catalog": ["C1图ID"], "page0": "ImgBB图片ID" },
   ...
   "168": { "pages": ["ImgBB图片ID", ...], "catalog": ["C1图ID", "C2图ID"] }
 }
@@ -18,15 +18,16 @@
 - 键：三位卷号 `000`~`168`（全部补零）
 - `pages`：该卷正文页数组，长度 = 该卷页数，与 `data/sutra_links.js` 的 `VOLUME_PAGE_COUNTS` 一一对应（生成时已交叉校验）
 - `catalog`：该卷目录封面（C 图）ImgBB ID 数组，`catalog[i]` 即 `C{i+1}` 图；无 C 图的卷为空数组（当前 000 为空）
+- `page0`：第 0 页（`0.png`，封面）的 ImgBB ID；仅第 0 部经所在卷 001 存在。0 页是"序列之前的前导"标记，不进入正文 `pages`（`pages` 仍从页 1 起），读取逻辑见 `imageLoader.js` 的 `getImgBBId`（name=`"0"`）
 
 ## 图片 URL 拼接规则
 
 | 源 | 规则 | 示例 |
 |---|---|---|
-| R2 | `https://img.daxumi.top/{卷号}/{页或C图}.png` | `https://img.daxumi.top/001/C1.png` |
-| ImgBB 正文 | `https://i.ibb.co/{ID}/{卷号}-{页}-png.png` | `https://i.ibb.co/LdH060By/000-1-png.png` |
-| ImgBB 目录 | `https://i.ibb.co/{ID}/{卷号}-C{n}-png.png` | `https://i.ibb.co/PGgZNbDb/001-C1-png.png` |
-| GitHub | `https://abibazhi.github.io/{卷号}/{页}.png` | `https://abibazhi.github.io/000/1.png` |
+| R2 | `https://img.daxumi.top/{卷号}/{页或C图}.png` | `https://img.daxumi.top/001/0.png` |
+| ImgBB 正文 | `https://i.ibb.co/{ID}/{卷号}-{页}-png.png` | `https://i.ibb.co/fGqHPrQB/001-0-png.png` |
+| ImgBB 目录 | `https://i.ibb.co/{ID}/{卷号}-C{n}-png.png` | `https://i.ibb.co/4RztWvSW/001-C1-png.png` |
+| GitHub | `https://abibazhi.github.io/{卷号}/{页}.png` | `https://abibazhi.github.io/001/0.png` |
 
 ## 消费方（统一入口）
 
@@ -48,5 +49,20 @@ node back/tools/gen_unified_mapping.mjs
 ```
 
 ## 数据问题记录
+
+### 2026-08-18 第 0 部经图片编号调整（001 卷）
+
+- 第 0 部经（大清三藏聖教目录）阅读范围由 `1-1` 改为 `1-0`，新增封面图 `0.png`：
+  - 三个源同步改名：原目录封面 `C1.png` → `0.png`（R2 / GitHub 直接改名；ImgBB 不可改名，重传得新 ID `fGqHPrQB`，记入 `page0`）
+  - 原 `C2.png` → `C1.png`（R2 / GitHub 直接改名；ImgBB 重传得新 ID `4RztWvSW`）
+  - `catalog` 相应由 `["PGgZNbDb","5XWm5YKV"]` 改为 `["4RztWvSW"]`
+  - 旧 ImgBB ID `PGgZNbDb`（原 C1）、`5XWm5YKV`（原 C2）作废
+  - 阅读页从 `001/0.png` 开始，页号不再右移（第 1 页起仍是原册页）
+
+### 系统性数据问题：部分卷 catalog 末张 C 图与正文尾页共用 ImgBB ID（另案）
+
+- 现象：167 卷的 `catalog` 末张 C 图（多为 `C2`）与正文最后几页共用同一 ImgBB ID（如 001 卷 C2 与第 660 页同为 `5XWm5YKV`、100 卷 C2 与第 706 页等）。
+- 原因疑似当年上传目录 C 图时直接复用了卷末页图；因 ImgBB 不可改名，原 ID 无法拆分为两张不同图。
+- 本次 001 卷已随 C 图重传而消除（新 C1 为独立 ID），其余 166 卷仍存在，需逐卷重传换新 ID（另案处理）。
 
 （此处记录后续发现的任何数据问题，如某卷缺页、图片 ID 异常等）

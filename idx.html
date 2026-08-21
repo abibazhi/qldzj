@@ -5,6 +5,20 @@
     <title>乾隆大藏经目录</title>
     <link href="index.css" rel="stylesheet">
 
+    <style>
+    /* 校对标记开关：循环切换 关 → 多经同卷 → 单页经 */
+    #markToggle {
+        margin-left: 12px;
+        padding: 1px 10px;
+        font-size: 0.9em;
+        cursor: pointer;
+    }
+    body.mark-multi tr[data-multi] { background-color: #fff3b0; }
+    body.mark-multi tr[data-first] td { font-weight: 700; }
+    body.mark-multi tr[data-first] td:first-child { border-left: 4px solid #e0a800; }
+    body.mark-single tr[data-single] { background-color: #cfe8ff; }
+    </style>
+
     <script>
     var _hmt = _hmt || [];
     (function() {
@@ -22,6 +36,7 @@
         <div class="special-anchor">
             快速跳转:
             <span id="quickJumpLinks"></span>
+            <button id="markToggle" type="button">标记: 关</button>
         </div>
 
         <table border="1" class="dataframe" id="sutraTable">
@@ -103,12 +118,18 @@
     <!-- ⭐ 所有逻辑都在这个 type="module" 脚本中 -->
     <script type="module">
     // 数据来源：data/cache/（gen_cache.mjs 从真源生成，浏览器不加载真源主表）
-    const [sutraLinks, categoryMap] = await Promise.all([
+    const [sutraLinks, categoryMap, multiVol] = await Promise.all([
         fetch('./data/cache/sutras.json').then(r => r.json()),
-        fetch('./data/cache/category_map.json').then(r => r.json())
+        fetch('./data/cache/category_map.json').then(r => r.json()),
+        // 多经同卷分组（校对开关用）；加载失败降级为空，单页经标记不受影响
+        fetch('./data/cache/multi_vol.json').then(r => r.json()).catch(() => ({ firsts: [], members: [] }))
     ]);
 
     'use strict';
+
+    // 多经同卷分组：members=组内全部经号，firsts=首部经号
+    const multiSet = new Set(multiVol.members);
+    const firstSet = new Set(multiVol.firsts);
 
     /**
      * 生成快速跳转链接（数据来自 categoryMap）
@@ -149,7 +170,15 @@
         const idxLink = (sutra === '') ? '' :
             '<a href="' + idxHref + '" class="idx-link" title="卷索引">☰</a>';
 
-        return '<tr>\n' +
+        // 校对标记：多经同卷 / 首部经 / 单页经（start=end），由顶部按钮切换显示
+        let marks = '';
+        if (typeof sutra === 'number') {
+            if (multiSet.has(sutra)) marks += ' data-multi="1"';
+            if (firstSet.has(sutra)) marks += ' data-first="1"';
+            if (start === end) marks += ' data-single="1"';
+        }
+
+        return '<tr' + marks + '>\n' +
             '            <td>' + numText + '</td>\n' +
             '            <td><a href="' + readHref + '">' + title + '</a>' + idxLink + '</td>\n' +
             '            <td>' + translatorHtml + '</td>\n' +
@@ -216,6 +245,35 @@
             }
         }
     });
+
+    // ============================================================
+    // 校对标记开关：关 → 多经同卷 → 单页经 循环（纯 CSS 类切换，不重建表格）
+    // 模式存入 localStorage，回退/刷新/再次打开均自动恢复
+    // ============================================================
+    const MARK_MODES = [
+        { cls: '', label: '标记: 关' },
+        { cls: 'mark-multi', label: '标记: 多经同卷' },
+        { cls: 'mark-single', label: '标记: 单页经' }
+    ];
+    const MARK_KEY = 'idxMarkMode';
+    const markBtn = document.getElementById('markToggle');
+    let markIdx = 0;
+    try {
+        const saved = parseInt(localStorage.getItem(MARK_KEY), 10);
+        if (saved >= 0 && saved < MARK_MODES.length) markIdx = saved;
+    } catch (e) {}
+    function applyMarkMode() {
+        document.body.classList.remove('mark-multi', 'mark-single');
+        const mode = MARK_MODES[markIdx];
+        if (mode.cls) document.body.classList.add(mode.cls);
+        markBtn.textContent = mode.label;
+    }
+    markBtn.addEventListener('click', function() {
+        markIdx = (markIdx + 1) % MARK_MODES.length;
+        try { localStorage.setItem(MARK_KEY, String(markIdx)); } catch (e) {}
+        applyMarkMode();
+    });
+    applyMarkMode();
     </script>
 
     <script>

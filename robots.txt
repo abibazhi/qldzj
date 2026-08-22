@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /js/
+Disallow: /css/
+Disallow: /data/
+
+Sitemap: https://qldzj.daxumi.top/sitemap.xml

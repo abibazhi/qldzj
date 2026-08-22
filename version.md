@@ -255,6 +255,12 @@
 0. simplelightbox css/js 本地化（css/ 与 js/ 目录），摆脱 jsdelivr CDN 依赖。
 
 
+## release1.4.14（2026.8.22）sitemap 与 robots.txt
+0. 新增 back/tools/gen_sitemap.mjs：由真源生成 sitemap.xml（1674 条＝目录3页＋卷索引1670页＋勘误主核对页）与 robots.txt（排除 js/css/data 资产目录，声明 Sitemap）。
+0. 壳页补静态元信息：title／meta description／link rel=canonical（自指），任何爬虫不执行 JS 即可识别页面；h1 与表格主体仍为浏览器渲染。
+0. 主站域名 qldzj.daxumi.top；阅读入口（sutra.html?参数）暂不进 sitemap，靠内链自然发现。
+
+
 ---
 
 ## 更新日志汇总

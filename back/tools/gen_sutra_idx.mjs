@@ -94,7 +94,8 @@ if (dry) mkdirSync(dryDir, { recursive: true });
 for (const sutra of sutras) {
   const fname = `sutra${sutra.n}.idx.html`;
   const html = renderShell(sutra, {
-    headHtml: sutra.n === 1 ? HUI_CSS : '',
+    canonicalBase: 'https://qldzj.daxumi.top/public/',
+    huiCss: sutra.n === 1 ? HUI_CSS : '',
     huiData: sutra.n === 1 ? HUI_MARKS : null
   });
 

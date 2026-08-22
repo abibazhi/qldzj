@@ -149,13 +149,20 @@ export function renderBody(data, limit = 24) {
   return out.join('\n');
 }
 
-// 壳页：静态部分只有数据块与样式链接，主体由 js/sutraIdxBoot.js 渲染
+// 壳页：静态部分只有元信息、数据块与样式链接，主体由 js/sutraIdxBoot.js 渲染。
+// title/description/canonical 为静态元信息——任何爬虫不执行 JS 也可识别页面；
+// h1 与表格仍由浏览器渲染（"完全动态"哲学不变，标题属元数据而非内容）。
 export function renderShell(data, opts = {}) {
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const t = esc(data.t);
   const out = [];
   out.push('<!DOCTYPE html>');
   out.push('<html lang="zh">');
   out.push('<head>');
   out.push('    <meta charset="utf-8"/>');
+  out.push(`    <title>乾隆大藏经 · ${t}</title>`);
+  out.push(`    <meta name="description" content="《${t}》乾隆大藏经高清影印在线阅读。">`);
+  if (opts.canonicalBase) out.push(`    <link rel="canonical" href="${opts.canonicalBase}sutra${data.n}.idx.html">`);
   if (opts.headHtml) out.push(opts.headHtml);
   out.push('    <link href="sutra.vols.css" rel="stylesheet">');
   out.push('</head>');

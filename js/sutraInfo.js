@@ -1,48 +1,36 @@
 // js/sutraInfo.js
 
-let titlesCachePromise = null;   // 共享 titles.json 加载 Promise
-let rollsCachePromise = null;    // 共享 rolls.json 加载 Promise
+// 数据来源：public/sutra{N}.idx.html 页尾内嵌的 #sutra-meta JSON 数据块
+// （由 back/tools/gen_sutra_idx.mjs 从真源生成，含繁体经名 t 与卷表 r:[{t,i}]）
+// 阅读页按需取当前经一份，不再加载全量 titles/rolls 切片
 
-// 经名来源：data/cache/titles.json（gen_cache.mjs 从真源生成，经号→繁体经名）
-// 卷表来源：data/cache/rolls.json（gen_cache.mjs 从真源生成，[{ n, r:[{t,i}] }]）
-
-/**
- * 加载经号→经名映射（全站只 fetch 一次）
- * @returns {Promise<Record<string,string>>}
- */
-function loadTitles() {
-    if (!titlesCachePromise) {
-        titlesCachePromise = fetch('./data/cache/titles.json').then(async (res) => {
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res.json();
-        }).catch(e => {
-            console.error('加载 data/cache/titles.json 失败:', e);
-            titlesCachePromise = null; // 允许重试
-            return {};
-        });
-    }
-    return titlesCachePromise;
-}
+const metaCache = new Map();   // 经号 → Promise<meta|null>（会话内共享）
 
 /**
- * 加载卷表（全站只 fetch 一次）
- * @returns {Promise<Record<number, Array>>} 经号 → rolls
+ * 加载单部经的内嵌数据
+ * @param {number} n - 经号
+ * @returns {Promise<{t: string, r: Array}|null>}
  */
-function loadRolls() {
-    if (!rollsCachePromise) {
-        rollsCachePromise = fetch('./data/cache/rolls.json').then(async (res) => {
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            const arr = await res.json();
-            const map = {};
-            for (const item of arr) map[item.n] = item.r;
-            return map;
-        }).catch(e => {
-            console.error('加载 data/cache/rolls.json 失败:', e);
-            rollsCachePromise = null; // 允许重试
-            return {};
-        });
+function loadSutraMeta(n) {
+    if (!metaCache.has(n)) {
+        const p = fetch('./public/sutra' + n + '.idx.html')
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.text();
+            })
+            .then(html => {
+                const m = html.match(/<script type="application\/json" id="sutra-meta">([\s\S]*?)<\/script>/);
+                if (!m) throw new Error('sutra-meta 数据块缺失');
+                return JSON.parse(m[1]);
+            })
+            .catch(e => {
+                console.error('加载 sutra' + n + '.idx.html 内嵌数据失败:', e);
+                metaCache.delete(n); // 允许重试
+                return null;
+            });
+        metaCache.set(n, p);
     }
-    return rollsCachePromise;
+    return metaCache.get(n);
 }
 
 /**
@@ -54,14 +42,17 @@ export async function fetchSutraInfo(sutraNum) {
     if (!sutraNum) return null;
 
     const key = parseInt(sutraNum, 10);
-    const [titles, rollsMap] = await Promise.all([loadTitles(), loadRolls()]);
+    if (!Number.isFinite(key)) return null;
 
-    const rolls = rollsMap[key] || [];
+    const meta = await loadSutraMeta(key);
+    if (!meta) return null;
+
+    const rolls = Array.isArray(meta.r) ? meta.r : [];
     // 单卷经 r 只有 1 条（函号卷名），阅读页需展示 rollName
     const rollName = rolls.length === 1 ? rolls[0].t : '';
 
     return {
-        title: titles[String(key)] || '',
+        title: meta.t || '',
         rollName,
         rolls
     };

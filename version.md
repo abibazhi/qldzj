@@ -230,6 +230,11 @@
 0. 校对标记：index.html 黄底（962 单卷→235 首部经两轮演变）移除定稿；idx.html 新增「标记」循环开关（关 → 多经同卷 → 单页经），分组数据化 multi_vol.json（235 组/866 经），模式 localStorage 记忆。
 0. 其他：经名别名 alias 字段统一（20 余部）、勘误卷 000 改 169 册、目录页排版统一。
 
+## release1.4.10（2026.8.22）阅读页数据内嵌化
+0. public/sutra{N}.idx.html 页尾内嵌 #sutra-meta JSON 数据块（繁体经名+卷表 t/i，gen_sutra_idx.mjs 生成），目录页与阅读页共用同一文件。
+0. js/sutraInfo.js 改为按经 fetch 当前经 idx 页解析内嵌块（会话内缓存）；阅读页数据量 ~97KB(gzip) → 约0.5–10KB，不再依赖全量切片。
+0. 删除 data/cache/titles.json、rolls.json 及 gen_cache.mjs 对应生成逻辑；index.html 空闲预载行同步移除。
+
 
 ---
 

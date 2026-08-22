@@ -6,8 +6,6 @@
 data/
 ├── sutra_table.js       唯一真源（手维护）：经表 + 卷表合并
 └── cache/               派生切片（构建生成，浏览器运行时 fetch）
-    ├── rolls.json        卷表（阅读页卷名）
-    ├── titles.json       经号→经名（阅读页标题）
     ├── sutras.json      经表（目录页 idx.html）
     ├── category_map.json 分类映射（目录页）
     └── page_counts.json  册页数（翻页）
@@ -46,11 +44,14 @@ data/
 
 | 文件 | 内容 | 消费者 |
 |---|---|---|
-| `rolls.json` | `[{n, r:[{t,i}]}]` 全量卷表 | `js/sutraInfo.js`（阅读页卷名） |
-| `titles.json` | `{ "经号": 繁体经名 }` | `js/sutraInfo.js`（阅读页标题） |
 | `sutras.json` | 经表（真源前 7 字段，不含 rolls） | `idx.html`（目录页） |
 | `category_map.json` | 分类映射 | `idx.html` |
 | `page_counts.json` | 168 册每册页数 | `js/pageNav.js`（翻页跨册） |
+
+> **阅读页经名/卷名不走切片**：`public/sutra{N}.idx.html` 页尾内嵌
+> `<script type="application/json" id="sutra-meta">{"t":繁体经名,"r":[{t,i}...]}</script>`
+> 数据块（gen_sutra_idx.mjs 生成，人看机器读共用一个文件）。`js/sutraInfo.js`
+> 按经 fetch 当前经的 idx 页并解析该块，会话内缓存；单经数据量约 0.5–10KB(gzip)。
 
 ## 构建命令
 

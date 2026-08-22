@@ -6,12 +6,27 @@
     <link href="index.css" rel="stylesheet">
 
     <style>
-    /* 校对标记开关：循环切换 关 → 多经同卷 → 单页经 */
+    /* 校对标记开关：循环切换 关 → 多经同卷 → 单页经（固定悬浮右上角，滚动时可随时切换） */
     #markToggle {
-        margin-left: 12px;
-        padding: 1px 10px;
+        position: fixed;
+        top: 12px;
+        right: 16px;
+        z-index: 1000;
+        padding: 4px 14px;
         font-size: 0.9em;
         cursor: pointer;
+        background-color: rgba(255, 255, 255, 0.92);
+        border: 1px solid #ddd;
+        border-radius: 16px;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12);
+    }
+    @media (max-width: 520px) {
+        #markToggle {
+            top: 8px;
+            right: 10px;
+            padding: 3px 10px;
+            font-size: 0.8em;
+        }
     }
     body.mark-multi tr[data-multi] { background-color: #fff3b0; }
     body.mark-multi tr[data-first] td { font-weight: 700; }
@@ -31,12 +46,15 @@
 </head>
 <body>
     <h1>乾隆大藏经目录</h1>
+
+    <!-- 校对标记开关：固定悬浮视口右上角 -->
+    <button id="markToggle" type="button">标记: 关</button>
+
     <div class="container">
         <!-- 快速跳转链接（由 categoryMap 数据生成，见底部脚本） -->
         <div class="special-anchor">
             快速跳转:
             <span id="quickJumpLinks"></span>
-            <button id="markToggle" type="button">标记: 关</button>
         </div>
 
         <table border="1" class="dataframe" id="sutraTable">

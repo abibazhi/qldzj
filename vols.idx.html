@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📜</text></svg>">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.css">
+    <link rel="stylesheet" href="css/simplelightbox.min.css">
     <title>乾隆大藏经 · 168册目录</title>
 <style>
 h1 {
@@ -16,7 +16,6 @@ table {
     border-collapse: collapse;
     white-space: nowrap; 
     border: 1px solid #000; 
-    border-collapse: collapse; 
     margin: 0 auto; 
     width: 80%;
     transform: scale(0.8);
@@ -37,68 +36,152 @@ a {
 a:hover {
     text-decoration: underline;
 }
+#volToast {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,.75);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: .9em;
+    display: none;
+    z-index: 99999;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
 </style>
 </head>
 <body>
 <h1>📜 乾隆大藏经 · 168册目录</h1>
 <div id="volsTable" style="text-align:center;padding:40px;">加载中…</div>
+<div id="volToast"></div>
 
 <script type="module">
-// 目录 C 图链接：从统一 mapping.json 生成，点击走统一 resolveImage 降级
+// 目录 C 图链接：从统一 mapping.json 生成。
+// 不做全量预解析（旧版会后台下载全部 C 图）；点击时按需解析，
+// 结果存 localStorage 缓存 7 天，对抗内置浏览器图片缓存易失的问题。
+// 支持 ?vol=N 深链：自动定位该册并打开其 C1。
 import { resolveImage } from './js/imageLoader.js';
 
 const R2_BASE = 'https://img.daxumi.top';
+const LS_KEY = 'volsResolvedV1';           // { r2地址: [可用地址, 时间戳ms] }
+const RESOLVE_TTL = 7 * 24 * 3600 * 1000;  // 7 天过期重探
+const memCache = {};                       // localStorage 不可用时的会话级降级
 
-async function render() {
-    const res = await fetch(new URL('./js/mapping.json', import.meta.url), { cache: 'force-cache' });
-    if (!res.ok) {
-        document.getElementById('volsTable').textContent = '⚠️ mapping.json 加载失败';
-        return;
-    }
-    const mapping = await res.json();
-
-    const vols = Object.keys(mapping).filter(v => v !== '169').sort();
-    const cols = 4;
-    let html = '<table><tr>';
-    vols.forEach((vol, i) => {
-        const catalog = mapping[vol].catalog || [];
-        const links = catalog.map((id, idx) => {
-            const name = `C${idx + 1}`;
-            const r2 = `${R2_BASE}/${vol}/${name}.png`;
-            return `<a href="${r2}" data-r2="${r2}" data-vol="${vol}" data-c="${name}" class="lightbox" data-lightbox="vols" data-title="第${vol}册 · ${name}">${name}</a>`;
-        }).join(' ');
-        html += `<td>第${vol}册</td><td>${links}</td>`;
-        if ((i + 1) % cols === 0 && (i + 1) < vols.length) html += '</tr><tr>';
-    });
-    html += '</tr></table>';
-    document.getElementById('volsTable').innerHTML = html;
-
-    // 加载时预解析：后台逐个探测可用源并更新 href（不阻塞渲染）
-    const links = document.querySelectorAll('a[data-r2]');
-    links.forEach(a => {
-        Promise.resolve().then(async () => {
-            const resolved = await resolveImage(a.dataset.r2);
-            if (resolved) a.href = resolved;
-        });
-    });
-
-    // 渲染完成后再起 Lightbox 画廊（异步 fetch 结束、链接已存在）
-    initLightbox();
+function toast(msg) {
+  const t = document.getElementById('volToast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => { t.style.display = 'none'; }, 2500);
 }
 
+function loadCache() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY)) || memCache; }
+  catch (e) { return memCache; }
+}
+
+// 带持久化缓存的解析：命中直接返回；未命中探测后写入；全源失败返回 null（不缓存失败）
+const inflight = {}; // 同一链接去重
+async function getResolved(r2Url) {
+  const hit = loadCache()[r2Url];
+  if (Array.isArray(hit) && Date.now() - hit[1] < RESOLVE_TTL) return hit[0];
+  if (inflight[r2Url]) return inflight[r2Url];
+
+  inflight[r2Url] = (async () => {
+    const url = await resolveImage(r2Url);
+    if (!url) return null;
+    const cache = loadCache();
+    const now = Date.now();
+    // 顺带清理过期项，控制体积
+    for (const k of Object.keys(cache)) {
+      const v = cache[k];
+      if (!Array.isArray(v) || now - v[1] >= RESOLVE_TTL) delete cache[k];
+    }
+    cache[r2Url] = [url, now];
+    saveCache(cache);
+    return url;
+  })();
+  const r = await inflight[r2Url];
+  delete inflight[r2Url];
+  return r;
+}
+
+function saveCache(cache) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(cache)); } catch (e) {}
+}
+
+async function render() {
+  // 默认缓存策略：1小时内秒回；过期走 ETag 校验（304），不再 force-cache 常驻陈旧数据
+  const res = await fetch(new URL('./js/mapping.json', import.meta.url));
+  if (!res.ok) {
+    document.getElementById('volsTable').textContent = '⚠️ mapping.json 加载失败';
+    return;
+  }
+  const mapping = await res.json();
+
+  const vols = Object.keys(mapping).filter(v => v !== '169').sort();
+  const cols = 4;
+  let html = '<table><tr>';
+  vols.forEach((vol, i) => {
+    const catalog = mapping[vol].catalog || [];
+    const links = catalog.map((id, idx) => {
+      const name = `C${idx + 1}`;
+      const r2 = `${R2_BASE}/${vol}/${name}.png`;
+      return `<a href="${r2}" data-r2="${r2}" data-vol="${vol}" data-c="${name}" class="lightbox" data-lightbox="vols" data-title="第${vol}册 · ${name}">${name}</a>`;
+    }).join(' ');
+    html += `<td>第${vol}册</td><td>${links}</td>`;
+    if ((i + 1) % cols === 0 && (i + 1) < vols.length) html += '</tr><tr>';
+  });
+  html += '</tr></table>';
+  document.getElementById('volsTable').innerHTML = html;
+
+  initLightbox();
+  handleDeepLink();
+}
+
+// 点击拦截（捕获阶段先于 SimpleLightbox）：解析成功换 href 后放行；
+// 已解析的链接直接放行；全源失败提示且不放行（可再次点击重试）
+document.getElementById('volsTable').addEventListener('click', async e => {
+  const a = e.target.closest('a.lightbox');
+  if (!a || a.dataset.resolved) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const label = a.dataset.c;
+  a.textContent = '…';
+  const url = await getResolved(a.dataset.r2);
+  a.textContent = label;
+  if (!url) { toast(`第${a.dataset.vol}册 ${label} 暂不可用`); return; }
+  a.href = url;
+  a.dataset.resolved = '1';
+  a.click(); // 放行：SimpleLightbox 接管开图，画廊前后翻页不变
+}, true);
+
 function initLightbox() {
-    if (typeof SimpleLightbox === 'undefined') return;
-    new SimpleLightbox('.lightbox', {
-        captionsData: 'title',
-        captionDelay: 250,
-        scaleImageToRatio: true,
-        disableRightClick: false,
-    });
+  if (typeof SimpleLightbox === 'undefined') return;
+  window._volsLightbox = new SimpleLightbox('.lightbox', {
+    captionsData: 'title',
+    captionDelay: 250,
+    scaleImageToRatio: true,
+    disableRightClick: false,
+  });
+}
+
+// 深链：?vol=N 自动定位并打开该册 C1（走与手动点击相同的解析流程）
+async function handleDeepLink() {
+  const v = parseInt(new URLSearchParams(location.search).get('vol'), 10);
+  if (!v) return;
+  const vol3 = String(v).padStart(3, '0');
+  const target = document.querySelector(`a[data-vol="${vol3}"][data-c="C1"]`);
+  if (!target) { toast(`未找到第${v}册`); return; }
+  target.scrollIntoView({ block: 'center' });
+  target.click();
 }
 
 render();
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/simplelightbox@2.14.3/dist/simple-lightbox.min.js"></script>
+<script src="js/simplelightbox.min.js"></script>
 </body>
 </html>

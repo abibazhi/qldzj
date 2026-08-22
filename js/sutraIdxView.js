@@ -139,7 +139,7 @@ export function renderBody(data, limit = 24) {
 
   for (const g of groups) {
     const vol = g[0].i.slice(0, 3);
-    out.push(`<h2>第${parseInt(vol, 10)}册</h2>`);
+    out.push(`<h2><a class="vol-link" href="../vols.idx.html?vol=${parseInt(vol, 10)}">第${parseInt(vol, 10)}册</a></h2>`);
     out.push('');
     out.push(renderTable(data, g, limit));
     out.push('');

@@ -118,3 +118,12 @@ a.suspect::after {
   }
 }
 
+
+/* 册号深链：跳转 168册目录（vols.idx.html?vol=N） */
+.vol-link {
+  color: inherit;
+  text-decoration: none;
+}
+.vol-link:hover {
+  text-decoration: underline;
+}

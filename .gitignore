@@ -6,8 +6,11 @@
 !.env.example
 
 
-# backup files
-back/
+# backup files（tools 下的构建脚本除外，见下方白名单）
+back/*
+!back/tools/
+back/tools/*
+!back/tools/*.mjs
 
 # vim swap/backup files
 *.swp

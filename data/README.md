@@ -49,10 +49,10 @@ data/
 | `category_map.json` | 分类映射 | `idx.html` |
 | `page_counts.json` | 168 册每册页数 | `js/pageNav.js`（翻页跨册） |
 
-> **阅读页经名/卷名不走切片**：`public/sutra{N}.idx.html` 页尾内嵌
-> `<script type="application/json" id="sutra-meta">{"t":繁体经名,"r":[{t,i}...]}</script>`
-> 数据块（gen_sutra_idx.mjs 生成，人看机器读共用一个文件）。`js/sutraInfo.js`
-> 按经 fetch 当前经的 idx 页并解析该块，会话内缓存；单经数据量约 0.5–10KB(gzip)。
+> **阅读页经名/卷名不走切片**：`public/sutra{N}.idx.html` 内嵌
+> `<script type="application/json" id="sutra-meta">{n,s,e,t,r:[{t,i,b?}],gs?}</script>`
+> 富化数据块（gen_sutra_idx.mjs 生成，人看机器读共用一个文件）。`js/sutraInfo.js`
+> 按经 fetch 当前经的 idx 页并解析该块，会话内缓存；单经数据量约 0.3–6KB(gzip)。
 
 ## 构建命令
 
@@ -66,7 +66,11 @@ node back/tools/gen_sutra_idx.mjs    # 生成 public/sutra{N}.idx.html（全部 
 
 ## sutra{N}.idx.html 排版规则（7 条）
 
-由 `back/tools/gen_sutra_idx.mjs` 从真源生成。
+由 `back/tools/gen_sutra_idx.mjs` 从真源生成。**页面为壳页**：静态部分仅
+`#sutra-meta` 富化数据块（经1 另有会界样式与 `#hui-data`），表格主体、标题与
+h1 由 `js/sutraIdxBoot.js` 调用共享渲染器 **`js/sutraIdxView.js`** 在浏览器端
+生成——排版规则全库只有这一份实现，Node 生成器与浏览器共用（迁移时以
+1670 文件零 diff 验证等价）。无 JS 时页面不显示（已接受的取舍）。
 
 1. **字数阈值**：卷题超过 `js/config.js` 的 `ROLL_FULL_ROW_CHAR_LIMIT`（默认 24，UTF-16 码元计）→ 整行 `colspan="2"`；否则左右半列（`left-col` / `right-col`）。
 2. **奇数尾**：半列条目不成对时，右列留空（`<!-- 空单元格保持布局平衡 -->`）。

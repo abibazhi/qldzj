@@ -61,6 +61,7 @@ node back/tools/gen_cache.mjs        # 重新生成 data/cache/ 切片
 node back/tools/gen_index.mjs        # 生成首页 index.html
 node back/tools/gen_sutra_idx.mjs    # 生成 public/sutra{N}.idx.html（全部 1670 部经，含单卷）
 node back/tools/gen_sitemap.mjs      # 生成 sitemap.xml（1674条）与 robots.txt
+node back/tools/verify_special_cases.mjs  # 特例断言门禁（账本见 docs/SPECIAL_CASES.md）
 ```
 
 ---

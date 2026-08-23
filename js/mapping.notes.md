@@ -8,16 +8,16 @@
 
 ```json
 {
-  "000": { "pages": ["ImgBB图片ID", ...], "catalog": [] },
   "001": { "pages": ["ImgBB图片ID", ...], "catalog": ["C1图ID"], "page0": "ImgBB图片ID" },
   ...
-  "168": { "pages": ["ImgBB图片ID", ...], "catalog": ["C1图ID", "C2图ID"] }
+  "168": { "pages": ["ImgBB图片ID", ...], "catalog": ["C1图ID", "C2图ID"] },
+  "169": { "pages": ["勘误表62页ID..."], "catalog": [] }
 }
 ```
 
-- 键：三位卷号 `000`~`168`（全部补零）
-- `pages`：该卷正文页数组，长度 = 该卷页数，与 `data/sutra_links.js` 的 `VOLUME_PAGE_COUNTS` 一一对应（生成时已交叉校验）
-- `catalog`：该卷目录封面（C 图）ImgBB ID 数组，`catalog[i]` 即 `C{i+1}` 图；无 C 图的卷为空数组（当前 000 为空）
+- 键：三位补零卷号 `'001'~'169'`。**无** `000`——第 0 部经所在的第 1 册以 `page0` 字段承载封面图（`pages` 仍从页 1 起）；`'169'`=勘误表（62 页）
+- `pages`：该卷正文页数组，长度 = 该卷页数，与 `data/sutra_table.js` 的 `VOLUME_PAGE_COUNTS` 一一对应（生成时已交叉校验；现行断言见 `back/tools/verify_special_cases.mjs`）
+- `catalog`：该卷目录封面（C 图）ImgBB ID 数组，`catalog[i]` 即 `C{i+1}` 图；无 C 图的卷为空数组
 - `page0`：第 0 页（`0.png`，封面）的 ImgBB ID；仅第 0 部经所在卷 001 存在。0 页是"序列之前的前导"标记，不进入正文 `pages`（`pages` 仍从页 1 起），读取逻辑见 `imageLoader.js` 的 `getImgBBId`（name=`"0"`）
 
 ## 图片 URL 拼接规则
@@ -43,6 +43,9 @@
 - 输入：`back/tools/legacy_src/mapping.json`（旧每卷数组结构，一次性迁移完成后已删除）+ `back/tools/legacy_src/catalog_imgbb.js`
 - 输出：上述新结构 `js/mapping.json`
 - 校验：169 卷、每卷 `pages.length` 与 `VOLUME_PAGE_COUNTS` 一致、`catalog` 条目总数与原文件一致
+
+> 2026-08-23 起一次性迁移的遗留输入已整体归档（`~/archive/qldzj-back-20260823.tar.gz`），
+> `back/` 目录仅保留 `tools/*.mjs` 生成脚本；`gen_unified_mapping.mjs` 属已完成的历史迁移，不再重跑。
 
 ```
 node back/tools/gen_unified_mapping.mjs

@@ -319,3 +319,6 @@ UTF-16 编码：D874 DE81
 
 1. http://culture.people.com.cn/n1/2017/0118/c1013-29031584.html
 2. https://baike.baidu.com/item/%E4%B9%BE%E9%9A%86%E5%A4%A7%E8%97%8F%E7%BB%8F/57476259?fromModule=lemma_sense-layer#viewPageContent
+
+上述及另外七处来源的全文拷贝与数据可信度分析（含分歧数据对照、现代出版谱系），见
+[docs/参考资料-出版背景.md](docs/参考资料-出版背景.md)。

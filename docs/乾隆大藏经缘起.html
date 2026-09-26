@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>乾隆大藏经缘起大事记</title>
+<meta name="description" content="乾隆大藏经缘起大事记 — 17 个阶段 · 83 条大事 · 971 — 2025">
+<style>
+:root{
+  --paper:#fdf8f0;
+  --paper2:#fffbf5;
+  --card:#ffffff;
+  --ink:#2b2b2b;
+  --muted:#6b7280;
+  --line:#e7ddd0;
+  --accent:#b91c1c;
+  --accent2:#8b1a1a;
+  --indigo:#1e3a5f;
+  --gold:#c9a86a;
+  --pill:#1f2937;
+  --radius:14px;
+  --shadow:0 4px 16px rgba(43,43,43,.07);
+  --shadow2:0 8px 28px rgba(43,43,43,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family: "Noto Serif SC","Source Han Serif SC","Songti SC","Microsoft YaHei",system-ui,-apple-system,serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+/* header */
+.hero{
+  max-width:1120px;margin:0 auto;padding:42px 20px 18px;
+  text-align:center;
+}
+.hero h1{
+  font-size:2.15em;letter-spacing:.12em;font-weight:800;
+  color:var(--pill);
+  position:relative;display:inline-block;
+  padding-bottom:12px;
+}
+.hero h1::after{
+  content:'';position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+  width:88px;height:3px;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:2px;
+}
+.hero .sub{
+  margin-top:12px;color:var(--muted);font-size:.95em;letter-spacing:.04em;
+}
+.hero .stats{margin-top:8px;color:#8b7355;font-size:.88em}
+/* layout */
+.shell{max-width:1120px;margin:0 auto;padding:0 20px 40px;display:flex;gap:22px;align-items:flex-start}
+.toc{
+  position:sticky;top:14px;flex:0 0 210px;
+  background:var(--paper2);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 12px;box-shadow:var(--shadow);
+  max-height:calc(100vh - 28px);overflow:auto;
+}
+.toc-title{font-size:.82em;letter-spacing:.14em;color:#8b7355;font-weight:700;margin-bottom:10px;text-transform:uppercase}
+.toc-link{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:7px 8px;border-radius:8px;text-decoration:none;color:#334155;font-size:.88em;
+  border:1px solid transparent;
+}
+.toc-link:hover{background:#fff;border-color:var(--line);color:var(--pill)}
+.toc-link.active{background:var(--pill);color:#fff;border-color:var(--pill)}
+.toc-count{font-size:.78em;background:#f1e8d9;color:#7c6650;padding:1px 6px;border-radius:20px;margin-left:8px}
+.toc-link.active .toc-count{background:rgba(255,255,255,.18);color:#fff}
+.toc-tools{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);display:flex;flex-direction:column;gap:8px}
+.search{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:.88em;outline:none}
+.search:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,106,.18)}
+.hint{font-size:.76em;color:#9aa0a6;line-height:1.5}
+.main{flex:1;min-width:0}
+/* era */
+.era{margin-bottom:28px}
+.era-head{
+  display:flex;align-items:baseline;gap:10px;
+  padding:10px 2px 10px 14px;
+  border-left:4px solid var(--accent);
+  margin-bottom:14px;
+  background:linear-gradient(90deg, rgba(185,28,28,.06), transparent);
+  border-radius:0 8px 8px 0;
+}
+.era-head h2{font-size:1.15em;letter-spacing:.08em;color:var(--pill)}
+.era-count{font-size:.78em;color:var(--muted);background:#fff;border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+/* timeline */
+.cards{position:relative;padding-left:22px}
+.cards::before{
+  content:'';position:absolute;left:6px;top:6px;bottom:6px;width:2px;background:var(--line);border-radius:2px;
+}
+.card{
+  position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 16px 14px;margin-bottom:12px;box-shadow:var(--shadow);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.card::before{
+  content:'';position:absolute;left:-18px;top:20px;width:10px;height:10px;background:#fff;border:2px solid var(--accent);border-radius:50%;
+  box-shadow:0 0 0 3px var(--paper);
+}
+.card:hover{transform:translateY(-1px);box-shadow:var(--shadow2);border-color:#e2d5c3}
+.time{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.year-pill{font-size:.78em;font-weight:700;letter-spacing:.04em;background:var(--pill);color:#fff;padding:3px 8px;border-radius:20px}
+.time-pill{font-size:.82em;background:#fff7ed;border:1px solid #f0d9b5;color:#7c5a2a;padding:3px 9px;border-radius:20px}
+.time-pill.muted{background:#f3f4f6;border-color:#e5e7eb;color:#9aa0a6}
+.time-text{font-size:.84em;color:var(--muted)}
+.card-title{font-size:1.02em;font-weight:750;color:var(--pill);line-height:1.5;margin-bottom:6px}
+.info{color:#3a3a3a;font-size:.93em;white-space:pre-wrap;word-break:break-word}
+.info.multiline p{margin:6px 0}
+.info.multiline p:first-child{margin-top:0}
+.meta{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.meta-item{font-size:.8em;padding:4px 8px;border-radius:20px;border:1px solid var(--line);background:#fdfbf7;color:#5b4a33}
+.meta-item.org{background:#f8fafc;color:#334155;border-color:#e2e8f0}
+.source{margin-top:10px;display:inline-flex;align-items:center;gap:6px;font-size:.84em;color:var(--indigo);text-decoration:none;border:1px solid #dbe4f0;background:#f8faff;padding:4px 9px;border-radius:20px}
+.source:hover{background:#eef4ff;border-color:#c9d8f5;text-decoration:none}
+.source .ext{opacity:.7}
+.source .domain{font-size:.82em;color:#64748b}
+.source.text{color:var(--muted);background:#f9fafb;border-color:#e5e7eb}
+.hidden{display:none !important}
+/* footer */
+.foot{max-width:1120px;margin:0 auto;padding:18px 20px 30px;color:#9aa0a6;font-size:.82em;text-align:center}
+.foot a{color:#64748b}
+@media (max-width: 880px){
+  .shell{flex-direction:column}
+  .toc{position:relative;top:auto;flex:none;width:100%;max-height:none}
+  .toc{order:2}
+  .main{order:1;width:100%}
+  .hero h1{font-size:1.6em}
+}
+@media print{
+  .toc{display:none}
+  .shell{display:block}
+  .card{break-inside:avoid;box-shadow:none}
+}
+</style>
+</head>
+<body>
+  <header class="hero">
+    <h1>乾隆大藏经缘起大事记</h1>
+    <div class="sub">自北宋开宝藏至当代影印与数字化 · 以 Excel 原表为准</div>
+    <div class="stats">17 个阶段 · 83 条大事 · 971 — 2025</div>
+  </header>
+  <div class="shell">
+    <nav class="toc" aria-label="阶段目录">
+      <div class="toc-title">阶段目录</div>
+      <a href="#北宋-6" class="toc-link">北宋<span class="toc-count">3</span></a><a href="#明朝-11" class="toc-link">明朝<span class="toc-count">2</span></a><a href="#清朝-16" class="toc-link">清朝<span class="toc-count">2</span></a><a href="#清朝-初刻初印-20" class="toc-link">清朝-初刻初印<span class="toc-count">6</span></a><a href="#清朝-三次毁版-28" class="toc-link">清朝-三次毁版<span class="toc-count">2</span></a><a href="#清朝-初印本保存情况-32" class="toc-link">清朝-初印本保存情况<span class="toc-count">10</span></a><a href="#民国-45" class="toc-link">民国<span class="toc-count">1</span></a><a href="#新中国-49" class="toc-link">新中国<span class="toc-count">4</span></a><a href="#新中国-第一次重印-55" class="toc-link">新中国-第一次重印<span class="toc-count">15</span></a><a href="#新中国-第二次重印-72" class="toc-link">新中国-第二次重印<span class="toc-count">2</span></a><a href="#新中国-第二次重印后-168册影印版-76" class="toc-link">新中国-第二次重印后-168册影印版<span class="toc-count">8</span></a><a href="#新中国-第三次重印-87" class="toc-link">新中国-第三次重印<span class="toc-count">4</span></a><a href="#新中国-第三次重印后捐赠情况-93" class="toc-link">新中国-第三次重印后捐赠情况<span class="toc-count">7</span></a><a href="#新中国-第三次重印后市面情况-102" class="toc-link">新中国-第三次重印后市面情况<span class="toc-count">1</span></a><a href="#新中国-第三次重印后雕版修复入藏-105" class="toc-link">新中国-第三次重印后雕版修复入藏<span class="toc-count">9</span></a><a href="#广西文科中心影印版-119" class="toc-link">广西文科中心影印版<span class="toc-count">5</span></a><a href="#其它版本-127" class="toc-link">其它版本<span class="toc-count">2</span></a>
+      <div class="toc-tools">
+        <input id="q" class="search" placeholder="搜索 标题 / 地点 / 来源…" autocomplete="off">
+        <div class="hint">点击阶段可跳 · 输入关键词即时筛选 · 年份胶囊为可排序公历年</div>
+      </div>
+    </nav>
+    <main class="main">
+      <section id="北宋-6" class="era">
+      <div class="era-head"><h2>北宋</h2><span class="era-count">3</span></div>
+      <div class="cards"><article class="card" data-year="971">
+        <div class="time"><span class="year-pill">971</span><span class="time-text">北宋开宝四年（971）</span></div>
+        <h3 class="card-title">千年佛典！</h3>
+        <div class="info">这是我国首次刊刻“大藏经”。</div>
+        <div class="meta"><span class="meta-item place">📍 我国首次刊刻“大藏经”。</span><span class="meta-item org">🏛 官方组织刊刻了总卷数超过五千卷的《开宝藏》</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MjM5NDI2NzczNA==&amp;mid=2650559926&amp;idx=1&amp;sn=e76bfcea1ae60b99aa8f17c61936b4ce&amp;scene=21&amp;poc_token=HMJGtGqjM5vhS8rb_V-9g09F4JBqMVbJJ3cScWv5" target="_blank" rel="noopener noreferrer">公众号-上海书画出版社<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article>
+<article class="card" data-year="983">
+        <div class="time"><span class="year-pill">983</span><span class="time-text">太平兴国八年（983年）</span></div>
+        <h3 class="card-title">开宝大藏经</h3>
+        <div class="info">该藏经以《开元释教录》入藏经目为底本，首次采用千字文编次，起“天”字终“英”字，共480帙5048卷，卷轴装帧，每版23行14字 [2-3]。历经十二年雕版，于太平兴国八年（983年）在汴京印经院完成初印。</div>
+        <div class="meta"><span class="meta-item place">📍 历经十二年雕版，于太平兴国八年（983年）在汴京印经院完成初印。</span><span class="meta-item org">🏛 宋太祖敕令高品张从信在益州刊刻的首部官版汉文大藏经</span></div>
+        <a class="source" href="https://baike.baidu.com/item/%E5%BC%80%E5%AE%9D%E5%A4%A7%E8%97%8F%E7%BB%8F/5512186?fromtitle=%E5%BC%80%E5%AE%9D%E8%97%8F&amp;fromid=2006547&amp;fr=aladdin" target="_blank" rel="noopener noreferrer">百度百科<span class="ext">↗</span><span class="domain">baike.baidu.com</span></a>
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill">北宋末年</span></div>
+        
+        
+        <div class="meta"><span class="meta-item place">📍 原版毁于靖康之变</span></div>
+        
+      </article></div>
+    </section>
+<section id="明朝-11" class="era">
+      <div class="era-head"><h2>明朝</h2><span class="era-count">2</span></div>
+      <div class="cards"><article class="card" data-year="1412">
+        <div class="time"><span class="year-pill">1412</span><span class="time-text">明成祖永乐十年（1412）</span></div>
+        <h3 class="card-title">千年佛典！</h3>
+        <div class="info">《永乐南藏》又名《再刻南藏》《南藏》。为明成祖敕令雕印。始刻于明成祖永乐十年（1412），约于永乐十七年（1419）雕毕。</div>
+        <div class="meta"><span class="meta-item place">📍 南藏板藏南京报恩寺，由南京礼部清吏司主管批准，供全国各地寺院请印。</span><span class="meta-item org">🏛 为明成祖敕令雕印</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MjM5NDI2NzczNA==&amp;mid=2650559926&amp;idx=1&amp;sn=e76bfcea1ae60b99aa8f17c61936b4ce&amp;scene=21&amp;poc_token=HMJGtGqjM5vhS8rb_V-9g09F4JBqMVbJJ3cScWv5" target="_blank" rel="noopener noreferrer">公众号-上海书画出版社<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article>
+<article class="card" data-year="1421">
+        <div class="time"><span class="year-pill">1421</span><span class="time-text">明永乐十九年（1421）</span></div>
+        <h3 class="card-title">千年佛典！</h3>
+        <div class="info">《永乐北藏》，又称《北藏》《明北藏》。明成祖永乐皇帝敕令雕印。明永乐十九年（1421）开始刊刻，于正统五年（1440）基本完成，收经六千三百六十一卷。万历十二年（1584）又续刻了四百十卷。</div>
+        <div class="meta"><span class="meta-item place">📍 《永乐北藏》在北京雕刻，经版由司礼监掌管，一直作为官赐藏经，由朝廷印刷，下赐各地寺院，具有官方性质和权威性。</span><span class="meta-item org">🏛 明成祖朱棣敕令雕印《大藏经》</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MjM5NDI2NzczNA==&amp;mid=2650559926&amp;idx=1&amp;sn=e76bfcea1ae60b99aa8f17c61936b4ce&amp;scene=21&amp;poc_token=HMJGtGqjM5vhS8rb_V-9g09F4JBqMVbJJ3cScWv5" target="_blank" rel="noopener noreferrer">公众号-上海书画出版社<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article></div>
+    </section>
+<section id="清朝-16" class="era">
+      <div class="era-head"><h2>清朝</h2><span class="era-count">2</span></div>
+      <div class="cards"><article class="card" data-year="1733">
+        <div class="time"><span class="year-pill">1733</span><span class="time-text">清雍正十一年（公元1733年）</span></div>
+        <h3 class="card-title">（设立藏经馆）</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 北京贤良寺设立藏经馆</span><span class="meta-item org">🏛 和硕庄亲王允禄、和硕和亲王弘昼及贤良寺住持等领衔主持</span></div>
+        <a class="source" href="https://www.mct.gov.cn/whzx/tpxw/201701/t20170118_829685.htm" target="_blank" rel="noopener noreferrer">文化和旅游部政府门户网站<span class="ext">↗</span><span class="domain">mct.gov.cn</span></a>
+      </article>
+<article class="card" data-year="1735">
+        <div class="time"><span class="year-pill">1735</span><span class="time-text">雍正十三年（1735年）</span></div>
+        <h3 class="card-title">（开雕）</h3>
+        
+        
+        <a class="source" href="https://www.mct.gov.cn/whzx/tpxw/201701/t20170118_829685.htm" target="_blank" rel="noopener noreferrer">文化和旅游部政府门户网站<span class="ext">↗</span><span class="domain">mct.gov.cn</span></a>
+      </article></div>
+    </section>
+<section id="清朝-初刻初印-20" class="era">
+      <div class="era-head"><h2>清朝-初刻初印</h2><span class="era-count">6</span></div>
+      <div class="cards"><article class="card" data-year="1738">
+        <div class="time"><span class="year-pill">1738</span><span class="time-text">乾隆三年（1738年）</span></div>
+        <h3 class="card-title">（ 竣工）</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 经版初刻完成后存于故宫武英殿内</span><span class="meta-item org">🏛 和硕庄亲王允禄、和硕和亲王弘昼及贤良寺住持等领衔主持</span></div>
+        <a class="source" href="https://www.mct.gov.cn/whzx/tpxw/201701/t20170118_829685.htm" target="_blank" rel="noopener noreferrer">文化和旅游部政府门户网站<span class="ext">↗</span><span class="domain">mct.gov.cn</span></a>
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill">（乾隆年间）</span></div>
+        
+        
+        <div class="meta"><span class="meta-item place">📍 柏林寺</span><span class="meta-item org">🏛 后因刷印不便搬到东城柏林寺存放</span></div>
+        <a class="source" href="https://fo.ifeng.com/zhuanti/shijiefojiaoluntan2/lingshanhuichang/fabaozhiguang/200903/0328_353_54347.shtml" target="_blank" rel="noopener noreferrer">凤凰新媒体 ( 苏士澍/文物出版社社长)<span class="ext">↗</span><span class="domain">fo.ifeng.com</span></a>
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill">乾隆末年</span></div>
+        <h3 class="card-title">第六十集 化“腐朽”为神奇：云居寺修复师与《龙藏》木板经</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 迁入北京柏林寺</span></div>
+        <a class="source" href="https://wwj.beijing.gov.cn/bjww/362760/362767/bwgxh/spzl/325959169/index.html" target="_blank" rel="noopener noreferrer">北京市文物局<span class="ext">↗</span><span class="domain">wwj.beijing.gov.cn</span></a>
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill">刻成翌年</span></div>
+        
+        
+        <div class="meta"><span class="meta-item place">📍 颁赐京内外名刹</span><span class="meta-item org">🏛 朝廷刷印百部</span></div>
+        
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill muted">时间待考</span></div>
+        <h3 class="card-title">初印104部</h3>
+        <div class="info">104部</div>
+        <div class="meta"><span class="meta-item place">📍 颁赐各地禅院</span><span class="meta-item org">🏛 《乾隆版大藏经》的编刊工程浩大，负责其事的官员、学者、高僧等达60余人，监造人员80余人，还募集刻字、刷印和装帧等优秀工匠860余人，历时6年完成</span></div>
+        <a class="source" href="https://www.dpm.org.cn/ancient/special/148432.html" target="_blank" rel="noopener noreferrer">故宫博物院<span class="ext">↗</span><span class="domain">dpm.org.cn</span></a>
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill">乾隆二十七年</span></div>
+        
+        
+        <div class="meta"><span class="meta-item org">🏛 补印3部</span></div>
+        
+      </article></div>
+    </section>
+<section id="清朝-三次毁版-28" class="era">
+      <div class="era-head"><h2>清朝-三次毁版</h2><span class="era-count">2</span></div>
+      <div class="cards"><article class="card" data-year="">
+        <div class="time"><span class="time-pill">乾隆30/34/41年</span></div>
+        <h3 class="card-title">（三次撤经毁板事件）</h3>
+        <div class="info">下旨 共撤毁了800余块经版和其对应的近百卷典籍。在这些撤毁的经版中，包括了钱谦益的著作，武则天、明永乐皇帝等前朝帝王撰写的文章等</div>
+        
+        <a class="source" href="https://www.mct.gov.cn/whzx/tpxw/201701/t20170118_829685.htm" target="_blank" rel="noopener noreferrer">文化和旅游部政府门户网站<span class="ext">↗</span><span class="domain">mct.gov.cn</span></a>
+      </article>
+<article class="card" data-year="1765">
+        <div class="time"><span class="year-pill">1765</span><span class="time-text">乾隆三十年间1765/1769/1776</span></div>
+        <h3 class="card-title">（三次撤经毁板事件）</h3>
+        <div class="info multiline"><p>不久，《清藏》就发生了三次撤经毁板事件。</p><p>第一次是乾隆三十年（1765），撤出钱谦益撰《楞严经疏解蒙钞》六十卷，毁经板660块。</p><p>第二次是乾隆三十四年（1769），撤出《开元释教录略出》《辩伪录》《明仁孝皇后梦感佛说第一稀有大功德经》《永乐皇帝御制赞文》四种共30卷，毁掉经板138块。这时，全藏的实际数字是7168册，经板8238块。</p><p>第三次是乾隆四十一年（1776），抽出了《华严经》《大乘显识经》《入定不定印经》《方广大庄严经》《佛说契证大乘经》《大乘入楞伽经》等六部经前武则天撰写的序文。此次撤经文时，只有《华严经》前武则天序文的板被毁，其余五部经只抽出了武则天的序文，未毁经板。</p></div>
+        
+        <a class="source" href="http://www.gxwkzx.gxnu.edu.cn/2023/0610/c12765a301664/page.htm" target="_blank" rel="noopener noreferrer">广西人文社会科学发展研究中心<span class="ext">↗</span><span class="domain">gxwkzx.gxnu.edu.cn</span></a>
+      </article></div>
+    </section>
+<section id="清朝-初印本保存情况-32" class="era">
+      <div class="era-head"><h2>清朝-初印本保存情况</h2><span class="era-count">10</span></div>
+      <div class="cards"><article class="card" data-year="1767">
+        <div class="time"><span class="year-pill">1767</span><span class="time-text">乾隆三十二年（1767年）</span></div>
+        <h3 class="card-title">潮州密码「59」乾隆版《大藏经》：“国宝遗珠”缘何深藏潮州？</h3>
+        <div class="info">开元寺藏乾隆版《大藏经》不仅是初印103部之一，更是乾隆年间三次撤板后存世的罕见完本。</div>
+        <div class="meta"><span class="meta-item place">📍 潮州开元寺</span><span class="meta-item org">🏛 静会和尚护送钦赐法宝归寺</span></div>
+        <a class="source" href="https://baijiahao.baidu.com/s?id=1853719866750900952&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener noreferrer">南方+记者 刘梓薇<span class="ext">↗</span><span class="domain">baijiahao.baidu.com</span></a>
+      </article>
+<article class="card" data-year="1767">
+        <div class="time"><span class="year-pill">1767</span><span class="time-text">乾隆三十二年（公元1767年）</span></div>
+        <h3 class="card-title">跨越200多年的守护与传承！潮州开元寺藏乾隆版《大藏经》从残卷到“新生”</h3>
+        <div class="info">它以明《永乐北藏》为底本，历时3年雕刻完成，79036块雕版收录1667部经典，总字数达7600万。每块版片双面刻字25行，字体端庄规整，刀工细腻流畅。</div>
+        <div class="meta"><span class="meta-item place">📍 潮州开元寺</span><span class="meta-item org">🏛 开元寺方丈静会老和尚以八十岁高龄，携师侄道昆</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MzA3MDQyNzYzMQ==&amp;mid=2650896099&amp;idx=1&amp;sn=5e206cda95a2b42f84710c87f9e1a8b9&amp;chksm=85f8f7ac8edf80f601436d28734011e7713414efbfdcc77a2a6e62e00535a0bdabaea70e3bad&amp;scene=27" target="_blank" rel="noopener noreferrer">公众号-潮州日报<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article>
+<article class="card" data-year="1767">
+        <div class="time"><span class="year-pill">1767</span><span class="time-text">乾隆三十二年（1767年）</span></div>
+        <h3 class="card-title">潮州开元寺乾隆版《大藏经》修复取得阶段性成果</h3>
+        <div class="info">乾隆版《大藏经》始刻于雍正十三年（1735年），竣工于乾隆三年（1738年），乾隆三十二年（1767年）由时任开元寺方丈静会和尚请回，共1667卷7240册，另有目录五卷，并有经橱、木函、令旗、和硕庄亲王手书“万德庄严”匾额及“钦赐宝藏”石碑等原件，是我国历代官刻大藏经中很重要的一部，具有很高的历史、文献和艺术价值。</div>
+        <div class="meta"><span class="meta-item place">📍 潮州开元寺</span><span class="meta-item org">🏛 时任开元寺方丈静会和尚请回</span></div>
+        <a class="source" href="https://whly.gd.gov.cn/service_newwwbwg/content/post_4738424.html" target="_blank" rel="noopener noreferrer">广东省文化和旅游厅<span class="ext">↗</span><span class="domain">whly.gd.gov.cn</span></a>
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill">光绪三十年</span></div>
+        
+        <div class="info">除清雍正十一年至乾隆三年刻本之外，《清藏》其后虽有几次刷印，但经板迭有损毁，所以刷印出来的《乾隆大藏经》已经不是原来的模样了。迄今所知，保存完整的《乾隆大藏经》初刻本仅有四部：一部在日本龙谷大学图书馆，是清末慈禧太后寄赠日本西本愿寺的；一部在马来西亚槟城的极乐寺，是光绪三十年妙莲老和尚入京申请的；另外两部分别保存在中国香港和美国万佛城。</div>
+        <div class="meta"><span class="meta-item place">📍 马来西亚槟城的极乐寺</span><span class="meta-item org">🏛 妙莲老和尚入京申请的</span></div>
+        <a class="source" href="http://www.gxwkzx.gxnu.edu.cn/2023/0610/c12765a301664/page.htm" target="_blank" rel="noopener noreferrer">广西人文社会科学发展研究中心<span class="ext">↗</span><span class="domain">gxwkzx.gxnu.edu.cn</span></a>
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill">光绪年间</span></div>
+        <h3 class="card-title">湖州佛教的宋韵迹忆（一）湖州道场山万寿寺</h3>
+        <div class="info">此《大藏经》为光绪三年之前的印本</div>
+        <div class="meta"><span class="meta-item place">📍 湖州道场山万寿寺藏经楼</span><span class="meta-item org">🏛 光绪年间，法磬禅师赴京请藏，满载而归，不仅携龙藏归山，还获敕紫衣朝珠。</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MzAxNzE1NTQyMQ==&amp;mid=2652449729&amp;idx=1&amp;sn=d694e01e562d31e03fc36eca18025f45&amp;chksm=80045ff3b773d6e53f072c25255e32cfa4a2eceb25d98a8fe6d0abbb2c8e2f6e854aecef42dc&amp;scene=27" target="_blank" rel="noopener noreferrer">公众号-湖州佛教<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill">清末</span></div>
+        
+        <div class="info">除清雍正十一年至乾隆三年刻本之外，《清藏》其后虽有几次刷印，但经板迭有损毁，所以刷印出来的《乾隆大藏经》已经不是原来的模样了。迄今所知，保存完整的《乾隆大藏经》初刻本仅有四部：一部在日本龙谷大学图书馆，是清末慈禧太后寄赠日本西本愿寺的；一部在马来西亚槟城的极乐寺，是光绪三十年妙莲老和尚入京申请的；另外两部分别保存在中国香港和美国万佛城。</div>
+        <div class="meta"><span class="meta-item place">📍 日本龙谷大学图书馆</span><span class="meta-item org">🏛 慈禧太后寄赠日本西本愿寺</span></div>
+        <a class="source" href="http://www.gxwkzx.gxnu.edu.cn/2023/0610/c12765a301664/page.htm" target="_blank" rel="noopener noreferrer">广西人文社会科学发展研究中心<span class="ext">↗</span><span class="domain">gxwkzx.gxnu.edu.cn</span></a>
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill muted">时间待考</span></div>
+        
+        <div class="info">除清雍正十一年至乾隆三年刻本之外，《清藏》其后虽有几次刷印，但经板迭有损毁，所以刷印出来的《乾隆大藏经》已经不是原来的模样了。迄今所知，保存完整的《乾隆大藏经》初刻本仅有四部：一部在日本龙谷大学图书馆，是清末慈禧太后寄赠日本西本愿寺的；一部在马来西亚槟城的极乐寺，是光绪三十年妙莲老和尚入京申请的；另外两部分别保存在中国香港和美国万佛城。</div>
+        <div class="meta"><span class="meta-item place">📍 中国香港和美国万佛城</span></div>
+        <a class="source" href="http://www.gxwkzx.gxnu.edu.cn/2023/0610/c12765a301664/page.htm" target="_blank" rel="noopener noreferrer">广西人文社会科学发展研究中心<span class="ext">↗</span><span class="domain">gxwkzx.gxnu.edu.cn</span></a>
+      </article>
+<article class="card" data-year="1990">
+        <div class="time"><span class="year-pill">1990</span><span class="time-text">1990年</span></div>
+        <h3 class="card-title">湖州万寿寺典故</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 从南浔嘉业堂取回，御赐乾隆大藏经。</span><span class="meta-item org">🏛 百度知道顶级答主：誉祥祥知识</span></div>
+        <a class="source" href="https://zhidao.baidu.com/question/444345690015218284.html" target="_blank" rel="noopener noreferrer">百度知道<span class="ext">↗</span><span class="domain">zhidao.baidu.com</span></a>
+      </article>
+<article class="card" data-year="1993">
+        <div class="time"><span class="year-pill">1993</span><span class="time-text">1993年初</span></div>
+        <h3 class="card-title">完整乾隆版《大藏经》国内“绝无仅有”</h3>
+        <div class="info">赵老称，像泰州光孝寺保存如此完好的，绝无仅有。</div>
+        <div class="meta"><span class="meta-item place">📍 泰州光孝寺、扬州旌忠寺</span><span class="meta-item org">🏛 全国政协副主席、中国佛教协会会长赵朴初</span></div>
+        <a class="source" href="https://baijiahao.baidu.com/s?id=1596152937093134294&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener noreferrer">中国江苏网<span class="ext">↗</span><span class="domain">baijiahao.baidu.com</span></a>
+      </article>
+<article class="card" data-year="2024">
+        <div class="time"><span class="year-pill">2024</span><span class="time-text">2024-06-15</span></div>
+        <h3 class="card-title">千年佛典！</h3>
+        <div class="info">此次展出的《乾隆大藏经》保存于浙江图书馆南浔嘉业堂藏书楼，从经柜到藏经箱，均为原装旧匣。</div>
+        <div class="meta"><span class="meta-item place">📍 浙江图书馆南浔嘉业堂藏书楼</span><span class="meta-item org">🏛 “佛典浙韵”浙图、径山寺两地开展！</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MjM5NDI2NzczNA==&amp;mid=2650559926&amp;idx=1&amp;sn=e76bfcea1ae60b99aa8f17c61936b4ce&amp;scene=21&amp;poc_token=HMJGtGqjM5vhS8rb_V-9g09F4JBqMVbJJ3cScWv5" target="_blank" rel="noopener noreferrer">公众号-上海书画出版社<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article></div>
+    </section>
+<section id="民国-45" class="era">
+      <div class="era-head"><h2>民国</h2><span class="era-count">1</span></div>
+      <div class="cards"><article class="card" data-year="">
+        <div class="time"><span class="time-pill">民国年间</span></div>
+        <h3 class="card-title">陆续刷印了数十部</h3>
+        <div class="info">共印行150余部</div>
+        
+        <a class="source" href="https://www.dpm.org.cn/ancient/special/148432.html" target="_blank" rel="noopener noreferrer">故宫博物院<span class="ext">↗</span><span class="domain">dpm.org.cn</span></a>
+      </article></div>
+    </section>
+<section id="新中国-49" class="era">
+      <div class="era-head"><h2>新中国</h2><span class="era-count">4</span></div>
+      <div class="cards"><article class="card" data-year="1956">
+        <div class="time"><span class="year-pill">1956</span><span class="time-text">1956年4月~1958年11月</span></div>
+        <h3 class="card-title">中国佛协60年：走过不凡历程</h3>
+        <div class="info">对北京房山石经进行调查、发掘、整理、拓印 （非乾隆大藏经）</div>
+        <div class="meta"><span class="meta-item place">📍 北京市房山区云居寺及石经山</span><span class="meta-item org">🏛 中国佛教协会组织相关人员</span></div>
+        <a class="source" href="http://iwr.cass.cn/qt/xsdt/xw/201308/t20130827_3048563.html" target="_blank" rel="noopener noreferrer">中国宗教学术网<span class="ext">↗</span><span class="domain">iwr.cass.cn</span></a>
+      </article>
+<article class="card" data-year="">
+        <div class="time"><span class="time-pill">“十年动乱中”</span></div>
+        
+        <div class="info">部分版片受潮变形损毁</div>
+        <div class="meta"><span class="meta-item place">📍 （乾隆大藏经）经版被移简易库房中</span></div>
+        <a class="source" href="https://fo.ifeng.com/zhuanti/shijiefojiaoluntan2/lingshanhuichang/fabaozhiguang/200903/0328_353_54347.shtml" target="_blank" rel="noopener noreferrer">凤凰新媒体 ( 苏士澍/文物出版社社长)<span class="ext">↗</span><span class="domain">fo.ifeng.com</span></a>
+      </article>
+<article class="card" data-year="1982">
+        <div class="time"><span class="year-pill">1982</span><span class="time-text">1982年</span></div>
+        
+        
+        <div class="meta"><span class="meta-item place">📍 （乾隆大藏经）经版运到智化寺，由北京市文物局保管。</span><span class="meta-item org">🏛 中央批准</span></div>
+        <a class="source" href="https://fo.ifeng.com/zhuanti/shijiefojiaoluntan2/lingshanhuichang/fabaozhiguang/200903/0328_353_54347.shtml" target="_blank" rel="noopener noreferrer">凤凰新媒体 ( 苏士澍/文物出版社社长)<span class="ext">↗</span><span class="domain">fo.ifeng.com</span></a>
+      </article>
+<article class="card" data-year="1982">
+        <div class="time"><span class="year-pill">1982</span><span class="time-text">1982年7月</span></div>
+        <h3 class="card-title">第六十集 化“腐朽”为神奇：云居寺修复师与《龙藏》木板经</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 经板被移至智化寺保存，由北京市文物局保管；</span></div>
+        <a class="source" href="https://wwj.beijing.gov.cn/bjww/362760/362767/bwgxh/spzl/325959169/index.html" target="_blank" rel="noopener noreferrer">北京市文物局<span class="ext">↗</span><span class="domain">wwj.beijing.gov.cn</span></a>
+      </article></div>
+    </section>
+<section id="新中国-第一次重印-55" class="era">
+      <div class="era-head"><h2>新中国-第一次重印</h2><span class="era-count">15</span></div>
+      <div class="cards"><article class="card" data-year="1987">
+        <div class="time"><span class="year-pill">1987</span><span class="time-text">1987年10月</span></div>
+        <h3 class="card-title">第六十集 化“腐朽”为神奇：云居寺修复师与《龙藏》木板经</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 经板运抵大兴县韩营古籍印刷厂进行刷印；</span></div>
+        <a class="source" href="https://wwj.beijing.gov.cn/bjww/362760/362767/bwgxh/spzl/325959169/index.html" target="_blank" rel="noopener noreferrer">北京市文物局<span class="ext">↗</span><span class="domain">wwj.beijing.gov.cn</span></a>
+      </article>
+<article class="card" data-year="1987">
+        <div class="time"><span class="year-pill">1987</span><span class="time-text">1987年10月</span></div>
+        
+        <div class="info">智化寺所藏经版73024块安全运抵</div>
+        <div class="meta"><span class="meta-item place">📍 北京大兴韩营古籍印刷厂</span></div>
+        <a class="source" href="https://fo.ifeng.com/zhuanti/shijiefojiaoluntan2/lingshanhuichang/fabaozhiguang/200903/0328_353_54347.shtml" target="_blank" rel="noopener noreferrer">凤凰新媒体 ( 苏士澍/文物出版社社长)<span class="ext">↗</span><span class="domain">fo.ifeng.com</span></a>
+      </article>
+<article class="card" data-year="1987">
+        <div class="time"><span class="year-pill">1987</span><span class="time-text">1987-12-29</span></div>
+        <h3 class="card-title">重印《乾隆版大藏经》汇报会在京举行</h3>
+        <div class="info">本刊讯由中国佛教协会、北京市文物局、文物出版社联合召开的重印《乾隆版大藏经》汇报会于1987年12月29日在北京广济寺举行。汇报会山由中国佛教协会副会长周绍良主持。到会的有首都佛教界、文化界、新闻出版界人士50多人。</div>
+        <div class="meta"><span class="meta-item place">📍 北京广济寺</span><span class="meta-item org">🏛 中国佛教协会、北京市文物局、文物出版社联合召开</span></div>
+        <a class="source" href="https://www.cnki.com.cn/Article/CJFDTOTAL-FYZZ198803029.htm" target="_blank" rel="noopener noreferrer">中国知网<span class="ext">↗</span><span class="domain">cnki.com.cn</span></a>
+      </article>
+<article class="card" data-year="1988">
+        <div class="time"><span class="year-pill">1988</span><span class="time-text">1988年</span></div>
+        <h3 class="card-title">利用此板再次重印</h3>
+        <div class="info">7167卷 1665种。</div>
+        <div class="meta"><span class="meta-item place">📍 文物出版社</span></div>
+        <a class="source" href="https://www.dpm.org.cn/ancient/special/148432.html" target="_blank" rel="noopener noreferrer">故宫博物院<span class="ext">↗</span><span class="domain">dpm.org.cn</span></a>
+      </article>
+<article class="card" data-year="1988">
+        <div class="time"><span class="year-pill">1988</span><span class="time-text">1988年4月</span></div>
+        <h3 class="card-title">《乾隆版大藏经》琐记</h3>
+        <div class="info">正式开印</div>
+        <div class="meta"><span class="meta-item place">📍 北京大兴韩营古籍印刷厂</span><span class="meta-item org">🏛 琉璃厂退休老匠师，培训工人</span></div>
+        <a class="source" href="https://fo.ifeng.com/zhuanti/shijiefojiaoluntan2/lingshanhuichang/fabaozhiguang/200903/0328_353_54347.shtml" target="_blank" rel="noopener noreferrer">凤凰新媒体 ( 苏士澍/文物出版社社长)<span class="ext">↗</span><span class="domain">fo.ifeng.com</span></a>
+      </article>
+<article class="card" data-year="1988">
+        <div class="time"><span class="year-pill">1988</span><span class="time-text">1988-11-24</span></div>
+        <h3 class="card-title">合作重印出版的《乾隆版大藏经》在北京首发。</h3>
+        
+        <div class="meta"><span class="meta-item org">🏛 中国佛教协会、北京市文物局、文物出版社</span></div>
+        <a class="source" href="http://iwr.cass.cn/qt/xsdt/xw/201308/t20130827_3048563.html" target="_blank" rel="noopener noreferrer">中国宗教学术网<span class="ext">↗</span><span class="domain">iwr.cass.cn</span></a>
+      </article>
+<article class="card" data-year="1988">
+        <div class="time"><span class="year-pill">1988</span><span class="time-text">1988-11-24</span></div>
+        <h3 class="card-title">《乾隆大藏经》首发式</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 人民大会堂</span><span class="meta-item org">🏛 由中国佛教协会、北京文物局、文物出版局、文物出版社合作重印出版</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MzA3OTg2MTI4OQ==&amp;mid=2650601944&amp;idx=1&amp;sn=ee37085e59412dd579bba81b3606d454&amp;chksm=87a55a9eb0d2d388bb6f083e807b1d5b535c207cd2f4ce0a461448a51e94d72fcb28309e5b05&amp;scene=27" target="_blank" rel="noopener noreferrer">公众号-杭州佛学院<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article>
+<article class="card" data-year="1988">
+        <div class="time"><span class="year-pill">1988</span><span class="time-text">1988-11-24</span></div>
+        <h3 class="card-title">《乾隆版大藏经》发行仪式在京举行</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 北京人民大会堂西藏厅</span><span class="meta-item org">🏛 全国人大常委会副委员长、中国佛教协会名誉会长班禅额尔德尼·确吉坚赞,全国政协副主席、中国佛教协会会长赵朴初到会祝贺</span></div>
+        <a class="source" href="https://www.cnki.com.cn/Article/CJFDTOTAL-FYZZ198902019.htm" target="_blank" rel="noopener noreferrer">中国知网<span class="ext">↗</span><span class="domain">cnki.com.cn</span></a>
+      </article>
+<article class="card" data-year="1988">
+        <div class="time"><span class="year-pill">1988</span><span class="time-text">1988-11-24</span></div>
+        <h3 class="card-title">《乾隆版大藏经》发行仪式在京举行</h3>
+        <div class="info">赵朴初先生指出：“大藏经是人类文化史上极为罕见的巍峨丰碑，凝聚了中国世代人的聪明和辛勤劳动，体现了中华民族的坚韧精神和伟大气魄，是我们引以为自豪的无价的精神宝藏。文物出版社将濒于失传的大藏经完整地公布于世，为保存祖国传统文化做出了重要贡献。”</div>
+        <div class="meta"><span class="meta-item place">📍 北京人民大会堂西藏厅</span><span class="meta-item org">🏛 全国人大常委会副委员长、中国佛教协会名誉会长班禅额尔德尼·确吉坚赞,全国政协副主席、中国佛教协会会长赵朴初 出席并予以高度评价。</span></div>
+        <a class="source" href="https://fo.ifeng.com/zhuanti/shijiefojiaoluntan2/lingshanhuichang/fabaozhiguang/200903/0328_353_54347.shtml" target="_blank" rel="noopener noreferrer">凤凰新媒体 ( 苏士澍/文物出版社社长)<span class="ext">↗</span><span class="domain">fo.ifeng.com</span></a>
+      </article>
+<article class="card" data-year="1989">
+        <div class="time"><span class="year-pill">1989</span><span class="time-text">1989-01-09</span></div>
+        <h3 class="card-title">藏经楼宣告落成， 终于补齐了《大藏经》</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 泰州光孝寺</span><span class="meta-item org">🏛 泰州光孝寺、扬州旌忠寺</span></div>
+        <a class="source" href="https://baijiahao.baidu.com/s?id=1596152937093134294&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener noreferrer">中国江苏网<span class="ext">↗</span><span class="domain">baijiahao.baidu.com</span></a>
+      </article>
+<article class="card" data-year="1989">
+        <div class="time"><span class="year-pill">1989</span><span class="time-text">1989年2月</span></div>
+        <h3 class="card-title">第六十集 化“腐朽”为神奇：云居寺修复师与《龙藏》木板经</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 经板刷印后不再运回智化寺，而是移至云居寺为《龙藏》专门建立的库房中存放</span><span class="meta-item org">🏛 北京市文物局和房山区政府商定</span></div>
+        <a class="source" href="https://wwj.beijing.gov.cn/bjww/362760/362767/bwgxh/spzl/325959169/index.html" target="_blank" rel="noopener noreferrer">北京市文物局<span class="ext">↗</span><span class="domain">wwj.beijing.gov.cn</span></a>
+      </article>
+<article class="card" data-year="1990">
+        <div class="time"><span class="year-pill">1990</span><span class="time-text">1990年6月</span></div>
+        <h3 class="card-title">《乾隆版大藏经》琐记</h3>
+        <div class="info">全部印装完毕</div>
+        <div class="meta"><span class="meta-item place">📍 北京大兴韩营古籍印刷厂</span><span class="meta-item org">🏛 琉璃厂退休老匠师，培训工人</span></div>
+        <a class="source" href="https://fo.ifeng.com/zhuanti/shijiefojiaoluntan2/lingshanhuichang/fabaozhiguang/200903/0328_353_54347.shtml" target="_blank" rel="noopener noreferrer">凤凰新媒体 ( 苏士澍/文物出版社社长)<span class="ext">↗</span><span class="domain">fo.ifeng.com</span></a>
+      </article>
+<article class="card" data-year="1991">
+        <div class="time"><span class="year-pill">1991</span><span class="time-text">1991年1月</span></div>
+        <h3 class="card-title">《乾隆版大藏经》琐记</h3>
+        <div class="info">重印工程圆满结束</div>
+        <div class="meta"><span class="meta-item place">📍 全部经版运交房山云居寺</span></div>
+        <a class="source" href="https://fo.ifeng.com/zhuanti/shijiefojiaoluntan2/lingshanhuichang/fabaozhiguang/200903/0328_353_54347.shtml" target="_blank" rel="noopener noreferrer">凤凰新媒体 ( 苏士澍/文物出版社社长)<span class="ext">↗</span><span class="domain">fo.ifeng.com</span></a>
+      </article>
+<article class="card" data-year="1991">
+        <div class="time"><span class="year-pill">1991</span><span class="time-text">1991年</span></div>
+        <h3 class="card-title">《乾隆版大藏经》琐记</h3>
+        <div class="info">将一部《大藏经》作为国礼赠送给泰国国王</div>
+        <div class="meta"><span class="meta-item place">📍 出访泰国</span><span class="meta-item org">🏛 时任国家主席的杨尚昆同志</span></div>
+        <a class="source" href="https://fo.ifeng.com/zhuanti/shijiefojiaoluntan2/lingshanhuichang/fabaozhiguang/200903/0328_353_54347.shtml" target="_blank" rel="noopener noreferrer">凤凰新媒体 ( 苏士澍/文物出版社社长)<span class="ext">↗</span><span class="domain">fo.ifeng.com</span></a>
+      </article>
+<article class="card" data-year="1993">
+        <div class="time"><span class="year-pill">1993</span><span class="time-text">1993年7月</span></div>
+        <h3 class="card-title">北京市文物局和北京石刻博物馆重印《龙藏》</h3>
+        <div class="info">云居寺藏《龙藏》木经板文物保护修复计划书</div>
+        <div class="meta"><span class="meta-item place">📍 将大部分经板存放到了北京昌平的十三陵文物库房内，云居寺目前珍藏着7000余块《龙藏》木经板。</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MzA5MDY5NjEzOA==&amp;mid=2649515752&amp;idx=1&amp;sn=23dbccc0e96dc5c3270b1a8c048319c5&amp;chksm=89e18f051bc5309d676fa91430702a90ec481e7c651f1bd27737af64807ac719594a1794fd43&amp;scene=27" target="_blank" rel="noopener noreferrer">公众号-大美房山/云居寺石经博物馆的王晓宁<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article></div>
+    </section>
+<section id="新中国-第二次重印-72" class="era">
+      <div class="era-head"><h2>新中国-第二次重印</h2><span class="era-count">2</span></div>
+      <div class="cards"><article class="card" data-year="2004">
+        <div class="time"><span class="year-pill">2004</span><span class="time-text">2004-06-26</span></div>
+        <h3 class="card-title">清乾隆版《大藏经》即将重印 堪称佛教百科全书</h3>
+        <div class="info">将由文物出版社、北京经律论文化传播有限公司等单位重印并出版。</div>
+        <div class="meta"><span class="meta-item place">📍 人民大会堂举行的新闻发布会</span><span class="meta-item org">🏛 中新社北京六月二十六日电</span></div>
+        
+      </article>
+<article class="card" data-year="2006">
+        <div class="time"><span class="year-pill">2006</span><span class="time-text">2006年4月13日至16日</span></div>
+        <h3 class="card-title">乾隆大藏经重印本现身首届世界佛教论坛会场</h3>
+        <div class="info">724函、总计1675部。至清末共印132部。</div>
+        <div class="meta"><span class="meta-item place">📍 浙江人民大会堂</span><span class="meta-item org">🏛 首届世界佛教论坛</span></div>
+        <a class="source" href="https://www.zsodl.cn/zjwh/1395.jhtml" target="_blank" rel="noopener noreferrer">舟山海洋数字图书馆<span class="ext">↗</span><span class="domain">zsodl.cn</span></a>
+      </article></div>
+    </section>
+<section id="新中国-第二次重印后-168册影印版-76" class="era">
+      <div class="era-head"><h2>新中国-第二次重印后-168册影印版</h2><span class="era-count">8</span></div>
+      <div class="cards"><article class="card" data-year="1997">
+        <div class="time"><span class="year-pill">1997</span><span class="time-text">1997年</span></div>
+        
+        <div class="info">168册</div>
+        <div class="meta"><span class="meta-item place">📍 浙江图书馆之江馆区</span><span class="meta-item org">🏛 著者： 宝印佛经流通处；出版社： 乾隆版大藏经刊印处</span></div>
+        <a class="source" href="https://www.zjlib.cn/search?q=%E4%B9%BE%E9%9A%86%E5%A4%A7%E8%97%8F%E7%BB%8F%EF%BC%8E%E7%AC%AC1%E5%86%8C%EF%BC%8C%E5%A4%A7%E4%B9%98%E7%BB%8F+%E8%88%AC%E8%8B%A5%E9%83%A8(%E4%B8%80)&amp;searchWay=1955822119611236354&amp;searchMode=2" target="_blank" rel="noopener noreferrer">浙江图书馆<span class="ext">↗</span><span class="domain">zjlib.cn</span></a>
+      </article>
+<article class="card" data-year="2004">
+        <div class="time"><span class="year-pill">2004</span><span class="time-text">2004年12月</span></div>
+        <h3 class="card-title">根据台湾佛陀教育基金会出版的《乾隆大藏经》进行影印</h3>
+        <div class="info">全套共169册</div>
+        <div class="meta"><span class="meta-item place">📍 丽江市图书馆</span><span class="meta-item org">🏛 河北省佛教协会（为中共河北省委统战部所属全额拨款事业单位）</span></div>
+        <a class="source" href="https://www.ljstsg.cn/?p=6315" target="_blank" rel="noopener noreferrer">丽江市图书馆<span class="ext">↗</span><span class="domain">ljstsg.cn</span></a>
+      </article>
+<article class="card" data-year="2007">
+        <div class="time"><span class="year-pill">2007</span><span class="time-text">2007年5月</span></div>
+        <h3 class="card-title">乾隆大藏经(共168册)(精)</h3>
+        <div class="info">根据故宫珍藏原版影印</div>
+        <div class="meta"><span class="meta-item place">📍 中国版本图书馆CIP数据核字（2007）第040309号</span><span class="meta-item org">🏛 作者:(清)雍正敕修出版社:中国书店</span></div>
+        <a class="source" href="https://product.dangdang.com/11084474556.html" target="_blank" rel="noopener noreferrer">当当.com<span class="ext">↗</span><span class="domain">product.dangdang.com</span></a>
+      </article>
+<article class="card" data-year="2008">
+        <div class="time"><span class="year-pill">2008</span><span class="time-text">2008年</span></div>
+        <h3 class="card-title">题名：乾隆大藏经：精缩新版</h3>
+        <div class="info">载体形态：168册 ；版本：[影印本]</div>
+        <div class="meta"><span class="meta-item place">📍 浙江图书馆德清书库中文图书保存本</span><span class="meta-item org">🏛 出版社：中国文史出版社</span></div>
+        <a class="source" href="https://www.zjlib.cn/search/book?id=110000012147837&amp;searchMode=%E6%99%AE%E9%80%9A%E6%A3%80%E7%B4%A2&amp;q=%E4%B9%BE%E9%9A%86%E5%A4%A7%E8%97%8F%E7%BB%8F" target="_blank" rel="noopener noreferrer">浙江图书馆<span class="ext">↗</span><span class="domain">zjlib.cn</span></a>
+      </article>
+<article class="card" data-year="2010">
+        <div class="time"><span class="year-pill">2010</span><span class="time-text">2010年10月</span></div>
+        <h3 class="card-title">乾隆大藏经（精装全一百六十八册）</h3>
+        
+        <div class="meta"><span class="meta-item org">🏛 河北省佛教协会、 宗教文化出版社</span></div>
+        <a class="source" href="https://product.dangdang.com/22497432.html" target="_blank" rel="noopener noreferrer">当当.com<span class="ext">↗</span><span class="domain">product.dangdang.com</span></a>
+      </article>
+<article class="card" data-year="2015">
+        <div class="time"><span class="year-pill">2015</span><span class="time-text">2015-12-17</span></div>
+        <h3 class="card-title">妙华法师为我校图书馆捐赠佛教经典藏书</h3>
+        <div class="info">《乾隆大藏经》一套169册。</div>
+        <div class="meta"><span class="meta-item place">📍 上海师范大学</span><span class="meta-item org">🏛 上海宝山区药师道场萧泾古寺住持妙华法师， 我校副校长朱国权，校监、语言文化学院院长史文，资产设备处处长朱清，图书馆馆长吴志荣等领导出席了图书捐赠仪式</span></div>
+        <span class="source text">上海师范大学天华学院</span>
+      </article>
+<article class="card" data-year="2019">
+        <div class="time"><span class="year-pill">2019</span><span class="time-text">2019-07-12</span></div>
+        <h3 class="card-title">东宝·仲巴活佛向我馆捐赠《乾隆大藏经》</h3>
+        <div class="info">全套共169册</div>
+        <div class="meta"><span class="meta-item place">📍 丽江市图书馆</span><span class="meta-item org">🏛 东宝·仲巴活佛。 丽江市民族宗教局副局长、市佛教协会秘书长郭明生主持。</span></div>
+        <a class="source" href="https://www.ljstsg.cn/?p=6315" target="_blank" rel="noopener noreferrer">丽江市图书馆<span class="ext">↗</span><span class="domain">ljstsg.cn</span></a>
+      </article>
+<article class="card" data-year="2024">
+        <div class="time"><span class="year-pill">2024</span><span class="time-text">2024-10-16</span></div>
+        <h3 class="card-title">特色馆藏：乾隆大藏经</h3>
+        <div class="info">卷册数：168册</div>
+        <div class="meta"><span class="meta-item place">📍 南京财经大学图书馆</span><span class="meta-item org">🏛 出版社：（台湾）佛陀教育基金会</span></div>
+        <a class="source" href="http://lib.nufe.edu.cn/2024/1016/c345a9172/page.htm" target="_blank" rel="noopener noreferrer">南京财经大学图书馆<span class="ext">↗</span><span class="domain">lib.nufe.edu.cn</span></a>
+      </article></div>
+    </section>
+<section id="新中国-第三次重印-87" class="era">
+      <div class="era-head"><h2>新中国-第三次重印</h2><span class="era-count">4</span></div>
+      <div class="cards"><article class="card" data-year="2009">
+        <div class="time"><span class="year-pill">2009</span><span class="time-text">2009年</span></div>
+        <h3 class="card-title">正式启动《清敕修藏经》文物保护项目</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 （国家相关部门 ）</span><span class="meta-item org">🏛 《清敕修大藏经》经版修复保护工作委员会</span></div>
+        <a class="source" href="https://www.mct.gov.cn/whzx/tpxw/201701/t20170118_829685.htm" target="_blank" rel="noopener noreferrer">文化和旅游部政府门户网站<span class="ext">↗</span><span class="domain">mct.gov.cn</span></a>
+      </article>
+<article class="card" data-year="2009">
+        <div class="time"><span class="year-pill">2009</span><span class="time-text">2009年</span></div>
+        <h3 class="card-title">承接了《清敕修大藏经》经板保护、修复项目。</h3>
+        <div class="info">他们想要恢复重印的，便是未经删改过的乾隆初刻初印本。</div>
+        <div class="meta"><span class="meta-item place">📍 北京大兴的修复基地</span><span class="meta-item org">🏛 北京文物局委托北京邦普制版印刷有限公司</span></div>
+        <a class="source" href="https://paper.people.com.cn/rmrbhwb/html/2015-08/14/content_1598881.htm" target="_blank" rel="noopener noreferrer">人民日报海外版<span class="ext">↗</span><span class="domain">paper.people.com.cn</span></a>
+      </article>
+<article class="card" data-year="2014">
+        <div class="time"><span class="year-pill">2014</span><span class="time-text">2014年底</span></div>
+        <h3 class="card-title">经板的修复和补刻工作基本完成，开始重印《清敕修大藏经》</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 北京大兴的修复基地</span><span class="meta-item org">🏛 聘请了故宫博物院等的专家来传授技艺</span></div>
+        <a class="source" href="https://paper.people.com.cn/rmrbhwb/html/2015-08/14/content_1598881.htm" target="_blank" rel="noopener noreferrer">人民日报海外版<span class="ext">↗</span><span class="domain">paper.people.com.cn</span></a>
+      </article>
+<article class="card" data-year="2015">
+        <div class="time"><span class="year-pill">2015</span><span class="time-text">2015-08-14</span></div>
+        <h3 class="card-title">《清敕修大藏经》喜获重印</h3>
+        <div class="info">经板79036块。全藏724函，千字文编次天字至机字，1669部，7168卷。 一共刷印了80部</div>
+        <div class="meta"><span class="meta-item place">📍 北京大兴的修复基地</span><span class="meta-item org">🏛 《清敕修大藏经》经板保护、修复工作领导小组办公室副主任韩崇</span></div>
+        <a class="source" href="https://paper.people.com.cn/rmrbhwb/html/2015-08/14/content_1598881.htm" target="_blank" rel="noopener noreferrer">人民日报海外版<span class="ext">↗</span><span class="domain">paper.people.com.cn</span></a>
+      </article></div>
+    </section>
+<section id="新中国-第三次重印后捐赠情况-93" class="era">
+      <div class="era-head"><h2>新中国-第三次重印后捐赠情况</h2><span class="era-count">7</span></div>
+      <div class="cards"><article class="card" data-year="2017">
+        <div class="time"><span class="year-pill">2017</span><span class="time-text">2017-01-18</span></div>
+        <h3 class="card-title">原版刷印《清敕修大藏经》捐赠故宫博物院</h3>
+        <div class="info">再现了雍乾盛世初雕时的完整风貌，仅刷印八十部</div>
+        <div class="meta"><span class="meta-item place">📍 国家图书馆出版社正式出版</span><span class="meta-item org">🏛 北京邦普制版印刷有限公司承制</span></div>
+        <a class="source" href="https://www.mct.gov.cn/whzx/tpxw/201701/t20170118_829685.htm" target="_blank" rel="noopener noreferrer">文化和旅游部政府门户网站<span class="ext">↗</span><span class="domain">mct.gov.cn</span></a>
+      </article>
+<article class="card" data-year="2017">
+        <div class="time"><span class="year-pill">2017</span><span class="time-text">2017-01-18</span></div>
+        <h3 class="card-title">原版刷印《清敕修大藏经》捐赠故宫博物院</h3>
+        <div class="info">找到并完整补齐了《清敕修大藏经》乾隆初印本的全部底本内容</div>
+        <div class="meta"><span class="meta-item place">📍 故宫博物院</span><span class="meta-item org">🏛 文化部党组成员、故宫博物院院长单霁翔， 《清敕修大藏经》经版修复保护项目委员会首席专家、总顾问延藏法师</span></div>
+        <a class="source" href="https://www.mct.gov.cn/whzx/tpxw/201701/t20170118_829685.htm" target="_blank" rel="noopener noreferrer">文化和旅游部政府门户网站<span class="ext">↗</span><span class="domain">mct.gov.cn</span></a>
+      </article>
+<article class="card" data-year="2017">
+        <div class="time"><span class="year-pill">2017</span><span class="time-text">2017-01-18</span></div>
+        <h3 class="card-title">《大藏经》回家了</h3>
+        <div class="info">藏经以《千字文》编号，自“天”字起至“机”字止，共724字，每字一函，全藏共724函，每函10册，共计7240册。全藏共收入佛教经、律、论等部著作共1669部，7168卷。 经查实，《清御制龙藏经》经版存69410块，佚失9626块，现存中还有20%以上的经版存在不同程度损坏。 “经版不会再进行刊印，目前市面上只刊印了80套，其中一套入藏故宫。”工作人员介绍，这些全部是原版手工印刷完成。“连用纸都有讲究，使用的是安徽产的手工碱性宣纸。”</div>
+        <div class="meta"><span class="meta-item place">📍 故宫博物院</span><span class="meta-item org">🏛 《光明日报》（ 2017年01月18日 09版）</span></div>
+        <a class="source" href="https://epaper.gmw.cn/gmrb/html/2017-01/18/nw.D110000gmrb_20170118_1-09.htm?div=-1" target="_blank" rel="noopener noreferrer">光明日报社<span class="ext">↗</span><span class="domain">epaper.gmw.cn</span></a>
+      </article>
+<article class="card" data-year="2019">
+        <div class="time"><span class="year-pill">2019</span><span class="time-text">2019-09-17</span></div>
+        <h3 class="card-title">陕西历史博物馆入藏原版刷印《清敕修大藏经》</h3>
+        <div class="info">共收经1669部，7168卷，分作724函，7240册。并以《千字文》编号，始“天”终“机”。</div>
+        <div class="meta"><span class="meta-item place">📍 陕西历史博物馆</span><span class="meta-item org">🏛 陕西历史博物馆党委副书记、副馆长王炜林表示，此次《清敕修大藏经》经版修复保护项目委员会首席专家、总顾问延藏法师将95箱《清敕修大藏经》和3件艺术珍品捐赠给陕西历史博物馆，保护了佛教文化遗产，丰富了博物馆的馆藏，传承了博大精深的中华文化。 陕西历史博物馆党委书记、馆长强跃向捐赠者颁发了捐赠证书。 此次陕西历史博物馆受赠的刷印本是经2009年国家相关部门批准后启动的《清敕修大藏经》文物保护项目，由国家图书馆出版社正式出版，原大原色原样呈现，仅刷印80部。</span></div>
+        <a class="source" href="https://www.chinanews.com/cul/2019/09-17/8957931.shtml" target="_blank" rel="noopener noreferrer">中新网<span class="ext">↗</span><span class="domain">chinanews.com</span></a>
+      </article>
+<article class="card" data-year="2022">
+        <div class="time"><span class="year-pill">2022</span><span class="time-text">2022-11-30</span></div>
+        <h3 class="card-title">哪些珍贵赠品入藏杭州国家版本馆</h3>
+        <div class="info">《乾隆大藏经》7245册</div>
+        <div class="meta"><span class="meta-item place">📍 杭州国家版本馆</span><span class="meta-item org">🏛 北京藏家张玉坤先生捐赠《乾隆大藏经》7245册 。 浙江省委常委、宣传部部长王纲向金亮等藏家代表颁发了捐赠证书。 浙江省委宣传部常务副部长来颖杰为专家委员颁发了聘书。</span></div>
+        <a class="source" href="https://baijiahao.baidu.com/s?id=1750883197524212547&amp;wfr=spider&amp;for=pc" target="_blank" rel="noopener noreferrer">潮闻天下传媒<span class="ext">↗</span><span class="domain">baijiahao.baidu.com</span></a>
+      </article>
+<article class="card" data-year="2024">
+        <div class="time"><span class="year-pill">2024</span><span class="time-text">2024-06-06</span></div>
+        <h3 class="card-title">《清敕修大藏经》（原版刷印本） 捐赠仪式举行</h3>
+        <div class="info">原版刷印《清敕修大藏经》95箱，共725函、1669部、7245册；</div>
+        <div class="meta"><span class="meta-item place">📍 平凉市博物馆</span><span class="meta-item org">🏛 《清敕修大藏经》经版修复保护项目工作委员会首席专家、总顾问，北京市文物保护基金会名誉理事长、甘肃省丝绸之路协会名誉会长延藏等4位社会贤达 。 市委常委、宣传部部长王锦，市人大常委会副主任白玉、市政府副市长张拴会、市政协副主席郭宏出席捐赠仪式，并为捐赠代表颁发收藏证书及荣誉牌。张拴会及捐赠代表甘肃省生产力学会名誉会长、甘肃省政府原副秘书长朱宏分别致辞。</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MzA5NTA0NDYwOQ==&amp;mid=2652754148&amp;idx=1&amp;sn=7207d8281c4ee0bcb9006a8111de12d7&amp;chksm=8bac258abcdbac9cb6e4283687a46bd71746703a8b829bdda34e038b02ad5f7856e59716ba02&amp;scene=27" target="_blank" rel="noopener noreferrer">平凉市融媒体中心<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article>
+<article class="card" data-year="2025">
+        <div class="time"><span class="year-pill">2025</span><span class="time-text">2025-12-26</span></div>
+        <h3 class="card-title">复旦大学图书馆受赠全套乾隆原版刷印本《清御制龙藏经》</h3>
+        <div class="info">共计725函、7245册。</div>
+        <div class="meta"><span class="meta-item place">📍 复旦大学理科图书馆报告厅</span><span class="meta-item org">🏛 北京文物保护基金会名誉理事长延藏先生通过杭州国家版本馆馆长吴雪勇先生，向复旦大学捐赠全套乾隆原版刷印本《乾隆大藏经》，共计725函、7245册。复旦大学副校长陈志敏、复旦大学教育发展基金会副理事长金海燕、图书馆党委书记兼常务副馆长侯力强、文物与博物馆学系主任郑奕、哲学学院副院长林晖、宗教系副教授汤铭钧、图书馆副馆长兼中华古籍保护研究院常务副院长杨光辉等校方代表出席仪式。杭州国家版本馆馆长吴雪勇一行及国家非遗展览展示研究中心专家委员会主任马盛德也参加了活动。</span></div>
+        <a class="source" href="https://fuedf.fudan.edu.cn/a8/ca/c29744a764106/page.htm" target="_blank" rel="noopener noreferrer">复旦大学中华古籍保护研究院<span class="ext">↗</span><span class="domain">fuedf.fudan.edu.cn</span></a>
+      </article></div>
+    </section>
+<section id="新中国-第三次重印后市面情况-102" class="era">
+      <div class="era-head"><h2>新中国-第三次重印后市面情况</h2><span class="era-count">1</span></div>
+      <div class="cards"><article class="card" data-year="2017">
+        <div class="time"><span class="year-pill">2017</span><span class="time-text">2017-05-11</span></div>
+        <h3 class="card-title">单行本</h3>
+        <div class="info">原雕版刷印，全部手工制作。限量三百部。</div>
+        <div class="meta"><span class="meta-item place">📍 文物出版社(二〇一六年十二月)</span><span class="meta-item org">🏛 乾隆大藏经原雕版刷印</span></div>
+        <a class="source" href="https://book.kongfz.com/102740/682706591" target="_blank" rel="noopener noreferrer">孔夫子旧书网<span class="ext">↗</span><span class="domain">book.kongfz.com</span></a>
+      </article></div>
+    </section>
+<section id="新中国-第三次重印后雕版修复入藏-105" class="era">
+      <div class="era-head"><h2>新中国-第三次重印后雕版修复入藏</h2><span class="era-count">9</span></div>
+      <div class="cards"><article class="card" data-year="2016">
+        <div class="time"><span class="year-pill">2016</span><span class="time-text">2016年</span></div>
+        <h3 class="card-title">第六十集 化“腐朽”为神奇：云居寺修复师与《龙藏》木板经</h3>
+        <div class="info">云居寺藏《龙藏》木经板文物保护修复计划书</div>
+        <div class="meta"><span class="meta-item place">📍 云居寺将木经板的保护修复工作提上重要日程</span><span class="meta-item org">🏛 北京大学考古文博学院对木经板进行前期病害调查</span></div>
+        <a class="source" href="https://wwj.beijing.gov.cn/bjww/362760/362767/bwgxh/spzl/325959169/index.html" target="_blank" rel="noopener noreferrer">北京市文物局<span class="ext">↗</span><span class="domain">wwj.beijing.gov.cn</span></a>
+      </article>
+<article class="card" data-year="2016">
+        <div class="time"><span class="year-pill">2016</span><span class="time-text">2016年7月</span></div>
+        <h3 class="card-title">【文化讲述】中国国家版本馆镇馆之宝——《龙藏》木经板</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 云居寺首届晒经节</span><span class="meta-item org">🏛 云居寺与北京大学考古文博学院签订《云居寺明代纸经、清代龙藏木经板保护协作意向书》</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MzA5MDY5NjEzOA==&amp;mid=2649515752&amp;idx=1&amp;sn=23dbccc0e96dc5c3270b1a8c048319c5&amp;chksm=89e18f051bc5309d676fa91430702a90ec481e7c651f1bd27737af64807ac719594a1794fd43&amp;scene=27" target="_blank" rel="noopener noreferrer">公众号-大美房山/云居寺石经博物馆的王晓宁<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article>
+<article class="card" data-year="2018">
+        <div class="time"><span class="year-pill">2018</span><span class="time-text">2018年4月</span></div>
+        <h3 class="card-title">第六十集 化“腐朽”为神奇：云居寺修复师与《龙藏》木板经</h3>
+        
+        <div class="meta"><span class="meta-item place">📍 北京市文物局批复</span><span class="meta-item org">🏛 获得中央财政对重点文物保护的专项资金支持</span></div>
+        <a class="source" href="https://wwj.beijing.gov.cn/bjww/362760/362767/bwgxh/spzl/325959169/index.html" target="_blank" rel="noopener noreferrer">北京市文物局<span class="ext">↗</span><span class="domain">wwj.beijing.gov.cn</span></a>
+      </article>
+<article class="card" data-year="2019">
+        <div class="time"><span class="year-pill">2019</span><span class="time-text">2019年</span></div>
+        <h3 class="card-title">第六十集 化“腐朽”为神奇：云居寺修复师与《龙藏》木板经</h3>
+        <div class="info">修复木经板350块</div>
+        <div class="meta"><span class="meta-item place">📍 云居寺</span><span class="meta-item org">🏛 在试修复获得专家组查验肯定后，大批量木经板的修复工作正式开启</span></div>
+        <a class="source" href="https://wwj.beijing.gov.cn/bjww/362760/362767/bwgxh/spzl/325959169/index.html" target="_blank" rel="noopener noreferrer">北京市文物局<span class="ext">↗</span><span class="domain">wwj.beijing.gov.cn</span></a>
+      </article>
+<article class="card" data-year="2020">
+        <div class="time"><span class="year-pill">2020</span><span class="time-text">2020年底</span></div>
+        
+        
+        <div class="meta"><span class="meta-item place">📍 邀请吴梦麟、罗炤、周宝中、刘恩迪等专家学者到现场</span><span class="meta-item org">🏛 几名文物鉴定与修复专业的青年修复师也一起承接修复任务，朱肇旌就是其中之一。</span></div>
+        <a class="source" href="https://wwj.beijing.gov.cn/bjww/362760/362767/bwgxh/spzl/325959169/index.html" target="_blank" rel="noopener noreferrer">北京市文物局<span class="ext">↗</span><span class="domain">wwj.beijing.gov.cn</span></a>
+      </article>
+<article class="card" data-year="2022">
+        <div class="time"><span class="year-pill">2022</span><span class="time-text">2022年4月</span></div>
+        <h3 class="card-title">【文化讲述】中国国家版本馆镇馆之宝——《龙藏》木经板</h3>
+        <div class="info">已完成修复500件清代龙藏木经板</div>
+        <div class="meta"><span class="meta-item place">📍 云居寺石经博物馆</span><span class="meta-item org">🏛 第一阶段保护修复项目顺利通过北京市文物局验收</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MzA5MDY5NjEzOA==&amp;mid=2649515752&amp;idx=1&amp;sn=23dbccc0e96dc5c3270b1a8c048319c5&amp;chksm=89e18f051bc5309d676fa91430702a90ec481e7c651f1bd27737af64807ac719594a1794fd43&amp;scene=27" target="_blank" rel="noopener noreferrer">公众号-大美房山/云居寺石经博物馆的王晓宁<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article>
+<article class="card" data-year="2022">
+        <div class="time"><span class="year-pill">2022</span><span class="time-text">2022-04-11</span></div>
+        <h3 class="card-title">《关于推进新时代古籍工作的意见》</h3>
+        <div class="info">“  建设中国古籍版本目录知识系统  ”</div>
+        <div class="meta"><span class="meta-item place">📍 中共中央办公厅 国务院办公厅印发</span><span class="meta-item org">🏛 国务院公报 &gt; 2022年第12号</span></div>
+        <a class="source" href="https://www.gov.cn/gongbao/content/2022/content_5687500.htm" target="_blank" rel="noopener noreferrer">中国政府网  新华社北京4月11日电<span class="ext">↗</span><span class="domain">gov.cn</span></a>
+      </article>
+<article class="card" data-year="2022">
+        <div class="time"><span class="year-pill">2022</span><span class="time-text">2022年</span></div>
+        <h3 class="card-title">【文化讲述】中国国家版本馆镇馆之宝——《龙藏》木经板</h3>
+        <div class="info">已完成修复500件清代龙藏木经板，69000块《龙藏》雕版入藏</div>
+        <div class="meta"><span class="meta-item place">📍 雕版入藏新落成的中国国家版本馆</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MzA5MDY5NjEzOA==&amp;mid=2649515752&amp;idx=1&amp;sn=23dbccc0e96dc5c3270b1a8c048319c5&amp;chksm=89e18f051bc5309d676fa91430702a90ec481e7c651f1bd27737af64807ac719594a1794fd43&amp;scene=27" target="_blank" rel="noopener noreferrer">公众号-大美房山/云居寺石经博物馆的王晓宁<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article>
+<article class="card" data-year="2022">
+        <div class="time"><span class="year-pill">2022</span><span class="time-text">2022-08-03</span></div>
+        <h3 class="card-title">国家版本馆中央总馆展品选介</h3>
+        <div class="info">全藏共1670部、7240卷，雕成经版79036块</div>
+        <div class="meta"><span class="meta-item place">📍 《龙藏》雕版开始入藏国家版本馆中央总馆</span><span class="meta-item org">🏛 《光明日报》 2022年08月03日 07版</span></div>
+        <a class="source" href="https://epaper.gmw.cn/gmrb/html/2022-08/03/nw.D110000gmrb_20220803_2-07.htm" target="_blank" rel="noopener noreferrer">光明网<span class="ext">↗</span><span class="domain">epaper.gmw.cn</span></a>
+      </article></div>
+    </section>
+<section id="广西文科中心影印版-119" class="era">
+      <div class="era-head"><h2>广西文科中心影印版</h2><span class="era-count">5</span></div>
+      <div class="cards"><article class="card" data-year="2023">
+        <div class="time"><span class="year-pill">2023</span><span class="time-text">2023-03-19</span></div>
+        <h3 class="card-title">初版龙藏重光！全本《乾隆大藏经》宣纸线装版、精装版首发式在广化寺举行</h3>
+        <div class="info">中国佛教协会副会长宗性法师在发布会上首先对初版全本《乾隆大藏经》宣纸线装版、精装版的出版表示祝贺和肯定。他表示全本《乾隆大藏经》历经12年，在各方合力之下完成印制，是近年来唯一的全本再造，具有极高的文化学术意义，是文化界的一大盛事。</div>
+        <div class="meta"><span class="meta-item place">📍 广化寺</span><span class="meta-item org">🏛 中国佛教协会副会长宗性法师，广化寺监院广曙法师，北京什刹海书院秘书长吴安春，中国社科院世界宗教研究所研究员王志远，国家图书馆研究馆员李际宁，汉文大藏经研究院院长韩欣，善品堂创始人何德益先后在发布会上致辞</span></div>
+        <a class="source" href="https://fo.ifeng.com/c/8OJFatCTn2p" target="_blank" rel="noopener noreferrer">凤凰新媒体<span class="ext">↗</span><span class="domain">fo.ifeng.com</span></a>
+      </article>
+<article class="card" data-year="2023">
+        <div class="time"><span class="year-pill">2023</span><span class="time-text">2023-03-20</span></div>
+        <h3 class="card-title">全本《乾隆大藏經》宣紙線裝版昨在京首發</h3>
+        <div class="info">日本龍谷大學圖書館藏的初刻初刷裝訂本為底本</div>
+        <div class="meta"><span class="meta-item place">📍 北京佛協駐地廣化寺</span><span class="meta-item org">🏛 香港文匯報訊（記者 趙一存 北京報道 ）</span></div>
+        <a class="source" href="https://www.wenweipo.com/a/202303/20/AP64177312e4b0b6003c023241.html" target="_blank" rel="noopener noreferrer">香港文匯報<span class="ext">↗</span><span class="domain">wenweipo.com</span></a>
+      </article>
+<article class="card" data-year="2023">
+        <div class="time"><span class="year-pill">2023</span><span class="time-text">2023-03-21</span></div>
+        <h3 class="card-title">全本《乾隆大藏经》宣纸线装版、精装版在京首发</h3>
+        <div class="info">1669部，7168卷，共用经版79036块</div>
+        <div class="meta"><span class="meta-item place">📍 广化寺</span><span class="meta-item org">🏛 中原出版传媒集团中州古籍出版社</span></div>
+        <a class="source" href="https://www.chinanews.com/cul/2023/03-21/9975999.shtml" target="_blank" rel="noopener noreferrer">中新网北京3月21日电 (记者 应妮)<span class="ext">↗</span><span class="domain">chinanews.com</span></a>
+      </article>
+<article class="card" data-year="2023">
+        <div class="time"><span class="year-pill">2023</span><span class="time-text">2023-04-20</span></div>
+        <h3 class="card-title">全本《乾隆大藏经》宣纸线装版在北京首发</h3>
+        <div class="info">全本《乾隆大藏经》宣纸线装珍藏版，成书137函808册。为便于阅读和研究，新增《乾隆大藏经总目提要》5函22册。</div>
+        <div class="meta"><span class="meta-item place">📍 （互联网）</span></div>
+        <a class="source" href="https://mp.weixin.qq.com/s?__biz=MzA5NDQ1NzczMg==&amp;mid=2650699887&amp;idx=2&amp;sn=5687de0a56d44d90e1b31d584ddcd276&amp;chksm=88448284bf330b9238786bb55a424ac08cf4f888a3a164007e13864bd63a571e4e8abf2e5df2" target="_blank" rel="noopener noreferrer">公众号-印心剧场<span class="ext">↗</span><span class="domain">mp.weixin.qq.com</span></a>
+      </article>
+<article class="card" data-year="2023">
+        <div class="time"><span class="year-pill">2023</span><span class="time-text">2023-06-11</span></div>
+        <h3 class="card-title">【中国新闻网】关注报道广西人文社会科学发展研究中心汉文大藏经研究院重大成果—初刻全本《乾隆大藏经》在京首发</h3>
+        <div class="info">采用简体横排的方式，所收佛经进行详细分段、加现代标点，采用现代排印、书册本与电子版配套的方式出版，使之更加符合现代人的阅读习惯</div>
+        <div class="meta"><span class="meta-item place">📍 广化寺</span><span class="meta-item org">🏛 广西人文社会科学发展研究中心汉文大藏经研究院院长韩欣带领团队历时十余年完成的重大成果</span></div>
+        <a class="source" href="http://www.gxwkzx.gxnu.edu.cn/2023/0610/c12765a301664/page.htm" target="_blank" rel="noopener noreferrer">广西人文社会科学发展研究中心<span class="ext">↗</span><span class="domain">gxwkzx.gxnu.edu.cn</span></a>
+      </article></div>
+    </section>
+<section id="其它版本-127" class="era">
+      <div class="era-head"><h2>其它版本</h2><span class="era-count">2</span></div>
+      <div class="cards"><article class="card" data-year="2007">
+        <div class="time"><span class="year-pill">2007</span><span class="time-text">2007-06-19</span></div>
+        <h3 class="card-title">中国人心中的另一个大敦煌――大藏经</h3>
+        <div class="info">河北出版界佛学界近年连续推出了中国学术界和佛学界急需的《乾隆大藏经》、《大正藏》和《蛀续编》，以一地之力，做了全国的社科宗教研究者、全国的佛学实践者渴盼多年的盛事。</div>
+        <div class="meta"><span class="meta-item org">🏛 河北出版界佛学界</span></div>
+        <a class="source" href="https://discovery.cctv.com/20070619/107154.shtml" target="_blank" rel="noopener noreferrer">中国中央电视台<span class="ext">↗</span><span class="domain">discovery.cctv.com</span></a>
+      </article>
+<article class="card" data-year="2013">
+        <div class="time"><span class="year-pill">2013</span><span class="time-text">2013年06月</span></div>
+        <h3 class="card-title">乾隆大藏经（16开线装 全814函6516册）</h3>
+        
+        <div class="meta"><span class="meta-item org">🏛 河北省佛教协会、东方出版社</span></div>
+        <a class="source" href="https://product.dangdang.com/11534449004.html" target="_blank" rel="noopener noreferrer">当当.com<span class="ext">↗</span><span class="domain">product.dangdang.com</span></a>
+      </article></div>
+    </section>
+    </main>
+  </div>
+  <footer class="foot">
+    数据来源：<code>docs/用大藏经自带总目录校对.xlsx</code>「乾隆大藏经缘起」工作表 · 由 <code>back/tools/gen_yuanqi.mjs</code> 生成 · 复现：<code>node back/tools/gen_yuanqi.mjs</code>
+  </footer>
+<script>
+const links=[...document.querySelectorAll('.toc-link')];
+const eras=[...document.querySelectorAll('.era')];
+function setActive(id){
+  links.forEach(a=>a.classList.toggle('active', a.getAttribute('href')==='#'+id));
+}
+const io=new IntersectionObserver(ents=>{
+  const vis=ents.filter(e=>e.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];
+  if(vis) setActive(vis.target.id);
+},{rootMargin:'-40% 0px -50% 0px', threshold:0});
+eras.forEach(e=>io.observe(e));
+const q=document.getElementById('q');
+q.addEventListener('input',()=>{
+  const kw=q.value.trim().toLowerCase();
+  document.querySelectorAll('.card').forEach(c=>{
+    const t=c.textContent.toLowerCase();
+    c.classList.toggle('hidden', kw && !t.includes(kw));
+  });
+  // hide empty eras
+  document.querySelectorAll('.era').forEach(era=>{
+    const vis=[...era.querySelectorAll('.card')].some(c=>!c.classList.contains('hidden'));
+    era.style.display = (kw && !vis) ? 'none' : '';
+  });
+});
+links.forEach(a=>{
+  a.addEventListener('click',e=>{
+    // allow default hash jump
+    links.forEach(x=>x.classList.remove('active'));
+    a.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

@@ -165,6 +165,16 @@ ${renderTable()}
             <span class="link-label">勘误表核对</span>
         </a>
 
+        <span class="footer-divider">|</span>
+
+        <!-- 3. 版权声明 -->
+        <a href="about.html"
+           class="footer-icon-link"
+           title="关于">
+            <span class="footer-icon">📄</span>
+            <span class="link-label">关于</span>
+        </a>
+
     </div>
 
     <div class="footer-note">

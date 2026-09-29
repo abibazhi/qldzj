@@ -1,6 +1,6 @@
 // ============================================================
 // verify_special_cases.mjs
-// 《docs/SPECIAL_CASES.md》特例总录的机器断言脚本。
+// 《docs/索引异常情况汇总.md》特例总录的机器断言脚本。
 //
 // 作用：把总录中立账的特例固化为回归检查，防止将来重构/改数时
 // 静默破坏。文档与脚本冲突时：先跑本脚本取实测数，再修文档。
@@ -180,7 +180,7 @@ for (const id of [127, 128, 206, 401]) {
   const badCat = keys.filter((k) => !Array.isArray(mapping[k].catalog));
   check('G1 各卷均有catalog数组', badCat.length === 0, `缺失: ${badCat}`);
 }
-check('G3 彩色大图范围仍为001卷0~162（若调整请同步 docs/SPECIAL_CASES.md G3）',
+check('G3 彩色大图范围仍为001卷0~162（若调整请同步 docs/索引异常情况汇总.md G3）',
   JSON.stringify((await import(join(root, 'js/config.js'))).COLOR_IMAGE_RANGES) === JSON.stringify([{ vol: '001', pageStart: 0, pageEnd: 162 }])
 );
 
@@ -198,7 +198,7 @@ check('D4 sutra1011 译者字段含「𭊁」(U+2D281)', get(1011)?.[4].includes
 // ---------- 结果 ----------
 console.log('—— 结果 ——');
 if (failures.length === 0) {
-  console.log(`✅ 全部通过（共 ${checkCount} 项断言）。快照与《docs/SPECIAL_CASES.md》一致。`);
+  console.log(`✅ 全部通过（共 ${checkCount} 项断言）。快照与《docs/索引异常情况汇总.md》一致。`);
 } else {
   console.log(`❌ ${failures.length}/${checkCount} 项失败：`);
   failures.forEach((f) => console.log('  ' + f));

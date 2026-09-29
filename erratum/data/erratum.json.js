@@ -2068,7 +2068,7 @@ export const erratumPicData = {
           correction: "應反字",
           note: "見四一八上",
           locationHref: "http://img.daxumi.top/149/756.png",
-          correctionHref: "../public/sutra.html?start=149721&end=149868&idx=149756&sutra=1614",
+          correctionHref: "../public/sutra.html?start=149721&end=149870&idx=149756&sutra=1614",
           verifyNote: "加提醒（黑框中的字需要旋转180°）"
         },
         {

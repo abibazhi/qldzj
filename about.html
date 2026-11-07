@@ -14,6 +14,16 @@
       position: sticky; top: 0; height: 100vh; overflow-y: auto;
     }
     #content { flex: 1; padding: 20px; max-width: 800px; }
+    #content {
+      flex: 1;
+      padding: 20px;
+      /* 让内容块自身居中，并限制最大宽度 */
+      max-width: 1200px;   /* ← 想要更宽就调大，比如 1400px */
+      margin: 0 auto;      /* ← 水平居中 */
+      width: 100%;
+    }
+
+
     #sidebar ul { list-style: none; padding-left: 0; }
     #sidebar li { margin: 6px 0; }
     #sidebar a { text-decoration: none; color: #0366d6; }

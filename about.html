@@ -23,7 +23,7 @@
 
 <!-- 加载 about.md 并渲染 -->
 <script>
-  fetch('about.md')
+  fetch('./docs/乾隆大藏经版本考据.md')
     .then(res => res.text())
     .then(md => {
       document.getElementById('about-content').innerHTML = marked.parse(md);

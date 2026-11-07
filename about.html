@@ -24,6 +24,9 @@
   <div id="content">加载中...</div>
 
   <script>
+    // 在调用 marked.use 之前加上这一行
+    const { gfmHeadingId, getHeadingList } = markedGfmHeadingId;
+    
     // const url = 'https://example.com/your-file.md'; // ← 改成你的 md 地址
     const url = './docs/' + encodeURIComponent('乾隆大藏经版本考据.md');
 

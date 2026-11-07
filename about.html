@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Markdown 带侧边栏</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
+
   <script src="https://cdn.jsdelivr.net/npm/marked/lib/marked.umd.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked-gfm-heading-id/lib/index.umd.js"></script>
   <style>
@@ -21,7 +23,7 @@
 </head>
 <body>
   <div id="sidebar"><ul id="toc"></ul></div>
-  <div id="content">加载中...</div>
+  <div id="content" class="markdown-body">加载中...</div>
 
   <script>
     // 在调用 marked.use 之前加上这一行
